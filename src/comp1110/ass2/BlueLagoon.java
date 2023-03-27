@@ -31,11 +31,19 @@ public class BlueLagoon {
 
         System.out.println("gameStates:" + Arrays.toString(gameStates));
 
+        // Check if gameArrangementStatement is valid
         String[] gameArrangementStatement = gameStates[0].split("\\s+");
         System.out.println("gameArrangementStatement:" + Arrays.toString(gameArrangementStatement));
-        if (gameArrangementStatement [0] != "a"){ return false;}
+        if (!(gameArrangementStatement [0].equals("a"))){ return false;}
         if (!(gameArrangementStatement [1].matches("-?\\d+(\\.\\d+)?"))){ return false;}
         if (!(gameArrangementStatement [2].matches("-?\\d+(\\.\\d+)?"))){ return false;}
+
+        // Check if currentStateStatement is valid
+        String[] currentStateStatement = gameStates[1].trim().split("\\s+");
+        System.out.println("currentStateStatement:" + Arrays.toString(currentStateStatement));
+        if (!(currentStateStatement [0].equals("c"))){ return false;}
+        if (!(currentStateStatement [1].matches("-?\\d+(\\.\\d+)?"))){ return false;}
+        if (!(currentStateStatement [2].equals("E") | currentStateStatement [2].equals("S"))){ return false;}
 
 
          return true; // FIXME Task 3
