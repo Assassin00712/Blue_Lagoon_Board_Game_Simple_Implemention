@@ -45,6 +45,12 @@ public class BlueLagoon {
         if (!(currentStateStatement [1].matches("-?\\d+(\\.\\d+)?"))){ return false;}
         if (!(currentStateStatement [2].equals("E") | currentStateStatement [2].equals("S"))){ return false;}
 
+        // islandStatement
+        for (int i = 2; i < gameStates.length -3 ; i++) {
+            String[] tempStatement = gameStates[i].trim().split("\\s+");
+            System.out.println("tempStatement"+ i + ":" + Arrays.toString(tempStatement));
+        }
+
 
          return true; // FIXME Task 3
     }
