@@ -34,6 +34,7 @@ public class BlueLagoon {
         // Check if gameArrangementStatement is valid
         String[] gameArrangementStatement = gameStates[0].split("\\s+");
         System.out.println("gameArrangementStatement:" + Arrays.toString(gameArrangementStatement));
+        if (gameArrangementStatement.length != 3) {return false;}
         if (!(gameArrangementStatement [0].equals("a"))){ return false;}
         if (!(gameArrangementStatement [1].matches("-?\\d+(\\.\\d+)?"))){ return false;}
         if (!(gameArrangementStatement [2].matches("-?\\d+(\\.\\d+)?"))){ return false;}
@@ -41,6 +42,7 @@ public class BlueLagoon {
         // Check if currentStateStatement is valid
         String[] currentStateStatement = gameStates[1].trim().split("\\s+");
         System.out.println("currentStateStatement:" + Arrays.toString(currentStateStatement));
+        if (currentStateStatement.length != 3) {return false;}
         if (!(currentStateStatement [0].equals("c"))){ return false;}
         if (!(currentStateStatement [1].matches("-?\\d+(\\.\\d+)?"))){ return false;}
         if (!(currentStateStatement [2].equals("E") | currentStateStatement [2].equals("S"))){ return false;}
@@ -319,7 +321,7 @@ public class BlueLagoon {
     }
 
     public static void main(String[] args) {
-        String stateString = "a 13 2; c 0 E; i 6 0,0 0,1 0,2 0,3 1,0 1,1 1,2 1,3 1,4 2,0 2,1; i 6 0,5 0,6 0,7 1,6 1,7 1,8 2,6 2,7 2,8 3,7 3,8; i 6 7,12 8,11 9,11 9,12 10,10 10,11 11,10 11,11 11,12 12,10 12,11; i 8 0,9 0,10 0,11 1,10 1,11 1,12 2,10 2,11 3,10 3,11 3,12 4,10 4,11 5,11 5,12; i 8 4,0 5,0 5,1 6,0 6,1 7,0 7,1 7,2 8,0 8,1 8,2 9,0 9,1 9,2; i 8 10,3 10,4 11,0 11,1 11,2 11,3 11,4 11,5 12,0 12,1 12,2 12,3 12,4 12,5; i 10 3,3 3,4 3,5 4,2 4,3 4,4 4,5 5,3 5,4 5,5 5,6 6,3 6,4 6,5 6,6 7,4 7,5 7,6 8,4 8,5; i 10 5,8 5,9 6,8 6,9 7,8 7,9 7,10 8,7 8,8 8,9 9,7 9,8 9,9 10,6 10,7 10,8 11,7 11,8 12,7 12,8; s 0,0 0,5 0,9 1,4 1,8 1,12 2,1 3,5 3,7 3,10 3,12 4,0 4,2 5,9 5,11 6,3 6,6 7,0 7,8 7,12 8,2 8,5 9,0 9,9 10,3 10,6 10,10 11,0 11,5 12,2 12,8 12,11; r C B W P S; p 0 0 0 0 0 0 0 S T; p 1 0 0 0 0 0 0 S T;";
+        String stateString = "a 13 2;c 0 E; i 6 0,0 0,1 0,2 0,3 1,0 1,1 1,2 1,3 1,4 2,0 2,1; i 6 0,5 0,6 0,7 1,6 1,7 1,8 2,6 2,7 2,8 3,7 3,8; i 6 7,12 8,11 9,11 9,12 10,10 10,11 11,10 11,11 11,12 12,10 12,11; i 8 0,9 0,10 0,11 1,10 1,11 1,12 2,10 2,11 3,10 3,11 3,12 4,10 4,11 5,11 5,12; i 8 4,0 5,0 5,1 6,0 6,1 7,0 7,1 7,2 8,0 8,1 8,2 9,0 9,1 9,2; i 8 10,3 10,4 11,0 11,1 11,2 11,3 11,4 11,5 12,0 12,1 12,2 12,3 12,4 12,5; i 10 3,3 3,4 3,5 4,2 4,3 4,4 4,5 5,3 5,4 5,5 5,6 6,3 6,4 6,5 6,6 7,4 7,5 7,6 8,4 8,5; i 10 5,8 5,9 6,8 6,9 7,8 7,9 7,10 8,7 8,8 8,9 9,7 9,8 9,9 10,6 10,7 10,8 11,7 11,8 12,7 12,8; s 0,0 0,5 0,9 1,4 1,8 1,12 2,1 3,5 3,7 3,10 3,12 4,0 4,2 5,9 5,11 6,3 6,6 7,0 7,8 7,12 8,2 8,5 9,0 9,9 10,3 10,6 10,10 11,0 11,5 12,2 12,8 12,11; r C B W P S; p 0 0 0 0 0 0 0 S T; p 1 0 0 0 0 0 0 S T;";
         System.out.println(isStateStringWellFormed(stateString));
     }
 
