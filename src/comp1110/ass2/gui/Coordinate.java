@@ -34,6 +34,10 @@ public class Coordinate {
         return Objects.hash(row, col);
     }
 
+    public static boolean isCorValid (int bound, Coordinate cor){
+        return (bound >= cor.getRow()) && (bound >= cor.getCol());
+    }
+
     @Override
     public String toString() {
         return  row + " " + col;
