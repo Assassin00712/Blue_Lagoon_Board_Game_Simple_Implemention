@@ -40,7 +40,7 @@ public class BlueLagoon {
 
         System.out.println("gameStates:" + Arrays.toString(gameStates));
 
-        // Check if gameArrangementStatement is valid
+        //// Check if gameArrangementStatement is valid ////
         String[] gameArrangementStatement = gameStates[0].split("\\s");
         System.out.println("gameArrangementStatement:" + Arrays.toString(gameArrangementStatement));
         if (gameArrangementStatement.length != 3) {return false;}
@@ -48,7 +48,7 @@ public class BlueLagoon {
         if (!(gameArrangementStatement [1].matches("-?\\d+(\\.\\d+)?"))){ return false;}
         if (!(gameArrangementStatement [2].matches("-?\\d+(\\.\\d+)?"))){ return false;}
 
-        // Check if currentStateStatement is valid
+        //// Check if currentStateStatement is valid ////
         String[] currentStateStatement = gameStates[1].split("\\s");
         System.out.println("currentStateStatement:" + Arrays.toString(currentStateStatement));
         if (currentStateStatement.length != 3) {return false;}
@@ -56,7 +56,7 @@ public class BlueLagoon {
         if (!(currentStateStatement [1].matches("-?\\d+(\\.\\d+)?"))){ return false;}
         if (!(currentStateStatement [2].equals("E") | currentStateStatement [2].equals("S"))){ return false;}
 
-        // Check if island and stone Statements are valid
+        //// Check if island and stone Statements are valid ////
         for (int i = 2; i < gameStates.length -numberOfPlayers -1 ; i++) {
             String[] tempStatement = gameStates[i].split("\\s");
             System.out.println("tempStatement"+ i + ":" + Arrays.toString(tempStatement));
@@ -79,11 +79,11 @@ public class BlueLagoon {
                     }
                 }
 
-            } else {return false;}
+            } else return false;
         }
 
 
-        // Check if Resources and Statuettes Statements are valid
+        //// Check if Resources and Statuettes Statements are valid ////
         String[] resourcesStatement = gameStates[gameStates.length -numberOfPlayers -1].split("\\s");
         System.out.println("resourcesStatement" + Arrays.toString(resourcesStatement));
         // "r C" must be the first character
@@ -101,7 +101,7 @@ public class BlueLagoon {
                     (resourcesStatement[i].equals("S")) ||
                     (resourcesStatement[i].matches("\\d+,\\d+"))
                 )){
-                System.out.println(resourcesStatement[i] + "??"); return false;
+                return false;
             }
         }
 
@@ -109,17 +109,29 @@ public class BlueLagoon {
         Set<String> elementResource = new HashSet<>();
         for (String element : resourcesStatement) {
             if (elementResource.contains(element)) {
-                System.out.println(element + "??"); return false;
+                return false;
             }
-            elementResource.add(element);
+            if (!(element.matches("\\d+,\\d+"))){
+                elementResource.add(element);
+            }
         }
+        if (elementResource.size() != 6){return false;}
 
 
 
-        // Check if Player Statements are valid
+        //// Check if Player Statements are valid
         for (int i = gameStates.length-numberOfPlayers; i < gameStates.length ; i++) {
-            String[] playerStatement = gameStates[i].replaceAll(";", "").split("\\s");
+            String[] playerStatement = new String[]{};
+            if (i == gameStates.length-1 && gameStates[i].charAt(gameStates[i].length()-1) == ';'){
+                playerStatement = gameStates[i].substring(0, gameStates[i].length()-1).split("\\s");
+            }else if (i != gameStates.length-1){
+                playerStatement = gameStates[i].split("\\s");
+            }else return false;
+
+
             System.out.println("playerStatement" + Arrays.toString(playerStatement));
+            // Player should have "p", score and resources, and then "S" and "T"
+            if (!(playerStatement[8].equals("S"))) {return false;}
             for (int j = 0; j < playerStatement.length; j++){
                 if (!(
                         (playerStatement[j].equals("p")) ||
@@ -142,116 +154,12 @@ public class BlueLagoon {
                     elementPlayer.add(element);
                 }
             }
+            if (elementPlayer.size() != 3){return false;}
 
         }
 
 
-
-
-
-
-         return true; // FIXME Task 3
-
-
-
-        /*
-        if (stateString == null || stateString.isEmpty()) {return false;}
-
-        String[] parts = stateString.split(";");
-        System.out.println("gameStates:" + Arrays.toString(parts));
-
-        for (String part : parts) {
-            String[] subparts = part.split(" ");
-
-            char command = subparts[0].charAt(0);
-            if (command == 'a') {
-                if (subparts.length != 3) {
-                    return false;
-                }
-                try {
-                    Integer.parseInt(subparts[1]);
-                    Integer.parseInt(subparts[2]);
-                } catch (NumberFormatException e) {
-                    return false;
-                }
-            } else if (command == 'c') {
-                if (subparts.length != 3) {
-                    return false;
-                }
-                try {
-                    Integer.parseInt(subparts[1]);
-                } catch (NumberFormatException e) {
-                    return false;
-                }
-                if (subparts[2].length() != 1 || !Character.isLetter(subparts[2].charAt(0))) {
-                    return false;
-                }
-            } else if (command == 'i') {
-                if (subparts.length < 3) {
-                    return false;
-                }
-                try {
-                    int numIslands = Integer.parseInt(subparts[1]);
-                    if (numIslands != subparts.length - 2) {
-                        return false;
-                    }
-                    for (int i = 2; i < subparts.length; i++) {
-                        String[] coordinates = subparts[i].split(",");
-                        if (coordinates.length != 2) {
-                            return false;
-                        }
-                        Integer.parseInt(coordinates[0]);
-                        Integer.parseInt(coordinates[1]);
-                    }
-                } catch (NumberFormatException e) {
-                    return false;
-                }
-            } else if (command == 's') {
-                if (subparts.length < 2) {
-                    return false;
-                }
-                for (int i = 1; i < subparts.length; i++) {
-                    String[] coordinates = subparts[i].split(",");
-                    if (coordinates.length != 2) {
-                        return false;
-                    }
-                    try {
-                        Integer.parseInt(coordinates[0]);
-                        Integer.parseInt(coordinates[1]);
-                    } catch (NumberFormatException e) {
-                        return false;
-                    }
-                }
-            } else if (command == 'r') {
-                if (subparts.length < 2) {
-                    return false;
-                }
-                for (int i = 1; i < subparts.length; i++) {
-                    if (subparts[i].length() != 1 || !Character.isLetter(subparts[i].charAt(0))) {
-                        return false;
-                    }
-                }
-            } else if (command == 'p') {
-                if (subparts.length != 10) {
-                    return false;
-                }
-                try {
-                    Integer.parseInt(subparts[1]);
-                    for (int i = 2; i < subparts.length; i++) {
-                        if (!subparts[i].equals("0") && !Character.isLetter(subparts[i].charAt(0))) {
-                            return false;
-                        }
-                    }
-                } catch (NumberFormatException e) {
-                    return false;
-                }
-            } else { // invalid command
-                return false;
-            }
-        }
-        return true;
-
-         */
+        return true; // FIXME Task 3
 
     }
 
