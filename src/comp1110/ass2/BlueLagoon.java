@@ -38,11 +38,8 @@ public class BlueLagoon {
         if (stateString == null || stateString.isEmpty()) {return false;}
         String[] gameStates = stateString.split("; ");
 
-        System.out.println("gameStates:" + Arrays.toString(gameStates));
-
         //// Check if gameArrangementStatement is valid ////
         String[] gameArrangementStatement = gameStates[0].split("\\s");
-        System.out.println("gameArrangementStatement:" + Arrays.toString(gameArrangementStatement));
         if (gameArrangementStatement.length != 3) {return false;}
         if (!(gameArrangementStatement [0].equals("a"))){ return false;}
         if (!(gameArrangementStatement [1].matches("-?\\d+(\\.\\d+)?"))){ return false;}
@@ -50,7 +47,6 @@ public class BlueLagoon {
 
         //// Check if currentStateStatement is valid ////
         String[] currentStateStatement = gameStates[1].split("\\s");
-        System.out.println("currentStateStatement:" + Arrays.toString(currentStateStatement));
         if (currentStateStatement.length != 3) {return false;}
         if (!(currentStateStatement [0].equals("c"))){ return false;}
         if (!(currentStateStatement [1].matches("-?\\d+(\\.\\d+)?"))){ return false;}
@@ -59,7 +55,6 @@ public class BlueLagoon {
         //// Check if island and stone Statements are valid ////
         for (int i = 2; i < gameStates.length -numberOfPlayers -1 ; i++) {
             String[] tempStatement = gameStates[i].split("\\s");
-            System.out.println("tempStatement"+ i + ":" + Arrays.toString(tempStatement));
             if (tempStatement [0].equals("i")) {
                 if (!(tempStatement[1].matches("-?\\d+(\\.\\d+)?"))) {
                     System.out.println("3" + tempStatement[1]); return false;
@@ -85,7 +80,6 @@ public class BlueLagoon {
 
         //// Check if Resources and Statuettes Statements are valid ////
         String[] resourcesStatement = gameStates[gameStates.length -numberOfPlayers -1].split("\\s");
-        System.out.println("resourcesStatement" + Arrays.toString(resourcesStatement));
         // "r C" must be the first character
         if (!(resourcesStatement [0].equals("r"))){ return false;}
         if (!(resourcesStatement [1].equals("C"))){ return false;}
@@ -128,8 +122,6 @@ public class BlueLagoon {
                 playerStatement = gameStates[i].split("\\s");
             }else return false;
 
-
-            System.out.println("playerStatement" + Arrays.toString(playerStatement));
             // Player should have "p", score and resources, and then "S" and "T"
             if (!(playerStatement[8].equals("S"))) {return false;}
             for (int j = 0; j < playerStatement.length; j++){
