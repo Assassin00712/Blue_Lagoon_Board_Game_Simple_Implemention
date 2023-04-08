@@ -168,7 +168,6 @@ public class BlueLagoon {
 
         String[] move = moveString.split(" ");
         if (move.length != 2) {return false;}
-        System.out.println(Arrays.toString(move));
         if (!(move [0].equals("S") || move [0].equals("T"))){return false;}
         if (!(move [1].matches("\\d+,\\d+"))){return false;}
 
