@@ -173,7 +173,15 @@ public class BlueLagoon {
      * @return true if moveString is well-formed and false otherwise
      */
     public static boolean isMoveStringWellFormed(String moveString){
-         return false; // FIXME Task 4
+
+        String[] move = moveString.split(" ");
+        if (move.length != 2) {return false;}
+        System.out.println(Arrays.toString(move));
+        if (!(move [0].equals("S") || move [0].equals("T"))){return false;}
+        if (!(move [1].matches("\\d+,\\d+"))){return false;}
+
+
+        return true; // FIXME Task 4
     }
 
     /**
