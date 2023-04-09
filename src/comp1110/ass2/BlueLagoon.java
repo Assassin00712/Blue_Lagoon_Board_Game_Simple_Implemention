@@ -88,6 +88,91 @@ public class BlueLagoon {
      * @return true if the current player can make the move and false otherwise
      */
     public static boolean isMoveValid(String stateString, String moveString){
+        /** Split stateString into relative parts.
+         * Note: every split starts with " "**/
+
+        //Split original statement into a string set
+        String [] s1 = stateString.split(";");
+
+        //Split Arrangement Statement and Current State Statement parts
+        String gameArrangementStatement = " " + s1[0];
+        String currentStateStatement = s1[1];
+
+        //Split island Statement part
+        String islandStatement = "";
+        int i = 2;
+        int islandLength = 0;
+        while(s1[i].charAt(1) == 'i'){
+            String a = s1[i];
+            islandStatement = islandStatement + a + ";";
+            islandLength = islandLength + 1;
+            i++;
+        }
+
+        //Split the stonesStatement and unclaimedResourcesAndStatuettesStatement parts
+        String stonesStatement = s1[islandLength + 2];
+        String unclaimedResourcesAndStatuettesStatement = s1[islandLength + 3];
+
+        //Split player statement according to the number of players
+        String playerStatement = "";
+        for(int a = 1;a <= Integer.parseInt(gameArrangementStatement.substring(6,7));a++){
+            playerStatement = playerStatement + s1[islandLength + 3 + a] + ";";
+        }
+
+
+        /** When it's in exploration phase **/
+        if(currentStateStatement.charAt(5) == 'E'){
+
+            //Check the number of settlers and villages placed
+            //Create a string list to contain all players' settlers and villages
+            String[] s2 = playerStatement.split(";");
+            //Put settlers and villages of all players in s2
+            for(int j=0;j<=s2.length - 1;j++) {
+                for (int a = 0; a <= s2[j].length() - 1; a++) {
+                    if (playerStatement.charAt(a) == 'S') {
+                        s2[j] = s2[j].substring(a);
+                    }
+                }
+            }
+            //Get current player's settlers and villages
+            String currentPlayerID = currentStateStatement.substring(3,4);
+            String currentSettlersAndVillages = s2[Integer.parseInt(currentPlayerID)];
+            //Get current player's settlers and villages separately
+            int TPosition = 0;
+            String currentSettlers = "";
+            String currentVillages = "";
+            for(int a = 0;a<=currentSettlersAndVillages.length() - 1;a++){
+                if(currentSettlersAndVillages.charAt(a) == 'T'){
+                    TPosition = a;
+                }
+                currentSettlers = currentSettlersAndVillages.substring(0,a);
+                currentVillages = currentSettlersAndVillages.substring(a);
+            }
+            System.out.println(currentSettlersAndVillages);
+            //When players don't have enough settlers and want to place settlers, we can't make the move
+            if(moveString.charAt(0) == 'S'){
+                int SettlersNum = 0;
+                for (int a = 0;a<=currentSettlers.length()-1;a++){
+                    SettlersNum = SettlersNum + 1;
+                }
+                if (SettlersNum >= 122){
+                    return false;
+                }
+            }
+            //When players don't have enough villages and want to place villages, the move can't be made
+            if (moveString.charAt(0) == 'T') {
+                int VillageNum = 0;
+                for (int a = 0; a <= currentVillages.length() - 1; a++) {
+                    VillageNum = VillageNum + 1;
+                }
+                if (VillageNum >= 5) {
+                    return false;
+                }
+            }
+        }
+
+
+
          return false; // FIXME Task 7
     }
 
