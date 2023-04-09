@@ -1,5 +1,7 @@
 package comp1110.ass2;
 
+import javax.swing.*;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,7 +28,131 @@ public class BlueLagoon {
      * @return true if stateString is well-formed and false otherwise
      */
     public static boolean isStateStringWellFormed(String stateString){
-         return false; // FIXME Task 3
+        int numberOfPlayers = 0;
+        for (int i = 0; i < stateString.length(); i++) {
+            if (stateString.charAt(i) == 'p') {
+                numberOfPlayers++;
+            }
+        }
+
+        if (stateString == null || stateString.isEmpty()) {return false;}
+        String[] gameStates = stateString.split("; ");
+
+        //// Check if gameArrangementStatement is valid ////
+        String[] gameArrangementStatement = gameStates[0].split("\\s");
+        if (gameArrangementStatement.length != 3) {return false;}
+        if (!(gameArrangementStatement [0].equals("a"))){ return false;}
+        if (!(gameArrangementStatement [1].matches("-?\\d+(\\.\\d+)?"))){ return false;}
+        if (!(gameArrangementStatement [2].matches("-?\\d+(\\.\\d+)?"))){ return false;}
+
+        //// Check if currentStateStatement is valid ////
+        String[] currentStateStatement = gameStates[1].split("\\s");
+        if (currentStateStatement.length != 3) {return false;}
+        if (!(currentStateStatement [0].equals("c"))){ return false;}
+        if (!(currentStateStatement [1].matches("-?\\d+(\\.\\d+)?"))){ return false;}
+        if (!(currentStateStatement [2].equals("E") | currentStateStatement [2].equals("S"))){ return false;}
+
+        //// Check if island and stone Statements are valid ////
+        for (int i = 2; i < gameStates.length -numberOfPlayers -1 ; i++) {
+            String[] tempStatement = gameStates[i].split("\\s");
+            if (tempStatement [0].equals("i")) {
+                if (!(tempStatement[1].matches("-?\\d+(\\.\\d+)?"))) {
+                    System.out.println("3" + tempStatement[1]); return false;
+                }
+                for (int j = 2; j < tempStatement.length; j++) {
+                    if (!(tempStatement[j].matches("\\d+,\\d+"))) {
+                        System.out.println("f" + tempStatement[j]);
+                        return false;
+                    }
+                }
+
+            } else if(tempStatement [0].equals("s")){
+                for (int j = 1; j < tempStatement.length; j++) {
+                    if (!(tempStatement[j].matches("\\d+,\\d+"))) {
+                        System.out.println("f" + tempStatement[j]);
+                        return false;
+                    }
+                }
+
+            } else return false;
+        }
+
+
+        //// Check if Resources and Statuettes Statements are valid ////
+        String[] resourcesStatement = gameStates[gameStates.length -numberOfPlayers -1].split("\\s");
+        // "r C" must be the first character
+        if (!(resourcesStatement [0].equals("r"))){ return false;}
+        if (!(resourcesStatement [1].equals("C"))){ return false;}
+
+        // every character should be valid and not a space
+        for (int i = 0; i < resourcesStatement.length; i++){
+            if (!(
+                    (resourcesStatement[i].equals("r")) ||
+                    (resourcesStatement[i].equals("C")) ||
+                    (resourcesStatement[i].equals("B")) ||
+                    (resourcesStatement[i].equals("W")) ||
+                    (resourcesStatement[i].equals("P")) ||
+                    (resourcesStatement[i].equals("S")) ||
+                    (resourcesStatement[i].matches("\\d+,\\d+"))
+                )){
+                return false;
+            }
+        }
+
+        //"r, C, B, W, P, S" should be appeared one time and one time only
+        Set<String> elementResource = new HashSet<>();
+        for (String element : resourcesStatement) {
+            if (elementResource.contains(element)) {
+                return false;
+            }
+            if (!(element.matches("\\d+,\\d+"))){
+                elementResource.add(element);
+            }
+        }
+        if (elementResource.size() != 6){return false;}
+
+
+
+        //// Check if Player Statements are valid
+        for (int i = gameStates.length-numberOfPlayers; i < gameStates.length ; i++) {
+            String[] playerStatement = new String[]{};
+            if (i == gameStates.length-1 && gameStates[i].charAt(gameStates[i].length()-1) == ';'){
+                playerStatement = gameStates[i].substring(0, gameStates[i].length()-1).split("\\s");
+            }else if (i != gameStates.length-1){
+                playerStatement = gameStates[i].split("\\s");
+            }else return false;
+
+            // Player should have "p", score and resources, and then "S" and "T"
+            if (!(playerStatement[8].equals("S"))) {return false;}
+            for (int j = 0; j < playerStatement.length; j++){
+                if (!(
+                        (playerStatement[j].equals("p")) ||
+                        (playerStatement[j].equals("S")) ||
+                        (playerStatement[j].equals("T")) ||
+                        (playerStatement[j].matches("\\d+"))||
+                        (playerStatement[j].matches("\\d+,\\d+"))
+                )){
+                    return false;
+                }
+            }
+            //"p S T" should be appeared one time and one time only
+            Set<String> elementPlayer = new HashSet<>();
+            for (String element : playerStatement) {
+                if (elementPlayer.contains(element)) {
+                    return false;
+                }
+                if (!((element.matches("\\d+"))||
+                        (element.matches("\\d+,\\d+")))){
+                    elementPlayer.add(element);
+                }
+            }
+            if (elementPlayer.size() != 3){return false;}
+
+        }
+
+
+        return true; // FIXME Task 3
+
     }
 
     /**
@@ -39,7 +165,14 @@ public class BlueLagoon {
      * @return true if moveString is well-formed and false otherwise
      */
     public static boolean isMoveStringWellFormed(String moveString){
-         return false; // FIXME Task 4
+
+        String[] move = moveString.split(" ");
+        if (move.length != 2) {return false;}
+        if (!(move [0].equals("S") || move [0].equals("T"))){return false;}
+        if (!(move [1].matches("\\d+,\\d+"))){return false;}
+
+
+        return true; // FIXME Task 4
     }
 
     /**
@@ -376,4 +509,10 @@ public class BlueLagoon {
     public static String generateAIMove(String stateString){
          return ""; // FIXME Task 16
     }
+
+    public static void main(String[] args) {
+        String stateString = "a 13 2;c 0 E; i 6 0,0 0,1 0,2 0,3 1,0 1,1 1,2 1,3 1,4 2,0 2,1; i 6 0,5 0,6 0,7 1,6 1,7 1,8 2,6 2,7 2,8 3,7 3,8; i 6 7,12 8,11 9,11 9,12 10,10 10,11 11,10 11,11 11,12 12,10 12,11; i 8 0,9 0,10 0,11 1,10 1,11 1,12 2,10 2,11 3,10 3,11 3,12 4,10 4,11 5,11 5,12; i 8 4,0 5,0 5,1 6,0 6,1 7,0 7,1 7,2 8,0 8,1 8,2 9,0 9,1 9,2; i 8 10,3 10,4 11,0 11,1 11,2 11,3 11,4 11,5 12,0 12,1 12,2 12,3 12,4 12,5; i 10 3,3 3,4 3,5 4,2 4,3 4,4 4,5 5,3 5,4 5,5 5,6 6,3 6,4 6,5 6,6 7,4 7,5 7,6 8,4 8,5; i 10 5,8 5,9 6,8 6,9 7,8 7,9 7,10 8,7 8,8 8,9 9,7 9,8 9,9 10,6 10,7 10,8 11,7 11,8 12,7 12,8; s 0,0 0,5 0,9 1,4 1,8 1,12 2,1 3,5 3,7 3,10 3,12 4,0 4,2 5,9 5,11 6,3 6,6 7,0 7,8 7,12 8,2 8,5 9,0 9,9 10,3 10,6 10,10 11,0 11,5 12,2 12,8 12,11; r C 1,1 B 1,2 W P 1,4 S; p 0 0 0 0 0 0 0 S T; p 1 0 0 0 0 0 0 S T;";
+        System.out.println(isStateStringWellFormed(stateString));
+    }
+
 }
