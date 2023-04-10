@@ -34,8 +34,33 @@ public class Coordinate {
         return Objects.hash(row, col);
     }
 
+    /**
+     * test if a coordinate is in bound
+     * @param bound board bound detected
+     * @param cor cor input
+     * @return false if coordinate is out of bound, true otherwise
+     */
     public static boolean isCorValid (int bound, Coordinate cor){
         return (bound >= cor.getRow()) && (bound >= cor.getCol());
+    }
+
+    /**
+     * test if two Coordinates are linked
+     * @param cor1 the coordinate a play attempted to occupy
+     * @param cor2 the coordinate to compare, taken from the occupied coordinates of the player
+     * @return true if coordinates are linked, false otherwise
+     */
+    public static boolean isLinked (Coordinate cor1, Coordinate cor2){
+        int row1 = cor1.getRow();
+        int row2 = cor2.getRow();
+        int col1 = cor1.getCol();
+        int col2 = cor2.getCol();
+        if (row1 == row2){
+            return ((col1 == col2 + 1) || (col1 == col2 - 1));
+        }else if ((row1 == row2 - 1) || (row1 == row2 + 1)){
+            return (col1 == col2);
+        }
+        return false;
     }
 
     @Override
