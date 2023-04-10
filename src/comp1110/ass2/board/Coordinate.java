@@ -65,7 +65,16 @@ public class Coordinate {
 
     @Override
     public String toString() {
-        return  row + " " + col;
+        return  row + "," + col;
+    }
+
+    public static Coordinate corFromString(String s) {
+        Coordinate c = null;
+        int row = Integer.parseInt(String.valueOf(s.charAt(0)));
+        int col = Integer.parseInt(String.valueOf(s.charAt(3)));
+        c.setCol(col);
+        c.setRow(row);
+        return c;
     }
 
 }

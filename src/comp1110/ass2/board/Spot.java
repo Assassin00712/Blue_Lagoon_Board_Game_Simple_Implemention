@@ -1,6 +1,9 @@
 package comp1110.ass2.board;
 
 
+import static comp1110.ass2.board.Board.board;
+import static comp1110.ass2.board.Coordinate.corFromString;
+
 public class Spot {
 
 
@@ -27,6 +30,7 @@ public class Spot {
         this.resources = resources;
         this.occupier = occupier;
     }
+
 
     public Coordinate getsCor() {
         return sCor;
@@ -67,6 +71,18 @@ public class Spot {
     public void setOccupier(int occupier) {
         this.occupier = occupier;
     }
+
+    public static String[] splitStatement (String s){
+        String[] gameStates = s.split("; ");
+        return gameStates;
+    }
+
+    public static String[] splitStates (String s){
+        String[] coordinates = s.split(" ");
+        return coordinates;
+    }
+
+
 
     @Override
     public String toString() {
