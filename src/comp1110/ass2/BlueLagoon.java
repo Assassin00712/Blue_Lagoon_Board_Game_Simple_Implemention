@@ -1,6 +1,7 @@
 package comp1110.ass2;
 
 import javax.swing.*;
+import java.sql.SQLOutput;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -220,12 +221,14 @@ public class BlueLagoon {
      * @param moveString a string representing the current player's move
      * @return true if the current player can make the move and false otherwise
      */
-    public static boolean isMoveValid(String stateString, String moveString){
+    public static boolean isMoveValid(String stateString, String moveString) {
+
+
         /** Split stateString into relative parts.
          * Note: every split starts with " "**/
 
         //Split original statement into a string set
-        String [] s1 = stateString.split(";");
+        String[] s1 = stateString.split(";");
 
         //Split Arrangement Statement and Current State Statement parts
         String gameArrangementStatement = " " + s1[0];
@@ -235,9 +238,9 @@ public class BlueLagoon {
         String islandStatement = "";
         int i = 2;
         int islandLength = 0;
-        while(s1[i].charAt(1) == 'i'){
+        while (s1[i].charAt(1) == 'i') {
             String a = s1[i];
-            islandStatement = islandStatement + a + ";";
+            islandStatement = islandStatement + a;
             islandLength = islandLength + 1;
             i++;
         }
@@ -248,65 +251,468 @@ public class BlueLagoon {
 
         //Split player statement according to the number of players
         String playerStatement = "";
-        for(int a = 1;a <= Integer.parseInt(gameArrangementStatement.substring(6,7));a++){
+        for (int a = 1; a <= Integer.parseInt(gameArrangementStatement.substring(6, 7)); a++) {
             playerStatement = playerStatement + s1[islandLength + 3 + a] + ";";
         }
 
 
-        /** When it's in exploration phase **/
-        if(currentStateStatement.charAt(5) == 'E'){
+        /** Check if move and statement are valid (eg: no -1,-1) **/
+        if (!isMoveStringWellFormed(moveString)) {
+            return false;
+        }
 
-            //Check the number of settlers and villages placed
-            //Create a string list to contain all players' settlers and villages
-            String[] s2 = playerStatement.split(";");
-            //Put settlers and villages of all players in s2
-            for(int j=0;j<=s2.length - 1;j++) {
-                for (int a = 0; a <= s2[j].length() - 1; a++) {
-                    if (playerStatement.charAt(a) == 'S') {
-                        s2[j] = s2[j].substring(a);
-                    }
-                }
+
+        /** Check if move and statement are out of range because 12 13 12.... **/
+        //Get the position of the move
+        String movePosition = moveString.substring(2);
+        String[] moveList = movePosition.split(",");
+        int moveleft = Integer.parseInt(moveList[0]);
+        int moveright = Integer.parseInt(moveList[1]);
+
+        //Get the board height of game and compare with move position
+        String[] GASsplit = gameArrangementStatement.split(" ");
+        int boardHeight = Integer.parseInt(GASsplit[2]);
+
+        if (moveleft < 0 || moveright < 0 || moveright >= boardHeight || moveleft >= boardHeight) {
+            return false;
+        }
+        //Because there are 12 13 12 13 in each row, to control the odd and even lines to make sure move is in map
+        if (moveleft % 2 == 0) {
+            if (moveright > boardHeight - 2) {
+                return false;
             }
-            //Get current player's settlers and villages
-            String currentPlayerID = currentStateStatement.substring(3,4);
-            String currentSettlersAndVillages = s2[Integer.parseInt(currentPlayerID)];
-            //Get current player's settlers and villages separately
-            int TPosition = 0;
-            String currentSettlers = "";
-            String currentVillages = "";
-            for(int a = 0;a<=currentSettlersAndVillages.length() - 1;a++){
-                if(currentSettlersAndVillages.charAt(a) == 'T'){
-                    TPosition = a;
-                }
-                currentSettlers = currentSettlersAndVillages.substring(0,a);
-                currentVillages = currentSettlersAndVillages.substring(a);
-            }
-            System.out.println(currentSettlersAndVillages);
-            //When players don't have enough settlers and want to place settlers, we can't make the move
-            if(moveString.charAt(0) == 'S'){
-                int SettlersNum = 0;
-                for (int a = 0;a<=currentSettlers.length()-1;a++){
-                    SettlersNum = SettlersNum + 1;
-                }
-                if (SettlersNum >= 122){
-                    return false;
-                }
-            }
-            //When players don't have enough villages and want to place villages, the move can't be made
-            if (moveString.charAt(0) == 'T') {
-                int VillageNum = 0;
-                for (int a = 0; a <= currentVillages.length() - 1; a++) {
-                    VillageNum = VillageNum + 1;
-                }
-                if (VillageNum >= 5) {
-                    return false;
-                }
+        }
+        if (moveleft % 2 != 0) {
+            if (moveright > boardHeight -1) {
+                return false;
             }
         }
 
 
+        /**Check the number of settlers and villages placed,
+         * return false if players don't have enough settlers or villages **/
+        //Create a string list to contain all players' settlers and villages
+        String[] s2 = playerStatement.split(";");
+        //Put settlers and villages of all players in s2
+        for (int j = 0; j <= s2.length - 1; j++) {
+            for (int a = 0; a <= s2[j].length() - 1; a++) {
+                if (s2[j].charAt(a) == 'S') {
+                    s2[j] = s2[j].substring(a);
+                }
+            }
+        }
+        //Get current player's settlers and villages
+        String currentPlayerID = currentStateStatement.substring(3, 4);
+        String currentSettlersAndVillages = s2[Integer.parseInt(currentPlayerID)];
 
-         return false; // FIXME Task 7
+        //Get current player's settlers and villages separately
+        int TPosition = 0;
+        String currentSettlers = "";
+        String currentVillages = "";
+        for (int a = 0; a <= currentSettlersAndVillages.length() - 1; a++) {
+            if (currentSettlersAndVillages.charAt(a) == 'T') {
+                TPosition = a;
+            }
+            currentSettlers = currentSettlersAndVillages.substring(0, TPosition);
+            currentVillages = currentSettlersAndVillages.substring(TPosition);
+        }
+        //When players don't have enough settlers and want to place settlers, we can't make the move
+        String[] currentSettlersSplit = currentSettlers.split(" ");
+        String[] currentVillagesSplit = currentVillages.split(" ");
+
+        if (moveString.charAt(0) == 'S') {
+
+            if (currentSettlersSplit.length >= 31) {
+                return false;
+            }
+        }
+        //When players don't have enough villages and want to place villages, the move can't be made
+        if (moveString.charAt(0) == 'T') {
+
+            if (currentVillagesSplit.length >= 6) {
+                return false;
+            }
+        }
+
+        /** Check if the move position is occupied by players **/
+        String[] currentSettlerAndVillageSplit = playerStatement.split(" ");
+
+
+
+        for (int q = 0; q <= currentSettlerAndVillageSplit.length - 1; q++) {
+            for (int a = 0; a<= currentSettlerAndVillageSplit[q].length() - 1;a++){
+                if (currentSettlerAndVillageSplit[q].charAt(a) == ';'){
+                    currentSettlerAndVillageSplit[q] = currentSettlerAndVillageSplit[q].substring(0,a);
+                }
+            }
+            if (movePosition.equals(currentSettlerAndVillageSplit[q])) {
+                return false;
+            }
+        }
+
+
+        /** Villages should not be put on the sea **/
+        //Compare move position with every position in islandStatement
+        movePosition = moveString.substring(2);
+        String[] islandStatementList = islandStatement.split(" ");
+        boolean isVillagesOntheSea = false;
+        if (moveString.charAt(0) == 'T') {
+            for (int a = 0; a <= islandStatementList.length - 1; a++) {
+                if (islandStatementList[a].equals(movePosition)) {
+                    isVillagesOntheSea = true;
+                }
+            }
+            if (!isVillagesOntheSea){
+                return false;
+            }
+        }
+
+        /** When it's in exploration phase **/
+        if (currentStateStatement.charAt(5) == 'E') {
+
+        /** Settlers or villages should not be put on the area not adjacent to the settlers or village **/
+
+            //Check if settlers are on land
+            boolean SisOnLand = false;
+            for (int a = 0; a <= islandStatementList.length - 1; a++) {
+                //Check if settler put is on land
+                if (islandStatementList[a].equals(movePosition)) {
+                    SisOnLand = true;
+                }
+            }
+            //If S is on land, it should be adjacent to the settlers or villages, if it's, return true or return false
+            if (SisOnLand) {
+
+                String currentSettlersNoS = currentSettlers.substring(1);
+                String[] currentSettlersList = currentSettlersNoS.split(" ");
+                String currentVillageNoT = currentVillages.substring(1);
+                String[] currentVillageList = currentVillageNoT.split(" ");
+
+//                    //Add two string arrays to one, after this currentSettltersList is the combined array
+//                    int arryLen1 = currentSettlersList.length;
+//                    int arryLen2 = currentVillageList.length;
+//
+//                    currentSettlersList = Arrays.copyOf(currentSettlersList, arryLen1 + arryLen2);
+//                    System.arraycopy(currentVillageList, 0, currentSettlersList, arryLen1, arryLen2);
+
+                //currentSettlersNoS have an empty in the beginning
+                //Check if move position is adjacent to the settlers
+                String moveLeftnum = "";
+                String moveRightnum = "";
+                //Check if the move position is adjacent to villages
+                if (currentVillageNoT.length() > 1) {
+                    for (int a = 0; a <= movePosition.length() - 1; a++) {
+                        if (movePosition.charAt(a) == ',') {
+                            moveLeftnum = movePosition.substring(0, a);
+                            moveRightnum = movePosition.substring(a + 1);
+                        }
+                    }
+                    for (int q = 0; q <= currentVillageList.length - 1; q++) {
+                        if (!currentVillageList[q].equals("") && !currentVillageList[q].equals(" ")) {
+                            String leftnum = "";
+                            String rightnum = "";
+                            for (int a = 0; a <= currentVillageList[q].length() - 1; a++) {
+                                if (currentVillageList[q].charAt(a) == ',') {
+                                    leftnum = currentVillageList[q].substring(0, a);
+                                    rightnum = currentVillageList[q].substring(a + 1);
+                                }
+                            }
+                            //Check 6 situations of adjacent
+                            int moveleftnumI = Integer.parseInt(moveLeftnum);
+                            int moveRightnumI = Integer.parseInt(moveRightnum);
+                            int leftnumI = Integer.parseInt(leftnum);
+                            int rightnumI = Integer.parseInt(rightnum);
+
+                            if (moveleftnumI % 2 != 0) {
+
+                                if (leftnumI == moveleftnumI - 1 && rightnumI == moveRightnumI - 1) {
+                                    return true;
+                                }
+                                if (leftnumI == moveleftnumI - 1 && rightnumI == moveRightnumI) {
+                                    return true;
+                                }
+                                if (leftnumI == moveleftnumI && rightnumI == moveRightnumI - 1) {
+                                    return true;
+                                }
+                                if (leftnumI == moveleftnumI && rightnumI == moveRightnumI + 1) {
+                                    return true;
+                                }
+                                if (leftnumI == moveleftnumI + 1 && rightnumI == moveRightnumI - 1) {
+                                    return true;
+                                }
+                                if (leftnumI == moveleftnumI + 1 && rightnumI == moveRightnumI) {
+                                    return true;
+                                }
+                            }
+
+                            if (moveleftnumI % 2 == 0) {
+                                if (leftnumI == moveleftnumI - 1 && rightnumI == moveRightnumI) {
+                                    return true;
+                                }
+                                if (leftnumI == moveleftnumI - 1 && rightnumI == moveRightnumI + 1) {
+                                    return true;
+                                }
+                                if (leftnumI == moveleftnumI && rightnumI == moveRightnumI - 1) {
+                                    return true;
+                                }
+                                if (leftnumI == moveleftnumI && rightnumI == moveRightnumI + 1) {
+                                    return true;
+                                }
+                                if (leftnumI == moveleftnumI + 1 && rightnumI == moveRightnumI) {
+                                    return true;
+                                }
+                                if (leftnumI == moveleftnumI + 1 && rightnumI == moveRightnumI + 1) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (currentSettlersNoS.length() > 1) {
+                    for (int a = 0; a <= movePosition.length() - 1; a++) {
+
+                        if (movePosition.charAt(a) == ',') {
+                            moveLeftnum = movePosition.substring(0, a);
+                            moveRightnum = movePosition.substring(a + 1);
+                        }
+                    }
+                    for (int q = 0; q <= currentSettlersList.length - 1; q++) {
+                        if (!currentSettlersList[q].equals("") && !currentSettlersList[q].equals(" ")) {
+                            String leftnum = "";
+                            String rightnum = "";
+                            for (int a = 0; a <= currentSettlersList[q].length() - 1; a++) {
+                                if (currentSettlersList[q].charAt(a) == ',') {
+                                    leftnum = currentSettlersList[q].substring(0, a);
+                                    rightnum = currentSettlersList[q].substring(a + 1);
+                                }
+                            }
+                            //Check 6 situations of adjacent
+                            int moveleftnumI = Integer.parseInt(moveLeftnum);
+                            int moveRightnumI = Integer.parseInt(moveRightnum);
+                            int leftnumI = Integer.parseInt(leftnum);
+                            int rightnumI = Integer.parseInt(rightnum);
+
+                            if (moveleftnumI % 2 != 0) {
+                                if (leftnumI == moveleftnumI - 1 && rightnumI == moveRightnumI - 1) {
+                                    return true;
+                                }
+                                if (leftnumI == moveleftnumI - 1 && rightnumI == moveRightnumI) {
+
+                                    return true;
+                                }
+                                if (leftnumI == moveleftnumI && rightnumI == moveRightnumI - 1) {
+                                    return true;
+                                }
+                                if (leftnumI == moveleftnumI && rightnumI == moveRightnumI + 1) {
+                                    return true;
+                                }
+                                if (leftnumI == moveleftnumI + 1 && rightnumI == moveRightnumI - 1) {
+                                    return true;
+                                }
+                                if (leftnumI == moveleftnumI + 1 && rightnumI == moveRightnumI) {
+                                    return true;
+                                }
+                            }
+
+                            if (moveleftnumI % 2 == 0) {
+                                if (leftnumI == moveleftnumI - 1 && rightnumI == moveRightnumI) {
+                                    return true;
+                                }
+                                if (leftnumI == moveleftnumI - 1 && rightnumI == moveRightnumI + 1) {
+                                    return true;
+                                }
+                                if (leftnumI == moveleftnumI && rightnumI == moveRightnumI - 1) {
+                                    return true;
+                                }
+                                if (leftnumI == moveleftnumI && rightnumI == moveRightnumI + 1) {
+                                    return true;
+                                }
+                                if (leftnumI == moveleftnumI + 1 && rightnumI == moveRightnumI) {
+                                    return true;
+                                }
+                                if (leftnumI == moveleftnumI + 1 && rightnumI == moveRightnumI + 1) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                    //If it's the move position is not near the pieces put before
+                    return false;
+                }
+                //Settlers are put on the land but there is no pieces around
+                return false;
+            }
+            //If settlers are put on the ocean, return true
+            else {
+                return true;
+            }
+        }
+
+        if (currentStateStatement.charAt(5) == 'S'){
+            if(moveString.charAt(0) == 'S'){
+
+                //If S is on land, it should be adjacent to the settlers or villages, if it's, return true or return false
+
+                    String currentSettlersNoS = currentSettlers.substring(1);
+                    String[] currentSettlersList = currentSettlersNoS.split(" ");
+                    String currentVillageNoT = currentVillages.substring(1);
+                    String[] currentVillageList = currentVillageNoT.split(" ");
+
+                    //currentSettlersNoS have an empty in the beginning
+                    //Check if move position is adjacent to the settlers
+                    String moveLeftnum = "";
+                    String moveRightnum = "";
+                    //Check if the move position is adjacent to villages
+                    if (currentVillageNoT.length() > 1) {
+                        for (int a = 0; a <= movePosition.length() - 1; a++) {
+                            if (movePosition.charAt(a) == ',') {
+                                moveLeftnum = movePosition.substring(0, a);
+                                moveRightnum = movePosition.substring(a + 1);
+                            }
+                        }
+                        for (int q = 0; q <= currentVillageList.length - 1; q++) {
+                            if (!currentVillageList[q].equals("") && !currentVillageList[q].equals(" ")) {
+                                String leftnum = "";
+                                String rightnum = "";
+                                for (int a = 0; a <= currentVillageList[q].length() - 1; a++) {
+                                    if (currentVillageList[q].charAt(a) == ',') {
+                                        leftnum = currentVillageList[q].substring(0, a);
+                                        rightnum = currentVillageList[q].substring(a + 1);
+                                    }
+                                }
+                                //Check 6 situations of adjacent
+                                int moveleftnumI = Integer.parseInt(moveLeftnum);
+                                int moveRightnumI = Integer.parseInt(moveRightnum);
+                                int leftnumI = Integer.parseInt(leftnum);
+                                int rightnumI = Integer.parseInt(rightnum);
+
+                                if (moveleftnumI % 2 != 0) {
+
+                                    if (leftnumI == moveleftnumI - 1 && rightnumI == moveRightnumI - 1) {
+                                        return true;
+                                    }
+                                    if (leftnumI == moveleftnumI - 1 && rightnumI == moveRightnumI) {
+                                        return true;
+                                    }
+                                    if (leftnumI == moveleftnumI && rightnumI == moveRightnumI - 1) {
+                                        return true;
+                                    }
+                                    if (leftnumI == moveleftnumI && rightnumI == moveRightnumI + 1) {
+                                        return true;
+                                    }
+                                    if (leftnumI == moveleftnumI + 1 && rightnumI == moveRightnumI - 1) {
+                                        return true;
+                                    }
+                                    if (leftnumI == moveleftnumI + 1 && rightnumI == moveRightnumI) {
+                                        return true;
+                                    }
+                                }
+
+                                if (moveleftnumI % 2 == 0) {
+                                    if (leftnumI == moveleftnumI - 1 && rightnumI == moveRightnumI) {
+                                        return true;
+                                    }
+                                    if (leftnumI == moveleftnumI - 1 && rightnumI == moveRightnumI + 1) {
+                                        return true;
+                                    }
+                                    if (leftnumI == moveleftnumI && rightnumI == moveRightnumI - 1) {
+                                        return true;
+                                    }
+                                    if (leftnumI == moveleftnumI && rightnumI == moveRightnumI + 1) {
+                                        return true;
+                                    }
+                                    if (leftnumI == moveleftnumI + 1 && rightnumI == moveRightnumI) {
+                                        return true;
+                                    }
+                                    if (leftnumI == moveleftnumI + 1 && rightnumI == moveRightnumI + 1) {
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (currentSettlersNoS.length() > 1) {
+                        for (int a = 0; a <= movePosition.length() - 1; a++) {
+
+                            if (movePosition.charAt(a) == ',') {
+                                moveLeftnum = movePosition.substring(0, a);
+                                moveRightnum = movePosition.substring(a + 1);
+                            }
+                        }
+                        for (int q = 0; q <= currentSettlersList.length - 1; q++) {
+                            if (!currentSettlersList[q].equals("") && !currentSettlersList[q].equals(" ")) {
+                                String leftnum = "";
+                                String rightnum = "";
+                                for (int a = 0; a <= currentSettlersList[q].length() - 1; a++) {
+                                    if (currentSettlersList[q].charAt(a) == ',') {
+                                        leftnum = currentSettlersList[q].substring(0, a);
+                                        rightnum = currentSettlersList[q].substring(a + 1);
+                                    }
+                                }
+                                //Check 6 situations of adjacent
+                                int moveleftnumI = Integer.parseInt(moveLeftnum);
+                                int moveRightnumI = Integer.parseInt(moveRightnum);
+                                int leftnumI = Integer.parseInt(leftnum);
+                                int rightnumI = Integer.parseInt(rightnum);
+
+                                if (moveleftnumI % 2 != 0) {
+                                    if (leftnumI == moveleftnumI - 1 && rightnumI == moveRightnumI - 1) {
+                                        return true;
+                                    }
+                                    if (leftnumI == moveleftnumI - 1 && rightnumI == moveRightnumI) {
+
+                                        return true;
+                                    }
+                                    if (leftnumI == moveleftnumI && rightnumI == moveRightnumI - 1) {
+                                        return true;
+                                    }
+                                    if (leftnumI == moveleftnumI && rightnumI == moveRightnumI + 1) {
+                                        return true;
+                                    }
+                                    if (leftnumI == moveleftnumI + 1 && rightnumI == moveRightnumI - 1) {
+                                        return true;
+                                    }
+                                    if (leftnumI == moveleftnumI + 1 && rightnumI == moveRightnumI) {
+                                        return true;
+                                    }
+                                }
+
+                                if (moveleftnumI % 2 == 0) {
+                                    if (leftnumI == moveleftnumI - 1 && rightnumI == moveRightnumI) {
+                                        return true;
+                                    }
+                                    if (leftnumI == moveleftnumI - 1 && rightnumI == moveRightnumI + 1) {
+                                        return true;
+                                    }
+                                    if (leftnumI == moveleftnumI && rightnumI == moveRightnumI - 1) {
+                                        return true;
+                                    }
+                                    if (leftnumI == moveleftnumI && rightnumI == moveRightnumI + 1) {
+                                        return true;
+                                    }
+                                    if (leftnumI == moveleftnumI + 1 && rightnumI == moveRightnumI) {
+                                        return true;
+                                    }
+                                    if (leftnumI == moveleftnumI + 1 && rightnumI == moveRightnumI + 1) {
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                        //If it's the move position is not near the pieces put before
+                        return false;
+                    }
+                    //Settlers are put on the land but there is no pieces around
+                    return false;
+
+            }else {
+                //S phase is not allowed to put villages
+                return false;
+            }
+        }
+        return true; // FIXME Task 7
     }
 
     /**
