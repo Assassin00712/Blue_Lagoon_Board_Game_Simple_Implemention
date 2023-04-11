@@ -1,10 +1,13 @@
 package comp1110.ass2;
 
+import gittest.A;
+
 import javax.swing.*;
 import java.sql.SQLOutput;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Random;
 
 public class BlueLagoon {
     // The Game Strings for five maps have been created for you.
@@ -22,8 +25,8 @@ public class BlueLagoon {
      * (represents a state that players could reach in game play),
      * only that the string representation is syntactically well-formed.
      * <p>
-     * A description of the state string will be included in README.md
-     * in an update of the project after D2B is complete.
+     * A description of the state string will included in README.md
+     * in an update of the project after D2B is complebe te.
      *
      * @param stateString a string representing a game state
      * @return true if stateString is well-formed and false otherwise
@@ -177,6 +180,47 @@ public class BlueLagoon {
     }
 
     /**
+     * A helper method to take an element away from an array
+     */
+    public static String[] abandonAt (String[] strings, int index) {
+        String[] outPut = new String[strings.length-1];
+        System.arraycopy(strings, 0, outPut, 0, index);
+        System.arraycopy(strings, index+1, outPut, index, strings.length-index-1);
+
+        return outPut;
+
+    }
+
+    /** A helper method to combine two Arrays
+     * this can help distribute resources.
+     * @param letters a String Array with only letters
+     * @param coords a String Array with only coordinates
+     * @param digits an int Array with the digits where the letters will be inserted in the output
+     */
+    public static String[] combineAt (String[] letters, String[] coords, int[] digits) {
+        String[] outPut = new String[letters.length+ coords.length];
+        outPut[0] = letters[0];
+        // int i represent digit of outPut
+        for (int i = 1; i < outPut.length; i++){
+            // j represents digit of digits
+            int j = 0;
+            // k represents digits of letters
+            int k = 1;
+            // l represents digits of coords
+            int l = 0;
+            while ((j < digits.length) && (k < letters.length) && (l < coords.length)){
+                if (i == digits[j]){
+                    outPut[i] = letters[k];
+                    j++;
+                    k++;
+                } outPut[i] = coords[l];
+                l++;
+            }
+        }
+        return outPut;
+    }
+
+    /**
      * Given a state string which is yet to have resources distributed amongst the stone circles,
      * randomly distribute the resources and statuettes between all the stone circles.
      * <p>
@@ -194,8 +238,50 @@ public class BlueLagoon {
      * @param stateString a string representing a game state without resources distributed
      * @return a string of the game state with resources randomly distributed
      */
+
     public static String distributeResources(String stateString){
-         return ""; // FIXME Task 6
+
+        Random rand = new Random(3);
+        // I want this seed number to change so that the result are more random
+        // Ideally the seed number can be player number??
+
+        String[] randomStones = new String[32];
+        String[] resourcesDistributed = new String[38];
+
+        //Split original statement into a string set (taken from Task7,
+        // originally written by Wangtao Jia)
+        String[] s1 = stateString.split("; ");
+        String[] s2 = new String[s1.length+32];
+        for (int i = 0; i < s1.length; i++){
+            if (s1[i].startsWith("s")){
+                String[] stones = s1[i].split(" ");
+                // this array should be exactly lengthed 33
+                String[] orderedStones;
+                orderedStones = Arrays.copyOfRange(stones, 1, 33);
+                // this array should be exactly lengthed 32
+                //randomly distribute the coordinates of the stones
+                for (int j = 0; j < 32; j++){
+                    int digitTaken = rand.nextInt(0,32-j);
+                    randomStones[j] = orderedStones[digitTaken];
+                    orderedStones = abandonAt(orderedStones,digitTaken);
+                }
+            }if (s1[i].startsWith("r")){
+                int resourcesDigit = i;
+                String[] resources = s1[i].split(" ");
+                // the terms should only have letters since the resources are not distributed yet
+                // { "r", "C","B","W","P","S"}
+                //resourcesDistributed will start with "r"
+                //followed by randomStones
+                // with capital letters represented by each resource in the middle
+                int[] digits = {1,8,15,22,29};
+                resourcesDistributed = combineAt(resources,randomStones,digits);
+
+                System.arraycopy(s1, 0, s2, 0, resourcesDigit);
+                System.arraycopy(resourcesDistributed, 0, s2, resourcesDigit+1, s2.length);
+                }
+            }
+        String distributeStateString = s2.toString();
+         return distributeStateString; // FIXME Task 6
     }
 
     /**
