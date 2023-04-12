@@ -1,10 +1,12 @@
 package comp1110.ass2;
 
+import comp1110.ass2.board.Board;
+
 import javax.swing.*;
 import java.sql.SQLOutput;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+
+import static java.util.Collections.*;
 
 public class BlueLagoon {
     // The Game Strings for five maps have been created for you.
@@ -336,8 +338,6 @@ public class BlueLagoon {
 
         /** Check if the move position is occupied by players **/
         String[] currentSettlerAndVillageSplit = playerStatement.split(" ");
-
-
 
         for (int q = 0; q <= currentSettlerAndVillageSplit.length - 1; q++) {
             for (int a = 0; a<= currentSettlerAndVillageSplit[q].length() - 1;a++){
@@ -724,8 +724,31 @@ public class BlueLagoon {
      * @param stateString a string representing a game state
      * @return a set of strings representing all moves the current player can play
      */
-    public static Set<String> generateAllValidMoves(String stateString){
-         return new HashSet<>(); // FIXME Task 8
+    public static Set<String> generateAllValidMoves(String stateString) {
+        Set<String> validSet = new HashSet<>();
+
+        //Check every block if it's valid and add to the set if it's valid
+        for (int row = 0; row <= Board.BOARD_HEIGHT - 1; row++) {
+            for (int column = 0; column <= Board.BOARD_WIDTH - 1; column++) {
+                //Because the board is 12 13 12 13, to eliminate the 0,13 2,13......
+                if (row % 2 == 0 && column == Board.BOARD_WIDTH - 1){
+                    continue;
+                }else {
+                String coordinate = row + "," + column;
+
+                String settler = "S " + coordinate;
+                if (isMoveValid(stateString, settler)) {
+                    validSet.add(settler);
+                }
+
+                String village = "T " + coordinate;
+                if (isMoveValid(stateString, village)) {
+                    validSet.add(village);
+                }
+            }
+            }
+        }
+        return validSet; // FIXME Task 8
     }
 
     /**
