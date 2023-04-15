@@ -203,22 +203,33 @@ public class BlueLagoon {
      * @param digits an int Array with the digits where the letters will be inserted in the output
      */
     public static String[] combineAt (String[] letters, String[] coords, int[] digits) {
+//        if (letters.length!=digits.length){
+//            return coords;
+//        }
         String[] outPut = new String[letters.length+ coords.length];
         outPut[0] = letters[0];
-        // int i represent digit of outPut
-        for (int i = 1; i < outPut.length; i++){
-            // j represents digit of digits
-            int j = 0;
-            // k represents digits of letters
-            int k = 1;
-            // l represents digits of coords
-            int l = 0;
-            while ((j < digits.length) && (k < letters.length) && (l < coords.length)){
+        // j represents digit of digits
+        int j = 0;
+        // k represents digits of letters, which is same as j as accumulating
+        // thus I only implement j
+        //int k = 0;
+        // l represents digits of coords
+        int l = 0;
+        for (int i = 0; i < outPut.length; i++){
+            while ((j < digits.length) && (l < coords.length)){
                 if (i == digits[j]){
-                    outPut[i] = letters[k];
+                    // j starts from 0
+                    // if the i is the digit where the letter should be placed, which is digit[j]
+                    // k starts from 0
+                    // place the letter[k] at outPut[i]
+                    System.out.println(j);
+                    System.out.println(outPut[i]);
+                    outPut[i] = letters[j];
                     j++;
-                    k++;
-                } outPut[i] = coords[l];
+                } //after a letter is placed in the correct place,
+                //since there are already k letters in place, the digit of outPut switch k onwards
+                outPut[i] = coords[l];
+                //System.out.println(outPut[i]);
                 l++;
             }
         }
@@ -246,17 +257,17 @@ public class BlueLagoon {
 
     public static String distributeResources(String stateString){
 
-        Random rand = new Random(3);
+        Random rand = new Random(100);
         // I want this seed number to change so that the result are more random
         // Ideally the seed number can be player number??
 
         String[] randomStones = new String[32];
-        String[] resourcesDistributed = new String[38];
+        int resourcesDigit = 0;
 
         //Split original statement into a string set (taken from Task7,
         // originally written by Wangtao Jia)
         String[] s1 = stateString.split("; ");
-        String[] s2 = new String[s1.length+32];
+        String[] s2 = new String[s1.length+38];
         for (int i = 0; i < s1.length; i++){
             if (s1[i].startsWith("s")){
                 String[] stones = s1[i].split(" ");
@@ -269,22 +280,33 @@ public class BlueLagoon {
                     int digitTaken = rand.nextInt(0,32-j);
                     randomStones[j] = orderedStones[digitTaken];
                     orderedStones = abandonAt(orderedStones,digitTaken);
-                }
-            }if (s1[i].startsWith("r")){
-                int resourcesDigit = i;
-                String[] resources = s1[i].split(" ");
-                // the terms should only have letters since the resources are not distributed yet
-                // { "r", "C","B","W","P","S"}
-                //resourcesDistributed will start with "r"
-                //followed by randomStones
-                // with capital letters represented by each resource in the middle
-                int[] digits = {1,8,15,22,29};
-                resourcesDistributed = combineAt(resources,randomStones,digits);
-
-                System.arraycopy(s1, 0, s2, 0, resourcesDigit);
-                System.arraycopy(resourcesDistributed, 0, s2, resourcesDigit+1, s2.length);
+                    //System.out.println(Arrays.toString(orderedStones));
+                    //System.out.println(Arrays.toString(randomStones));
                 }
             }
+            if (s1[i].startsWith("r")){resourcesDigit =i;}
+            }
+        String[] resources = {"r","C","B","W","P","S"};
+
+        // the terms should only have letters since the resources are not distributed yet
+        // { "r", "C","B","W","P","S"}
+        //resourcesDistributed will start with "r"
+        //followed by randomStones
+        // with capital letters represented by each resource in the middle
+        int[] digits = {0,1,8,15,22,29};
+        String[] resourcesDistributed = combineAt(resources,randomStones,digits);
+        System.out.println(Arrays.toString(resourcesDistributed));
+                /*
+                arraycopy(Object src, int srcPos, Object dest, int destPos, int length)
+                 */
+        //System.out.println(Arrays.toString(s1));
+        //System.out.println(Arrays.toString(resourcesDistributed));
+        System.arraycopy(s1, 0, s2, 0, resourcesDigit);
+        System.out.println(Arrays.toString(s2));
+        System.arraycopy(resourcesDistributed, 0, s2, resourcesDigit, 38);
+        System.out.println(Arrays.toString(s2));
+        System.arraycopy(s1, resourcesDigit+6, s2, resourcesDigit+32, s1.length-resourcesDigit);
+        System.out.println(Arrays.toString(s2));
         String distributeStateString = s2.toString();
          return distributeStateString; // FIXME Task 6
     }
