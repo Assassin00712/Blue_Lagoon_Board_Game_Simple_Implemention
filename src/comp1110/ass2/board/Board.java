@@ -3,8 +3,7 @@ package comp1110.ass2.board;
 import static comp1110.ass2.board.Coordinate.corFromString;
 
 public class Board {
-
-    public static int BOARD_HEIGHT = 13;
+    public final static int BOARD_HEIGHT = 13;
 
     static Spot[][] board = new Spot[BOARD_HEIGHT][BOARD_HEIGHT];
 
@@ -45,4 +44,9 @@ public class Board {
     }
 
 
-}
+    private Board() {}
+        private void initializeResources () {
+        }
+
+    }
+

@@ -1,9 +1,14 @@
 package comp1110.ass2;
 
+import comp1110.ass2.board.Board;
+
 import gittest.A;
 
 import javax.swing.*;
 import java.sql.SQLOutput;
+import java.util.*;
+
+import static java.util.Collections.*;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,8 +30,8 @@ public class BlueLagoon {
      * (represents a state that players could reach in game play),
      * only that the string representation is syntactically well-formed.
      * <p>
-     * A description of the state string will included in README.md
-     * in an update of the project after D2B is complebe te.
+     * A description of the state string will be included in README.md
+     * in an update of the project after D2B is complete.
      *
      * @param stateString a string representing a game state
      * @return true if stateString is well-formed and false otherwise
@@ -198,40 +203,35 @@ public class BlueLagoon {
      * @param digits an int Array with the digits where the letters will be inserted in the output
      */
     public static String[] combineAt (String[] letters, String[] coords, int[] digits) {
-//        if (letters.length!=digits.length){
-//            return coords;
-//        }
         String[] outPut = new String[letters.length+ coords.length];
-        outPut[0] = letters[0];
+        //outPut[0] = letters[0];
         // j represents digit of digits
         int j = 0;
-        // k represents digits of letters, which is same as j as accumulating
+        // k represents digit of letters, which is same as j as accumulating
         // thus I only implement j
         //int k = 0;
-        // l represents digits of coords
+        // l represents digit of coords
         int l = 0;
-        for (int i = 0; i < outPut.length; i++){
-            while ((j < digits.length) && (l < coords.length)){
-                System.out.println("i: "+i);
-                System.out.println("j: "+j);
-                System.out.println("l: "+l);
-                System.out.println(Arrays.toString(outPut));
+        int i = 0;
+            while (i < outPut.length){
+                //System.out.println("i is "+i);
                 if (i == digits[j]){
-                    // j starts from 0
                     // if the i is the digit where the letter should be placed, which is digit[j]
-                    // k starts from 0
-                    // place the letter[k] at outPut[i]
-                    //System.out.println(j);
-                    //System.out.println(outPut[i]);
+                    // place the letter[j] at outPut[i]
+                    //System.out.println("j is "+j);
                     outPut[i] = letters[j];
-                    j++;
-                } else { //after a letter is placed in the correct place,
+                   // System.out.println(outPut[i]);
+                    if (j < digits.length-1){j++;}
+                    i++;
+                }else{outPut[i] = coords[l];
+                //after a letter is placed in the correct place,
                 //since there are already k letters in place, the digit of outPut switch k onwards
-                outPut[i] = coords[l];
                 //System.out.println(outPut[i]);
-                l++;}
+                    //System.out.println("l is "+l);
+                    //System.out.println(outPut[i]);
+                    if (l < digits.length-1){l++;}
+                i++;}
             }
-        }
         return outPut;
     }
 
@@ -1030,12 +1030,7 @@ public class BlueLagoon {
 
     public static void main(String[] args) {
         String stateString = "a 13 2;c 0 E; i 6 0,0 0,1 0,2 0,3 1,0 1,1 1,2 1,3 1,4 2,0 2,1; i 6 0,5 0,6 0,7 1,6 1,7 1,8 2,6 2,7 2,8 3,7 3,8; i 6 7,12 8,11 9,11 9,12 10,10 10,11 11,10 11,11 11,12 12,10 12,11; i 8 0,9 0,10 0,11 1,10 1,11 1,12 2,10 2,11 3,10 3,11 3,12 4,10 4,11 5,11 5,12; i 8 4,0 5,0 5,1 6,0 6,1 7,0 7,1 7,2 8,0 8,1 8,2 9,0 9,1 9,2; i 8 10,3 10,4 11,0 11,1 11,2 11,3 11,4 11,5 12,0 12,1 12,2 12,3 12,4 12,5; i 10 3,3 3,4 3,5 4,2 4,3 4,4 4,5 5,3 5,4 5,5 5,6 6,3 6,4 6,5 6,6 7,4 7,5 7,6 8,4 8,5; i 10 5,8 5,9 6,8 6,9 7,8 7,9 7,10 8,7 8,8 8,9 9,7 9,8 9,9 10,6 10,7 10,8 11,7 11,8 12,7 12,8; s 0,0 0,5 0,9 1,4 1,8 1,12 2,1 3,5 3,7 3,10 3,12 4,0 4,2 5,9 5,11 6,3 6,6 7,0 7,8 7,12 8,2 8,5 9,0 9,9 10,3 10,6 10,10 11,0 11,5 12,2 12,8 12,11; r C 1,1 B 1,2 W P 1,4 S; p 0 0 0 0 0 0 0 S T; p 1 0 0 0 0 0 0 S T;";
-        //System.out.println(isStateStringWellFormed(stateString));
-
-        String[] letters = new String[]{"A","B","C"};
-        String[] coords = new String[]{"1,1","2,2","3,3","4,4"};
-        int[] digits = new int[]{0,2,4};
-        System.out.println(Arrays.toString(combineAt(letters, coords, digits)));
+        System.out.println(isStateStringWellFormed(stateString));
     }
 
 }

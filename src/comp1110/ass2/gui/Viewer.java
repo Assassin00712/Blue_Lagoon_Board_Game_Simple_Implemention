@@ -27,7 +27,7 @@ public class Viewer extends Application {
      * on the screen.
      * <p>
      * This may prove useful for debugging complex states.
-     *
+     * referred to makeBoard in Game.java in Assignment1
      * @param stateString a string representing a game state
      */
     void displayState(String stateString) {
