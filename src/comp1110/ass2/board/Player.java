@@ -66,10 +66,9 @@ public class Player {
         this.villages = villages;
     }
 
-    public void playerFromString(String[] gameStates){
-        for (int i = 0; i < gameStates.length; i++) {
-            if (gameStates[i].startsWith("p")){
-                String[] players = gameStates[i].split(" ");
+    public void playerFromString(String playerStates){
+
+                String[] players = playerStates.split(" ");
                 setPlayId(Integer.parseInt(players[1]));
                 setScore(Integer.parseInt(players[2]));
                 int[] resources = new int[5];
@@ -100,8 +99,8 @@ public class Player {
                 }
 
             }
-        }
-    }
 
 
-}
+
+
+
