@@ -2,6 +2,8 @@ package comp1110.ass2.board;
 
 import comp1110.ass2.board.Coordinate;
 
+import static comp1110.ass2.board.Coordinate.corFromString;
+
 public class Player {
 
     int playId;
@@ -76,8 +78,14 @@ public class Player {
                 resources[3] = Integer.parseInt(players[6]);
                 resources[4] = Integer.parseInt(players[7]);
                 setResources(resources);
-
-
+                for (int j = 0; j < players.length; j++){
+                    if (players[j].startsWith("S")){
+                        String[] settlers = players[j].split(" ");
+                        for (int k = 0; k < settlers.length; k++){
+                            //setSettlers(corFromString(settlers[k]));
+                        }
+                    }
+                }
 
             }
         }

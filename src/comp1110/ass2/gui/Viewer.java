@@ -26,10 +26,34 @@ public class Viewer extends Application {
      * on the screen.
      * <p>
      * This may prove useful for debugging complex states.
-     *
+     * referred to makeBoard in Game.java in Assignment1
      * @param stateString a string representing a game state
      */
     void displayState(String stateString) {
+        /* We need the initial state of the board to find out what sides of the
+           apple are being used. */
+
+        /* This loop will iterate over the first five characters in the state
+           string - the ones corresponding to the sides of the apple. */
+
+         /* These two lines of code load images from a provided path - very
+               useful if you're making your own GUI! */
+
+
+         /* These two lines set the location of the image in Cartesian
+               coordinates - except y moves from top to bottom, not bottom to
+               top. */
+
+
+
+         /* Add the apple segment to our board Group, and by extension, our
+               root Group. */
+
+        // Increment y and x (indirectly) so that the apple segments sit neatly
+
+
+
+
         // FIXME Task 5
     }
 

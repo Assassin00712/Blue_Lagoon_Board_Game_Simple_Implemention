@@ -203,36 +203,35 @@ public class BlueLagoon {
      * @param digits an int Array with the digits where the letters will be inserted in the output
      */
     public static String[] combineAt (String[] letters, String[] coords, int[] digits) {
-//        if (letters.length!=digits.length){
-//            return coords;
-//        }
         String[] outPut = new String[letters.length+ coords.length];
-        outPut[0] = letters[0];
+        //outPut[0] = letters[0];
         // j represents digit of digits
         int j = 0;
-        // k represents digits of letters, which is same as j as accumulating
+        // k represents digit of letters, which is same as j as accumulating
         // thus I only implement j
         //int k = 0;
-        // l represents digits of coords
+        // l represents digit of coords
         int l = 0;
-        for (int i = 0; i < outPut.length; i++){
-            while ((j < digits.length) && (l < coords.length)){
+        int i = 0;
+            while (i < outPut.length){
+                //System.out.println("i is "+i);
                 if (i == digits[j]){
-                    // j starts from 0
                     // if the i is the digit where the letter should be placed, which is digit[j]
-                    // k starts from 0
-                    // place the letter[k] at outPut[i]
-                    System.out.println(j);
-                    System.out.println(outPut[i]);
+                    // place the letter[j] at outPut[i]
+                    //System.out.println("j is "+j);
                     outPut[i] = letters[j];
-                    j++;
-                } //after a letter is placed in the correct place,
+                   // System.out.println(outPut[i]);
+                    if (j < digits.length-1){j++;}
+                    i++;
+                }else{outPut[i] = coords[l];
+                //after a letter is placed in the correct place,
                 //since there are already k letters in place, the digit of outPut switch k onwards
-                outPut[i] = coords[l];
                 //System.out.println(outPut[i]);
-                l++;
+                    //System.out.println("l is "+l);
+                    //System.out.println(outPut[i]);
+                    if (l < digits.length-1){l++;}
+                i++;}
             }
-        }
         return outPut;
     }
 
@@ -295,12 +294,11 @@ public class BlueLagoon {
         // with capital letters represented by each resource in the middle
         int[] digits = {0,1,8,15,22,29};
         String[] resourcesDistributed = combineAt(resources,randomStones,digits);
-        System.out.println(Arrays.toString(resourcesDistributed));
                 /*
                 arraycopy(Object src, int srcPos, Object dest, int destPos, int length)
                  */
         //System.out.println(Arrays.toString(s1));
-        //System.out.println(Arrays.toString(resourcesDistributed));
+        System.out.println(Arrays.toString(resourcesDistributed));
         System.arraycopy(s1, 0, s2, 0, resourcesDigit);
         System.out.println(Arrays.toString(s2));
         System.arraycopy(resourcesDistributed, 0, s2, resourcesDigit, 38);
