@@ -7,11 +7,16 @@ public class Coordinate {
     // I changed Position into Coordinate since the format given in state strings are not a typical position format
     int row;
     int col;
+    String[] cord;
 
 
     public Coordinate(int row,int col) {
         this.row = row;
         this.col = col;
+    }
+
+    public Coordinate(String cord){
+        this.cord = cord.split(",");
     }
 
     public int getRow() {
@@ -24,6 +29,14 @@ public class Coordinate {
 
     public int getCol() {
         return col;
+    }
+
+    public int stringToX(){
+        return Integer.parseInt(cord[0]);
+    }
+
+    public int stringToY(){
+        return Integer.parseInt(cord[1]);
     }
 
     public void setCol(int col) {
@@ -44,7 +57,7 @@ public class Coordinate {
         return (bound >= cor.getRow()) && (bound >= cor.getCol());
     }
 
-    /**
+    /** not fixed yet
      * test if two Coordinates are linked
      * @param cor1 the coordinate a play attempted to occupy
      * @param cor2 the coordinate to compare, taken from the occupied coordinates of the player
@@ -59,7 +72,8 @@ public class Coordinate {
             return ((col1 == col2 + 1) || (col1 == col2 - 1));
         }else if ((row1 == row2 - 1) || (row1 == row2 + 1)){
             return (col1 == col2);
-        }
+        }else if ((col1 == col2 - 1) || (col1 == col2 + 1)){
+            return (row1 == row2);}
         return false;
     }
 

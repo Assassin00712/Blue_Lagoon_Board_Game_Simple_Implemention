@@ -14,7 +14,10 @@ public class Spot {
     Boolean isStone;
     Resources resources;
     int occupier;
-    //1 if the spot is occupied by player1 and so on
+    //1101 if the spot is occupied by first settler of player 1
+    //2101 if the spot is occupied by first settler of player 2
+    //1101 if the spot is occupied by first village of player 1
+    //2101 if the spot is occupied by first village of player 2
     //0 if not occupied
     // must not be greater than number of players
 
@@ -72,6 +75,7 @@ public class Spot {
         this.occupier = occupier;
     }
 
+
     public static String[] splitStatement (String s){
         String[] gameStates = s.split("; ");
         return gameStates;
@@ -81,6 +85,8 @@ public class Spot {
         String[] coordinates = s.split(" ");
         return coordinates;
     }
+
+
 
 
 
