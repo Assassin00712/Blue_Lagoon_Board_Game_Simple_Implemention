@@ -52,16 +52,18 @@ public class Viewer extends Application {
                useful if you're making your own GUI! */
         Image appleImage = new Image(Game.class.getResource(path).toString());
         ImageView apple = new ImageView(appleImage);
+        Image stoneImage = new Image("assets/stone/stone.png");
+        ImageView stone = new ImageView(stoneImage);
 
             /* These two lines set the location of the image in Cartesian
                coordinates - except y moves from top to bottom, not bottom to
                top. */
-        apple.setLayoutX(200);
-        apple.setLayoutY(50);
+        stone.setLayoutX(200);
+        stone.setLayoutY(50);
 
             /* Add the apple segment to our board Group, and by extension, our
                root Group. */
-        root.getChildren().add(apple);
+        root.getChildren().add(stone);
 
         // FIXME Task 5
     }
