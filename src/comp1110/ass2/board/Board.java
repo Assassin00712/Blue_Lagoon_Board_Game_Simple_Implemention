@@ -5,8 +5,6 @@ import static comp1110.ass2.board.Coordinate.corFromString;
 public class Board {
     public final static int BOARD_HEIGHT = 13;
 
-    public static int BOARD_HEIGHT = 13;
-
     static Spot[][] board = new Spot[BOARD_HEIGHT][BOARD_HEIGHT];
 
     // initialize a board by creating an array/list of spots with every coordinates within bound
