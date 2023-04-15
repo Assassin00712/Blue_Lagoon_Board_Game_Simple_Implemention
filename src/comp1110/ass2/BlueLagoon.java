@@ -189,8 +189,13 @@ public class BlueLagoon {
      */
     public static String[] abandonAt (String[] strings, int index) {
         String[] outPut = new String[strings.length-1];
+        if (index == 0){
+            System.arraycopy(strings, 1, outPut, 0, strings.length-1);
+        }else if (index == strings.length-1){
+            System.arraycopy(strings, 0, outPut, 0, index);
+        }
         System.arraycopy(strings, 0, outPut, 0, index);
-        System.arraycopy(strings, index+1, outPut, index, strings.length-index-1);
+        System.arraycopy(strings, index+1, outPut, index,strings.length-index-1);
 
         return outPut;
 
@@ -229,7 +234,7 @@ public class BlueLagoon {
                 //System.out.println(outPut[i]);
                     //System.out.println("l is "+l);
                     //System.out.println(outPut[i]);
-                    if (l < digits.length-1){l++;}
+                    if (l < coords.length-1){l++;}
                 i++;}
             }
         return outPut;
@@ -255,58 +260,36 @@ public class BlueLagoon {
      */
 
     public static String distributeResources(String stateString){
-
-        Random rand = new Random(100);
-        // I want this seed number to change so that the result are more random
-        // Ideally the seed number can be player number??
-
+        Random rand = new Random();
         String[] randomStones = new String[32];
-        int resourcesDigit = 0;
-
-        //Split original statement into a string set (taken from Task7,
-        // originally written by Wangtao Jia)
         String[] s1 = stateString.split("; ");
-        String[] s2 = new String[s1.length+38];
+        String[] s2 = new String[s1.length];
         for (int i = 0; i < s1.length; i++){
             if (s1[i].startsWith("s")){
                 String[] stones = s1[i].split(" ");
-                // this array should be exactly lengthed 33
                 String[] orderedStones;
-                orderedStones = Arrays.copyOfRange(stones, 1, 33);
-                // this array should be exactly lengthed 32
-                //randomly distribute the coordinates of the stones
+                orderedStones = Arrays.copyOfRange(stones, 1,(stones.length));
+                int digitTaken;
                 for (int j = 0; j < 32; j++){
-                    int digitTaken = rand.nextInt(0,32-j);
+                    if (j < 30){digitTaken = rand.nextInt(0,32-j);
                     randomStones[j] = orderedStones[digitTaken];
-                    orderedStones = abandonAt(orderedStones,digitTaken);
-                    //System.out.println(Arrays.toString(orderedStones));
-                    //System.out.println(Arrays.toString(randomStones));
+                    orderedStones = abandonAt(orderedStones,digitTaken);}
+                    else {randomStones[j] = orderedStones[0];
+                        orderedStones = abandonAt(orderedStones,0);}
                 }
             }
-            if (s1[i].startsWith("r")){resourcesDigit =i;}
             }
         String[] resources = {"r","C","B","W","P","S"};
-
-        // the terms should only have letters since the resources are not distributed yet
-        // { "r", "C","B","W","P","S"}
-        //resourcesDistributed will start with "r"
-        //followed by randomStones
-        // with capital letters represented by each resource in the middle
         int[] digits = {0,1,8,15,22,29};
         String[] resourcesDistributed = combineAt(resources,randomStones,digits);
-                /*
-                arraycopy(Object src, int srcPos, Object dest, int destPos, int length)
-                 */
-        //System.out.println(Arrays.toString(s1));
-        System.out.println(Arrays.toString(resourcesDistributed));
-        System.arraycopy(s1, 0, s2, 0, resourcesDigit);
-        System.out.println(Arrays.toString(s2));
-        System.arraycopy(resourcesDistributed, 0, s2, resourcesDigit, 38);
-        System.out.println(Arrays.toString(s2));
-        System.arraycopy(s1, resourcesDigit+6, s2, resourcesDigit+32, s1.length-resourcesDigit);
-        System.out.println(Arrays.toString(s2));
-        String distributeStateString = s2.toString();
-         return distributeStateString; // FIXME Task 6
+        String resourcesFinal = "";
+
+
+        for (int l = 0; l < resourcesDistributed.length; l++){
+            resourcesFinal = String.join(" ",resourcesFinal,resourcesDistributed[l]);
+        }
+        //System.out.println(resourcesFinal);
+         return resourcesFinal.substring(1); // FIXME Task 6
     }
 
     /**
