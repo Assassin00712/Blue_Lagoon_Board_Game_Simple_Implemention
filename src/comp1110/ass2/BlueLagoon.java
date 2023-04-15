@@ -76,6 +76,12 @@ public class BlueLagoon {
         return s1[getIslandLength(stateString) + 3];
     }
 
+    //Return Player Statement
+    public static String getPlayerStatement(String stateString){
+        String[] s1 = stateString.split(";");
+        return s1[getIslandLength(stateString) + 4] + ";" + s1[getIslandLength(stateString) + 5];
+    }
+
 
 
 
