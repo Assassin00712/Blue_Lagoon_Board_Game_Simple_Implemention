@@ -1,5 +1,7 @@
 package comp1110.ass2.gui;
 
+import comp1110.ass2.BlueLagoon;
+import comp1110.ass2.board.Coordinate;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -60,11 +62,12 @@ public class Viewer extends Application {
     // The coordinate is from range (0,0) to (12,11)
     public Hexagon cordToHexagon (int x, int y){
         for (Hexagon hexagon: hexagons){
-            if ((hexagon.getLayoutX() == cordToXY(x,y)[0]) && (hexagon.getLayoutY() == cordToXY(x,y)[1])){
+            if ((Math.abs(hexagon.getLayoutX() - cordToXY(x,y)[0]) < 0.5)
+                && (Math.abs(hexagon.getLayoutY() - cordToXY(x,y)[1]) < 0.5)){
                 return hexagon;
             }
         }
-        return null;
+        return hexagons.get(0);
     }
 
 
@@ -127,6 +130,25 @@ public class Viewer extends Application {
                root Group. */
         root.getChildren().add(stone);
 
+
+        // Set Hexagon color to green if it's an island
+        for (Object cord: BlueLagoon.getAllIslandStatementList(stateString)){
+            cordToHexagon(new Coordinate((String) cord).stringToX(), new Coordinate((String) cord).stringToY())
+                    .setFill(Color.GREEN);
+        }
+
+        // Set Hexagon color to black if it's a stone
+        for (Object cord: BlueLagoon.getAllStoneList(stateString)){
+            cordToHexagon(new Coordinate((String) cord).stringToX(), new Coordinate((String) cord).stringToY())
+                    .setFill(Color.BLACK);
+        }
+
+        // Set Hexagon color to black if it's a stone
+        for (Object cord: BlueLagoon.getAllStoneList(stateString)){
+            cordToHexagon(new Coordinate((String) cord).stringToX(), new Coordinate((String) cord).stringToY())
+                    .setFill(Color.BLACK);
+        }
+
         // FIXME Task 5
     }
 
@@ -163,8 +185,6 @@ public class Viewer extends Application {
 
 
         double distX = 25; // the side length of the hexagon
-
-
         // Draw 13 rows of hexagons
         for (int row = 0; row < 13; row++){
             // Draw 12(or 13) columns of hexagons
