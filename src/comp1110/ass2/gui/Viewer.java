@@ -69,7 +69,7 @@ public class Viewer extends Application {
 
 
     // Given the coordinate, will return the absolute position on the viewer stage.
-    // Can be used for drawing graphics
+    // Can be used for drawing shapes or placing images.
     public double[] cordToXY (int x, int y){
         double outX = 0;
         double outY = 0;
@@ -118,8 +118,10 @@ public class Viewer extends Application {
             /* These two lines set the location of the image in Cartesian
                coordinates - except y moves from top to bottom, not bottom to
                top. */
-        stone.setLayoutX(200);
-        stone.setLayoutY(50);
+        stone.setFitWidth(36);
+        stone.setFitHeight(36);
+        stone.setLayoutX(cordToXY(0,2)[0]-18);
+        stone.setLayoutY(cordToXY(0,2)[1]-18);
 
             /* Add the apple segment to our board Group, and by extension, our
                root Group. */
