@@ -19,6 +19,7 @@ public class Viewer extends Application {
     private final Group root = new Group();
     private final Group controls = new Group();
     private TextField stateTextField;
+    private Label stateLabel = new Label();
 
 
     /**
@@ -30,6 +31,8 @@ public class Viewer extends Application {
      * @param stateString a string representing a game state
      */
     void displayState(String stateString) {
+        stateLabel.setText(stateString);
+        root.getChildren().add(stateLabel);
         // FIXME Task 5
     }
 
