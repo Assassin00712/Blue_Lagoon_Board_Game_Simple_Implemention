@@ -119,7 +119,7 @@ public class BlueLagoon {
     }
 
     //Return all resource names and relative coordinates as a list to solve task 5
-    public static List getAllResourcesList(String stateString){
+    public static List<String> getAllResourcesList(String stateString){
         List<String> AllResourcesList = new ArrayList<>();
         String ResourcesList = getUnclaimedResourcesandStatuettesStatement(stateString);
         String[] CoordinatesList = ResourcesList.split(" ");
@@ -131,24 +131,130 @@ public class BlueLagoon {
         }
         return AllResourcesList;
     }
+    //Return Coconut coordinates
+    public static List<String> getCoconutList(String stateString){
+        List<String> AllResourcesList = getAllResourcesList(stateString);
+        int BPosition = 0;
 
+        for (int i = 0;i<= AllResourcesList.size() - 1;i++){
+            if (AllResourcesList.get(i).equals("B")){
+                BPosition = i;
+            }
+        }
+        return AllResourcesList.subList(0,BPosition);
+    }
+
+    //Return Bamboo coordinates
+    public static List<String> getBamboo(String stateString){
+        List<String> AllResourcesList = getAllResourcesList(stateString);
+        int WPosition = 0;
+        int BPosition = 0;
+
+        for (int i = 0;i<= AllResourcesList.size() - 1;i++){
+            if (AllResourcesList.get(i).equals("B")){
+                BPosition = i;
+            }
+        }
+
+        for (int i = 0;i<= AllResourcesList.size() - 1;i++){
+            if (AllResourcesList.get(i).equals("W")){
+                WPosition = i;
+            }
+        }
+        return AllResourcesList.subList(BPosition,WPosition);
+    }
+
+    //Return Water coordinates
+    public static List<String> getWater(String stateString){
+        List<String> AllResourcesList = getAllResourcesList(stateString);
+        int WPosition = 0;
+        int PPosition = 0;
+
+        for (int i = 0;i<= AllResourcesList.size() - 1;i++){
+            if (AllResourcesList.get(i).equals("W")){
+                WPosition = i;
+            }
+        }
+
+        for (int i = 0;i<= AllResourcesList.size() - 1;i++){
+            if (AllResourcesList.get(i).equals("P")){
+                PPosition = i;
+            }
+        }
+        return AllResourcesList.subList(WPosition,PPosition);
+    }
+
+    //Return Precious stone coordinates
+    public static List<String> getPreciousStone(String stateString){
+        List<String> AllResourcesList = getAllResourcesList(stateString);
+        int PPosition = 0;
+        int SPosition = 0;
+
+        for (int i = 0;i<= AllResourcesList.size() - 1;i++){
+            if (AllResourcesList.get(i).equals("P")){
+                PPosition = i;
+            }
+        }
+
+        for (int i = 0;i<= AllResourcesList.size() - 1;i++){
+            if (AllResourcesList.get(i).equals("S")){
+                SPosition = i;
+            }
+        }
+        return AllResourcesList.subList(PPosition,SPosition);
+    }
+
+    //Return Statuette coordinates
+    public static List<String> getStatuette(String stateString){
+        List<String> AllResourcesList = getAllResourcesList(stateString);
+        int SPosition = 0;
+
+        for (int i = 0;i<= AllResourcesList.size() - 1;i++){
+            if (AllResourcesList.get(i).equals("S")){
+                SPosition = i;
+            }
+        }
+        return AllResourcesList.subList(SPosition, AllResourcesList.size());
+    }
 
     //Return all players' settlers and villages coordinates as a list to solve task 5
-    public static List getPlayers(String stateString){
+    public static List getAllPlayers(String stateString){
         List<String> AllPlayers = new ArrayList<>();
         String PlayersList = getPlayerStatement(stateString);
-        String[] CoordinatesList = PlayersList.split(" ");
-        System.out.println(PlayersList);
+        String[] CoordinatesList = PlayersList.split(";");
+
+        for(String containers: CoordinatesList) {
+            System.out.println(containers);
+        }
 
         int pnum = 0;
+        String a;
         for (int i =0;i<=CoordinatesList.length - 1;i++) {
-            if (CoordinatesList[i].equals("p")){
-                pnum = pnum + 1;
-                CoordinatesList[i] = "p" + Integer.toString(pnum);
-                AllPlayers.add(CoordinatesList[i]);
+            String[] playerSplit = CoordinatesList[i].split(" ");
+            boolean isPosition = false;
+            int SPosition = 100000;
+            for (int j = 0;j<=playerSplit.length - 1;j++){
+                if (playerSplit[j].equals("p")){
+                    pnum = pnum + 1;
+                    a = "p" + pnum;
+                    AllPlayers.add(a);
+                }
+                if (playerSplit[j].equals("S")){
+                    SPosition = j;
+                    AllPlayers.add(playerSplit[j]);
+                }
+                if (playerSplit[j].equals("T")){
+                    AllPlayers.add(playerSplit[j]);
+                }
+                for (int m = 0;m <= playerSplit[j].length() - 1;m++){
+                    if (playerSplit[j].charAt(m) == ','){
+                        isPosition = true;
+                    }
+                }
+                if (playerSplit[j].length() > 1 && j >= SPosition && isPosition){
+                    AllPlayers.add(playerSplit[j]);
+                }
             }
-
-
         }
         return AllPlayers;
         }
@@ -157,7 +263,13 @@ public class BlueLagoon {
     //Return Player Statement
     public static String getPlayerStatement(String stateString){
         String[] s1 = stateString.split(";");
-        return s1[getIslandLength(stateString) + 4] + ";" + s1[getIslandLength(stateString) + 5];
+        String[] s2 = Arrays.copyOfRange(s1,getIslandLength(stateString) + 4,s1.length);
+
+        String a = "";
+        for (String containers:s2){
+            a = a + containers + ";";
+        }
+        return a;
     }
 
 
