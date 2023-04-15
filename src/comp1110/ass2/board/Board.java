@@ -23,6 +23,12 @@ public class Board {
             row++;
         }
     }
+
+    public Spot spotFromCor(Coordinate cor) {
+        Spot spot = board[cor.getRow()][cor.getCol()];
+        return spot;
+    }
+
     public void spotsFromString(String[] gameStates){
         for (int i = 0; i< gameStates.length; i++){
             String[] coordinates = gameStates[i].split(" ");
@@ -35,8 +41,7 @@ public class Board {
                     Coordinate c = corFromString(coordinates[j]);
                     board[c.getRow()][c.getCol()].setStone(true);
                 }if (coordinates[0].equals("r")){
-                    Coordinate c = corFromString(coordinates[j]);
-                    board[c.getRow()][c.getCol()].setIsland(true);
+                    String[] coordinates = gameStates[i].split(";");
                 }
             }
         }

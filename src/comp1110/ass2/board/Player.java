@@ -3,6 +3,7 @@ package comp1110.ass2.board;
 import comp1110.ass2.board.Coordinate;
 
 import static comp1110.ass2.board.Coordinate.corFromString;
+import comp1110.ass2.board.Spot;
 
 public class Player {
 
@@ -71,7 +72,7 @@ public class Player {
                 String[] players = gameStates[i].split(" ");
                 setPlayId(Integer.parseInt(players[1]));
                 setScore(Integer.parseInt(players[2]));
-                    int[] resources = new int[5];
+                int[] resources = new int[5];
                 resources[0] = Integer.parseInt(players[3]);
                 resources[1] = Integer.parseInt(players[4]);
                 resources[2] = Integer.parseInt(players[5]);
@@ -81,9 +82,20 @@ public class Player {
                 for (int j = 0; j < players.length; j++){
                     if (players[j].startsWith("S")){
                         String[] settlers = players[j].split(" ");
-                        for (int k = 0; k < settlers.length; k++){
-                            //setSettlers(corFromString(settlers[k]));
+                        Coordinate[] cors = new Coordinate[settlers.length];
+                        for (int k = 0; k < settlers.length; k++) {
+                            cors[k] = corFromString(settlers[k]);
                         }
+                        setSettlers(cors);
+                        }
+                    if (players[j].startsWith("T")){
+                        String[] villages = players[j].split(" ");
+                        Coordinate[] cors = new Coordinate[villages.length];
+                        for (int k = 0; k < villages.length; k++) {
+                            cors[k] = corFromString(villages[k]);
+                        }
+                        setVillages(cors);
+                    }
                     }
                 }
 
