@@ -218,7 +218,7 @@ public class BlueLagoon {
     }
 
     //Return all players' settlers and villages coordinates as a list to solve task 5
-    public static List getAllPlayers(String stateString){
+    public static List<String> getAllPlayers(String stateString){
         List<String> AllPlayers = new ArrayList<>();
         String PlayersList = getPlayerStatement(stateString);
         String[] CoordinatesList = PlayersList.split(";");
