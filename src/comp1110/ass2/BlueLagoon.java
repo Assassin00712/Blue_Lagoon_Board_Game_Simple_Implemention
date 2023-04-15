@@ -1,11 +1,9 @@
 package comp1110.ass2;
 
 import comp1110.ass2.board.Board;
+import gittest.C;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Random;
+import java.util.*;
 
 public class BlueLagoon {
     // The Game Strings for five maps have been created for you.
@@ -50,6 +48,28 @@ public class BlueLagoon {
         return islandStatement;
     }
 
+    //Return all island coordinates as a list to solve task 5
+        public static List getAllIslandStatementList(String stateString){
+        List<String> AllIslandStatementList = new ArrayList<>();
+        String IslandStatement = getIslandStatement(stateString);
+        String[] CoordinatesList = IslandStatement.split(" ");
+        boolean isPosition = false;
+        for (int i =0;i<=CoordinatesList.length - 1;i++){
+            if (CoordinatesList[i].length() > 1){
+                for (int j = 0;j<= CoordinatesList[i].length() - 1;j++){
+                    if (CoordinatesList[i].charAt(j) == ','){
+                        isPosition = true;
+                    }
+                }
+            if (isPosition){
+                AllIslandStatementList.add(CoordinatesList[i]);
+            }
+        }
+            isPosition = false;
+        }
+        return AllIslandStatementList;
+    }
+
     //Return how many lands there are
     public static int getIslandLength(String stateString){
         String[] s1 = stateString.split(";");
@@ -70,10 +90,54 @@ public class BlueLagoon {
         return s1[getIslandLength(stateString) + 2];
     }
 
+    //Return all stone coordinates as a list to solve task 5
+    public static List getAllStoneList(String stateString){
+        List<String> AllstoneList = new ArrayList<>();
+        String StoneStatement = getStoneStatement(stateString);
+        String[] CoordinatesList = StoneStatement.split(" ");
+        boolean isPosition = false;
+        for (int i =0;i<=CoordinatesList.length - 1;i++){
+            if (CoordinatesList[i].length() > 1){
+                for (int j = 0;j<= CoordinatesList[i].length() - 1;j++){
+                    if (CoordinatesList[i].charAt(j) == ','){
+                        isPosition = true;
+                    }
+                }
+                if (isPosition){
+                    AllstoneList.add(CoordinatesList[i]);
+                }
+            }
+            isPosition = false;
+        }
+        return AllstoneList;
+    }
+
     //Return Stones Statement
     public static String getUnclaimedResourcesandStatuettesStatement(String stateString){
         String[] s1 = stateString.split(";");
         return s1[getIslandLength(stateString) + 3];
+    }
+
+    //Return all stone coordinates as a list to solve task 5
+    public static List getAllResourcesList(String stateString){
+        List<String> AllResourcesList = new ArrayList<>();
+        String ResourcesList = getUnclaimedResourcesandStatuettesStatement(stateString);
+        String[] CoordinatesList = ResourcesList.split(" ");
+        boolean isPosition = false;
+        for (int i =0;i<=CoordinatesList.length - 1;i++){
+            if (CoordinatesList[i].length() > 1){
+                for (int j = 0;j<= CoordinatesList[i].length() - 1;j++){
+                    if (CoordinatesList[i].charAt(j) == ','){
+                        isPosition = true;
+                    }
+                }
+                if (isPosition){
+                    AllResourcesList.add(CoordinatesList[i]);
+                }
+            }
+            isPosition = false;
+        }
+        return AllResourcesList;
     }
 
     //Return Player Statement
