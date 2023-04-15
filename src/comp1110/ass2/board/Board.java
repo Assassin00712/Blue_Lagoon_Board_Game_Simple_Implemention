@@ -33,7 +33,7 @@ public class Board {
                 }
                 if (coordinates[0].equals("s")){
                     Coordinate c = corFromString(coordinates[j]);
-                    board[c.getRow()][c.getCol()].setIsland(true);
+                    board[c.getRow()][c.getCol()].setStone(true);
                 }if (coordinates[0].equals("r")){
                     Coordinate c = corFromString(coordinates[j]);
                     board[c.getRow()][c.getCol()].setIsland(true);
