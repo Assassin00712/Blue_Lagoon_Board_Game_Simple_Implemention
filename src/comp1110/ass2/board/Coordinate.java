@@ -7,11 +7,16 @@ public class Coordinate {
     // I changed Position into Coordinate since the format given in state strings are not a typical position format
     int row;
     int col;
+    String[] cord;
 
 
     public Coordinate(int row,int col) {
         this.row = row;
         this.col = col;
+    }
+
+    public Coordinate(String cord){
+        this.cord = cord.split(",");
     }
 
     public int getRow() {
@@ -24,6 +29,14 @@ public class Coordinate {
 
     public int getCol() {
         return col;
+    }
+
+    public int stringToX(){
+        return Integer.parseInt(cord[0]);
+    }
+
+    public int stringToY(){
+        return Integer.parseInt(cord[1]);
     }
 
     public void setCol(int col) {
