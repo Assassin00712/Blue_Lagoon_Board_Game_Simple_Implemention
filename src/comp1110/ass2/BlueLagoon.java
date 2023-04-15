@@ -195,7 +195,7 @@ public class BlueLagoon {
             System.arraycopy(strings, 0, outPut, 0, index);
         }
         System.arraycopy(strings, 0, outPut, 0, index);
-        System.arraycopy(strings, index+1, outPut, index,strings.length-index-1);
+        System.arraycopy(strings, index+1, outPut, index, strings.length-index-1);
 
         return outPut;
 
@@ -234,7 +234,7 @@ public class BlueLagoon {
                 //System.out.println(outPut[i]);
                     //System.out.println("l is "+l);
                     //System.out.println(outPut[i]);
-                    if (l < coords.length-1){l++;}
+                    if (l < digits.length-1){l++;}
                 i++;}
             }
         return outPut;
