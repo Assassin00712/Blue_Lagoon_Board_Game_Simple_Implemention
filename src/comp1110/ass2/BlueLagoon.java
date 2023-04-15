@@ -219,22 +219,12 @@ public class BlueLagoon {
         int l = 0;
         int i = 0;
             while (i < outPut.length){
-                //System.out.println("i is "+i);
                 if (i == digits[j]){
-                    // if the i is the digit where the letter should be placed, which is digit[j]
-                    // place the letter[j] at outPut[i]
-                    //System.out.println("j is "+j);
                     outPut[i] = letters[j];
-                   // System.out.println(outPut[i]);
                     if (j < digits.length-1){j++;}
                     i++;
                 }else{outPut[i] = coords[l];
-                //after a letter is placed in the correct place,
-                //since there are already k letters in place, the digit of outPut switch k onwards
-                //System.out.println(outPut[i]);
-                    //System.out.println("l is "+l);
-                    //System.out.println(outPut[i]);
-                    if (l < digits.length-1){l++;}
+                    if (l < coords.length-1){l++;}
                 i++;}
             }
         return outPut;
@@ -288,7 +278,7 @@ public class BlueLagoon {
         for (int l = 0; l < resourcesDistributed.length; l++){
             resourcesFinal = String.join(" ",resourcesFinal,resourcesDistributed[l]);
         }
-        //System.out.println(resourcesFinal);
+        System.out.println(resourcesFinal);
          return resourcesFinal.substring(1); // FIXME Task 6
     }
 
