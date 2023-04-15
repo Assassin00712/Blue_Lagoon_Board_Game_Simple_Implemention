@@ -57,7 +57,7 @@ public class Coordinate {
         return (bound >= cor.getRow()) && (bound >= cor.getCol());
     }
 
-    /**
+    /** not fixed yet
      * test if two Coordinates are linked
      * @param cor1 the coordinate a play attempted to occupy
      * @param cor2 the coordinate to compare, taken from the occupied coordinates of the player
@@ -72,7 +72,8 @@ public class Coordinate {
             return ((col1 == col2 + 1) || (col1 == col2 - 1));
         }else if ((row1 == row2 - 1) || (row1 == row2 + 1)){
             return (col1 == col2);
-        }
+        }else if ((col1 == col2 - 1) || (col1 == col2 + 1)){
+            return (row1 == row2);}
         return false;
     }
 

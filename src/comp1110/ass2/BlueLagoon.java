@@ -419,7 +419,7 @@ public class BlueLagoon {
         for (int l = 0; l < resourcesDistributed.length; l++){
             resourcesFinal = String.join(" ",resourcesFinal,resourcesDistributed[l]);
         }
-        System.out.println(resourcesFinal);
+       // System.out.println(resourcesFinal);
          return resourcesFinal.substring(1); // FIXME Task 6
     }
 
