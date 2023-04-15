@@ -842,9 +842,9 @@ public class BlueLagoon {
 
         //Check every block if it's valid and add to the set if it's valid
         for (int row = 0; row <= Board.BOARD_HEIGHT - 1; row++) {
-            for (int column = 0; column <= Board.BOARD_WIDTH - 1; column++) {
+            for (int column = 0; column <= Board.BOARD_HEIGHT - 1; column++) {
                 //Because the board is 12 13 12 13, to eliminate the 0,13 2,13......
-                if (row % 2 == 0 && column == Board.BOARD_WIDTH - 1){
+                if (row % 2 == 0 && column == Board.BOARD_HEIGHT - 1){
                     continue;
                 }else {
                 String coordinate = row + "," + column;
