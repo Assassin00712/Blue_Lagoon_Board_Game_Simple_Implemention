@@ -118,13 +118,30 @@ public class BlueLagoon {
         return s1[getIslandLength(stateString) + 3];
     }
 
-    //Return all stone coordinates as a list to solve task 5
+    //Return all resource names and relative coordinates as a list to solve task 5
     public static List getAllResourcesList(String stateString){
         List<String> AllResourcesList = new ArrayList<>();
         String ResourcesList = getUnclaimedResourcesandStatuettesStatement(stateString);
         String[] CoordinatesList = ResourcesList.split(" ");
+
+        for (int i =0;i<=CoordinatesList.length - 1;i++) {
+            if (!CoordinatesList[i].equals("r")){
+                AllResourcesList.add(CoordinatesList[i]);
+            }
+        }
+        return AllResourcesList;
+    }
+
+
+    //Return all players' settlers and villages coordinates as a list to solve task 5
+    public static List getAllPlayers(String stateString){
+        List<String> AllPlayers = new ArrayList<>();
+        String PlayersList = getPlayerStatement(stateString);
+        String[] CoordinatesList = PlayersList.split(" ");
+        System.out.println(PlayersList);
+
         boolean isPosition = false;
-        for (int i =0;i<=CoordinatesList.length - 1;i++){
+        for (int i =0;i<=CoordinatesList.length - 1;i++) {
             if (CoordinatesList[i].length() > 1){
                 for (int j = 0;j<= CoordinatesList[i].length() - 1;j++){
                     if (CoordinatesList[i].charAt(j) == ','){
@@ -132,24 +149,20 @@ public class BlueLagoon {
                     }
                 }
                 if (isPosition){
-                    AllResourcesList.add(CoordinatesList[i]);
+                    AllPlayers.add(CoordinatesList[i]);
                 }
             }
             isPosition = false;
         }
-        return AllResourcesList;
-    }
+        return AllPlayers;
+        }
+
 
     //Return Player Statement
     public static String getPlayerStatement(String stateString){
         String[] s1 = stateString.split(";");
         return s1[getIslandLength(stateString) + 4] + ";" + s1[getIslandLength(stateString) + 5];
     }
-
-
-
-
-
 
 
     /**
