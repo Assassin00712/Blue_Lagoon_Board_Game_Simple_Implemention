@@ -134,25 +134,21 @@ public class BlueLagoon {
 
 
     //Return all players' settlers and villages coordinates as a list to solve task 5
-    public static List getAllPlayers(String stateString){
+    public static List getPlayers(String stateString){
         List<String> AllPlayers = new ArrayList<>();
         String PlayersList = getPlayerStatement(stateString);
         String[] CoordinatesList = PlayersList.split(" ");
         System.out.println(PlayersList);
 
-        boolean isPosition = false;
+        int pnum = 0;
         for (int i =0;i<=CoordinatesList.length - 1;i++) {
-            if (CoordinatesList[i].length() > 1){
-                for (int j = 0;j<= CoordinatesList[i].length() - 1;j++){
-                    if (CoordinatesList[i].charAt(j) == ','){
-                        isPosition = true;
-                    }
-                }
-                if (isPosition){
-                    AllPlayers.add(CoordinatesList[i]);
-                }
+            if (CoordinatesList[i].equals("p")){
+                pnum = pnum + 1;
+                CoordinatesList[i] = "p" + Integer.toString(pnum);
+                AllPlayers.add(CoordinatesList[i]);
             }
-            isPosition = false;
+
+
         }
         return AllPlayers;
         }
