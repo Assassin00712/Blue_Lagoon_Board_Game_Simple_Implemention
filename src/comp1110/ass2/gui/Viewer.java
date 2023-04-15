@@ -8,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
@@ -19,6 +21,7 @@ public class Viewer extends Application {
     private final Group root = new Group();
     private final Group controls = new Group();
     private TextField stateTextField;
+    private static final String URI_BASE = "assets/";
     private Label stateLabel = new Label();
 
 
@@ -33,6 +36,33 @@ public class Viewer extends Application {
     void displayState(String stateString) {
         stateLabel.setText(stateString);
         root.getChildren().add(stateLabel);
+
+
+        String cName = "Stone".toLowerCase(); // the asset names are lower-case
+        String path = URI_BASE + cName + "/";
+
+        path += ".png";
+
+            /*
+             NB: if you want to use assets in your own GUI, this is useful code
+             to remember!
+             */
+        Image image = new Image(Game.class.getResource(path).toString());
+        /* These two lines of code load images from a provided path - very
+               useful if you're making your own GUI! */
+        Image appleImage = new Image(Game.class.getResource(path).toString());
+        ImageView apple = new ImageView(appleImage);
+
+            /* These two lines set the location of the image in Cartesian
+               coordinates - except y moves from top to bottom, not bottom to
+               top. */
+        apple.setLayoutX(200);
+        apple.setLayoutY(50);
+
+            /* Add the apple segment to our board Group, and by extension, our
+               root Group. */
+        root.getChildren().add(apple);
+
         // FIXME Task 5
     }
 
