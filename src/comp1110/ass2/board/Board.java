@@ -7,6 +7,7 @@ public class Board {
 
     static Spot[][] board = new Spot[BOARD_HEIGHT][BOARD_HEIGHT];
 
+
     // initialize a board by creating an array/list of spots with every coordinates within bound
     public static void initialize(){
         int col = 0;

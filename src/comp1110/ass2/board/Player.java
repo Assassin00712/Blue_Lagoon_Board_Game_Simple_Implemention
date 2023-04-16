@@ -30,7 +30,7 @@ public class Player {
 
     Coordinate[] blankC = new Coordinate[0];
     int[] blankI = new int[0];
-    Player blank = new Player (0,0,blankI,blankC,blankC);
+    Player player1 = new Player (1,0,blankI,blankC,blankC);
     public int getPlayId() {
         return playId;
     }

@@ -133,8 +133,8 @@ public class Viewer extends Application {
      * @param stateString a string representing a game state
      */
     void displayState(String stateString) {
-        stateLabel.setText(stateString);
-        root.getChildren().add(stateLabel);
+        //stateLabel.setText(stateString);
+        //root.getChildren().add(stateLabel);
 
         /* This part is an example of putting image.
 
@@ -257,6 +257,7 @@ public class Viewer extends Application {
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
+                //System.out.println("refresh clicked");
                 displayState(stateTextField.getText());
             }
         });
