@@ -14,6 +14,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 
@@ -58,6 +59,27 @@ public class Viewer extends Application {
         }
     }
 
+    public class Triangle extends Polygon{
+        private double x;
+        private double y;
+        private double side;
+
+
+        public Triangle(double x, double y, double side) {
+            this.x = x;
+            this.y = y;
+            this.side = side;
+            this.getPoints().addAll(
+                    0.0, -(Math.sqrt(3) * side / 4),
+                    side / 2, (Math.sqrt(3) * side / 4),
+                    -(side / 2), (Math.sqrt(3) * side / 4));
+
+            // set the layout coordinates of the triangle
+            this.setLayoutX(x);
+            this.setLayoutY(y);
+        }
+    }
+
     // Return the exact hexagon by the given coordinate
     // The coordinate is from range (0,0) to (12,11)
     public Hexagon cordToHexagon (int x, int y){
@@ -68,6 +90,17 @@ public class Viewer extends Application {
             }
         }
         return hexagons.get(0);
+    }
+
+    public void drawTriangleText(double x, double y, String text, Paint paint){
+        Triangle triangle = new Triangle(x,y,35);
+        triangle.setFill(paint);
+        Label label = new Label(text);
+        label.setTextFill(Color.WHITE);
+        label.setLayoutX(x-4);
+        label.setLayoutY(y-4);
+
+        root.getChildren().addAll(triangle, label);
     }
 
 
@@ -90,6 +123,7 @@ public class Viewer extends Application {
     }
 
 
+
     /**
      * Given a state string, draw a representation of the state
      * on the screen.
@@ -102,33 +136,33 @@ public class Viewer extends Application {
         stateLabel.setText(stateString);
         root.getChildren().add(stateLabel);
 
+        /* This part is an example of putting image.
+
 
         String cName = "Stone".toLowerCase(); // the asset names are lower-case
         String path = URI_BASE + "stone/" + cName + ".png";
 
-            /*
-             NB: if you want to use assets in your own GUI, this is useful code
-             to remember!
-             */
+            //NB: if you want to use assets in your own GUI, this is useful code to remember!
+
         Image image = new Image(Game.class.getResource(path).toString());
-        /* These two lines of code load images from a provided path - very
-               useful if you're making your own GUI! */
+        // These two lines of code load images from a provided path - very useful if you're making your own GUI!
         Image appleImage = new Image(Game.class.getResource(path).toString());
         ImageView apple = new ImageView(appleImage);
         Image stoneImage = new Image(Game.class.getResource(path).toString());
         ImageView stone = new ImageView(stoneImage);
 
-            /* These two lines set the location of the image in Cartesian
-               coordinates - except y moves from top to bottom, not bottom to
-               top. */
+        // These two lines set the location of the image in Cartesian
+        // coordinates - except y moves from top to bottom, not bottom to top.
         stone.setFitWidth(36);
         stone.setFitHeight(36);
         stone.setLayoutX(cordToXY(0,2)[0]-18);
         stone.setLayoutY(cordToXY(0,2)[1]-18);
 
-            /* Add the apple segment to our board Group, and by extension, our
-               root Group. */
+            //Add the apple segment to our board Group, and by extension, our root Group.
         root.getChildren().add(stone);
+
+        */
+
 
 
         // Set Hexagon color to green if it's an island
@@ -143,11 +177,58 @@ public class Viewer extends Application {
                     .setFill(Color.BLACK);
         }
 
-        // Set Hexagon color to black if it's a stone
-        for (Object cord: BlueLagoon.getAllStoneList(stateString)){
-            cordToHexagon(new Coordinate((String) cord).stringToX(), new Coordinate((String) cord).stringToY())
-                    .setFill(Color.BLACK);
+        // Draw Bamboo
+        if (BlueLagoon.getBamboo(stateString).size() > 0){
+            for (Object cord: BlueLagoon.getBamboo(stateString)){
+                double[] draw = cordToXY(new Coordinate((String) cord).stringToX(), new Coordinate((String) cord).stringToY());
+                double x = draw[0];
+                double y = draw[1];
+                drawTriangleText(x, y,"B", Color.RED);
+            }
         }
+
+        // Draw Coconut
+        if (BlueLagoon.getCoconutList(stateString).size() > 0){
+            for (Object cord: BlueLagoon.getCoconutList(stateString)){
+                double[] draw = cordToXY(new Coordinate((String) cord).stringToX(), new Coordinate((String) cord).stringToY());
+                double x = draw[0];
+                double y = draw[1];
+                drawTriangleText(x, y,"C", Color.DARKGREEN);
+            }
+        }
+
+        // Draw Water
+        if (BlueLagoon.getWater(stateString).size() > 0){
+            for (Object cord: BlueLagoon.getWater(stateString)){
+                double[] draw = cordToXY(new Coordinate((String) cord).stringToX(), new Coordinate((String) cord).stringToY());
+                double x = draw[0];
+                double y = draw[1];
+                drawTriangleText(x, y,"W", Color.DARKBLUE);
+            }
+        }
+
+        // Draw Precious Stone
+        if (BlueLagoon.getPreciousStone(stateString).size() > 0){
+            for (Object cord: BlueLagoon.getPreciousStone(stateString)){
+                double[] draw = cordToXY(new Coordinate((String) cord).stringToX(), new Coordinate((String) cord).stringToY());
+                double x = draw[0];
+                double y = draw[1];
+                drawTriangleText(x, y,"P", Color.ORANGE);
+            }
+        }
+
+        // Draw statuette
+        if (BlueLagoon.getStatuette(stateString).size() > 0){
+            for (Object cord: BlueLagoon.getStatuette(stateString)){
+                double[] draw = cordToXY(new Coordinate((String) cord).stringToX(), new Coordinate((String) cord).stringToY());
+                double x = draw[0];
+                double y = draw[1];
+                drawTriangleText(x, y,"S", Color.PURPLE);
+            }
+        }
+
+
+
 
         // FIXME Task 5
     }
