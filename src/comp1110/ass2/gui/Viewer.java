@@ -227,6 +227,19 @@ public class Viewer extends Application {
             }
         }
 
+        // Draw Players
+        if (BlueLagoon.getAllPlayers(stateString).size() > 0){
+            for (Object cord: BlueLagoon.getAllPlayers(stateString)){
+                String c = (String) cord;
+                if (c.matches("-?\\d+(\\.\\d+)?")){
+                    double[] draw = cordToXY(new Coordinate((String) cord).stringToX(), new Coordinate((String) cord).stringToY());
+                    double x = draw[0];
+                    double y = draw[1];
+                    drawTriangleText(x, y,"Player", Color.YELLOW);
+                }
+            }
+        }
+
 
 
 
