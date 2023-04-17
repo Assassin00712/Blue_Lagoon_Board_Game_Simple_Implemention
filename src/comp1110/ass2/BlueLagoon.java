@@ -227,7 +227,7 @@ public class BlueLagoon {
             System.out.println(containers);
         }
 
-        int pnum = 0;
+        int pnum = -1;
         String a;
         for (int i =0;i<=CoordinatesList.length - 1;i++) {
             String[] playerSplit = CoordinatesList[i].split(" ");
