@@ -30,7 +30,6 @@ public class Viewer extends Application {
     private final Group controls = new Group();
     private TextField stateTextField;
     private static final String URI_BASE = "assets/";
-    private Label stateLabel = new Label();
 
 
     public ArrayList<Hexagon> hexagons = new ArrayList<>();
@@ -133,8 +132,6 @@ public class Viewer extends Application {
      * @param stateString a string representing a game state
      */
     void displayState(String stateString) {
-        //stateLabel.setText(stateString);
-        //root.getChildren().add(stateLabel);
 
         /* This part is an example of putting image.
 
@@ -302,15 +299,6 @@ public class Viewer extends Application {
         for (Hexagon fillHexagon: hexagons){
             root.getChildren().add(fillHexagon);
         }
-        System.out.println(hexagons.get(0).getLayoutX());
-        System.out.println(hexagons.get(0).getLayoutY());
-
-        System.out.println(hexagons.get(52).getLayoutX());
-        System.out.println(hexagons.get(52).getLayoutY());
-
-        System.out.println(Arrays.toString(cordToXY(2,4)));
-
-        cordToHexagon(10,10).setFill(Color.GREEN);
 
 
         primaryStage.setScene(scene);
