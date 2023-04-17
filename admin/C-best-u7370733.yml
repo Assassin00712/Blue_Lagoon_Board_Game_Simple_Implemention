@@ -35,8 +35,8 @@ declaration: >-
 # I wish to submit the following methods as entirely my own (remove this if
 # you want to just submit classes):
 method:
-   - isMoveValid
-   - generateAllValidMoves
+   - E:\COMP Tools\COMP6710 JAVA\comp1110-ass2\src\comp1110\ass2\BlueLagoon.java#L18-270
+   - E:\COMP Tools\COMP6710 JAVA\comp1110-ass2\src\comp1110\ass2\BlueLagoon.java#L554-1082
 
 # sign *your* name and uid here
 name: Wangtao Jia
