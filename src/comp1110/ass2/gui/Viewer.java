@@ -226,14 +226,30 @@ public class Viewer extends Application {
 
         // Draw Players
         if (BlueLagoon.getAllPlayers(stateString).size() > 0){
-            for (Object cord: BlueLagoon.getAllPlayers(stateString)){
-                String c = (String) cord;
-                if (c.matches("\\d+,\\d+")){
-                    double[] draw = cordToXY(new Coordinate((String) cord).stringToX(), new Coordinate((String) cord).stringToY());
+            int playerNumber = 0;
+            int playerState = 0;
+            for (int i = 0; i < BlueLagoon.getAllPlayers(stateString).size(); i++){
+                String c = (String) BlueLagoon.getAllPlayers(stateString).get(i);
+                if (c.equals("p")){playerNumber = Integer.parseInt(BlueLagoon.getAllPlayers(stateString).get(i+1));}
+                if (c.equals("S")){playerState = 0;}
+                if (c.equals("T")){playerState = 1;}
+
+                // If playerState==0, draw a settler
+                if (c.matches("\\d+,\\d+") && playerState == 0){
+                    double[] draw = cordToXY(new Coordinate((String) c).stringToX(), new Coordinate((String) c).stringToY());
                     double x = draw[0];
                     double y = draw[1];
-                    drawTriangleText(x, y,"Player", Color.YELLOW);
+                    drawTriangleText(x, y,"Se" + playerNumber, Color.DARKCYAN);
                 }
+
+                // If playerState==0, draw a village
+                if (c.matches("\\d+,\\d+") && playerState == 1){
+                    double[] draw = cordToXY(new Coordinate((String) c).stringToX(), new Coordinate((String) c).stringToY());
+                    double x = draw[0];
+                    double y = draw[1];
+                    drawTriangleText(x, y,"Vi" + playerNumber, Color.DARKORANGE);
+                }
+
             }
         }
 
