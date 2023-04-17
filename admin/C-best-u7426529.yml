@@ -31,13 +31,14 @@ declaration: >-
 
 # I wish to submit the following classes as entirely my own (remove this if
 # you want to just submit methods):
-
+class:
+  - Viewer
 
 # I wish to submit the following methods as entirely my own (remove this if
 # you want to just submit classes):
 method:
-   - isStateStringWellFormed
-   - isMoveStringWellFormed
+   - BlueLagoon.isStateStringWellFormed
+   - BlueLagoon.isMoveStringWellFormed
 
 # sign *your* name and uid here
 name: Hank Lin
