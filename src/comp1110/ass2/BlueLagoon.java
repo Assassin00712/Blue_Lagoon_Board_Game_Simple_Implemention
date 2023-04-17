@@ -223,10 +223,6 @@ public class BlueLagoon {
         String PlayersList = getPlayerStatement(stateString);
         String[] CoordinatesList = PlayersList.split(";");
 
-        for(String containers: CoordinatesList) {
-            System.out.println(containers);
-        }
-
         int pnum = -1;
         String a;
         for (int i =0;i<=CoordinatesList.length - 1;i++) {
@@ -236,8 +232,9 @@ public class BlueLagoon {
             for (int j = 0;j<=playerSplit.length - 1;j++){
                 if (playerSplit[j].equals("p")){
                     pnum = pnum + 1;
-                    a = "p" + pnum;
+                    a = "p";
                     AllPlayers.add(a);
+                    AllPlayers.add(Integer.toString(pnum));
                 }
                 if (playerSplit[j].equals("S")){
                     SPosition = j;
