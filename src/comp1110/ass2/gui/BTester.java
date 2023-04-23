@@ -1,17 +1,10 @@
 package comp1110.ass2.gui;
 
 import comp1110.ass2.BlueLagoon;
-import comp1110.ass2.board.Board;
-import comp1110.ass2.board.Player;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-public class Tester {
+public class BTester {
     //Test for task 7
     @Test
     void isMoveValidTest(){
