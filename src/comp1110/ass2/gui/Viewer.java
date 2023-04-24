@@ -105,7 +105,7 @@ public class Viewer extends Application {
 
     // Given the coordinate, will return the absolute position on the viewer stage.
     // Can be used for drawing shapes or placing images.
-    public double[] cordToXY (int x, int y){
+    public static double[] cordToXY (int x, int y){
         double outX = 0;
         double outY = 0;
 
@@ -320,6 +320,7 @@ public class Viewer extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+
 
 
 }
