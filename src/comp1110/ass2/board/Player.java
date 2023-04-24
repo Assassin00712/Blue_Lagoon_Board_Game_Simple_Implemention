@@ -1,18 +1,19 @@
 package comp1110.ass2.board;
 
-import comp1110.ass2.board.Coordinate;
-
 import static comp1110.ass2.board.Coordinate.corFromString;
-import comp1110.ass2.board.Spot;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class Player {
+
 
     int playId;
     int score;
     int[] resources;
     Coordinate[] settlers;
     Coordinate[] villages;
-
 
 
     public Player(int playId,
@@ -28,9 +29,20 @@ public class Player {
         this.villages = villages;
     }
 
-    Coordinate[] blankC = new Coordinate[0];
-    int[] blankI = new int[0];
-    Player player1 = new Player (1,0,blankI,blankC,blankC);
+
+    public final Coordinate[] blankC = new Coordinate[0];
+    public final int[] blankI = new int[0];
+
+    public Player() {
+        this.playId = 0;
+        this.score = 0;
+        this.resources = blankI;
+        // {coconut, bamboo, water, preciousStone, statuette}
+        this.settlers = blankC;
+        this.villages = blankC;
+
+    }
+
     public int getPlayId() {
         return playId;
     }
@@ -71,39 +83,54 @@ public class Player {
         this.villages = villages;
     }
 
-    public void playerFromString(String playerStates){
 
-                String[] players = playerStates.split(" ");
-                setPlayId(Integer.parseInt(players[1]));
-                setScore(Integer.parseInt(players[2]));
-                int[] resources = new int[5];
-                resources[0] = Integer.parseInt(players[3]);
-                resources[1] = Integer.parseInt(players[4]);
-                resources[2] = Integer.parseInt(players[5]);
-                resources[3] = Integer.parseInt(players[6]);
-                resources[4] = Integer.parseInt(players[7]);
-                setResources(resources);
-                for (int j = 0; j < players.length; j++){
-                    if (players[j].startsWith("S")){
-                        String[] settlers = players[j].split(" ");
-                        Coordinate[] cors = new Coordinate[settlers.length];
-                        for (int k = 0; k < settlers.length; k++) {
-                            cors[k] = corFromString(settlers[k]);
-                        }
-                        setSettlers(cors);
-                        }
-                    if (players[j].startsWith("T")){
-                        String[] villages = players[j].split(" ");
-                        Coordinate[] cors = new Coordinate[villages.length];
-                        for (int k = 0; k < villages.length; k++) {
-                            cors[k] = corFromString(villages[k]);
-                        }
-                        setVillages(cors);
-                    }
-                    }
-                }
-
+    public static Player playerFromString(String playerStates) {
+        Player player = new Player();
+        String[] players = playerStates.split(" ");
+        player.setPlayId(Integer.parseInt(players[1]));
+        player.setScore(Integer.parseInt(players[2]));
+        int[] resources = new int[5];
+        for (int i = 0; i < 5; i++) {
+            resources[i] = Integer.parseInt(players[i + 3]);
+        }
+//        resources[0] = Integer.parseInt(players[3]);
+//        resources[1] = Integer.parseInt(players[4]);
+//        resources[2] = Integer.parseInt(players[5]);
+//        resources[3] = Integer.parseInt(players[6]);
+//        resources[4] = Integer.parseInt(players[7]);
+        player.setResources(resources);
+        int settlerStarts = 0;
+        int villageStarts = 0;
+        for (int j = 5; j < players.length; j++) {
+            if (players[j].equals("S")) {
+                settlerStarts = j;
             }
+            if (players[j].equals("T")) {
+                villageStarts = j;
+            } }
+            Coordinate[] corS = new Coordinate[villageStarts - settlerStarts-1];
+            for (int k = 0; k < corS.length; k++) {
+             corS[k] = corFromString(players[settlerStarts + k + 1]);
+             player.setSettlers(corS);
+            }
+
+            Coordinate[] corV = new Coordinate[players.length - villageStarts-1];
+            for (int l = 0; l < corV.length; l++) {
+              corV[l] = corFromString(players[villageStarts + l + 1]);
+              player.setVillages(corV);
+            }
+
+        return player;
+    }
+}
+
+
+
+
+
+
+
+
 
 
 
