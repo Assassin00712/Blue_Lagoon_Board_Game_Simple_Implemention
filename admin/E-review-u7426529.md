@@ -2,12 +2,15 @@
 
 Reviewed by: Hank Lin, u7426529
 
-Reviewing code written by: <the other person's full name> <other uid>
+Reviewing code written by: Xinwen Cao, u7305675
 
-Component: <the component being reviewed>
+Component: Player.playerFromString()
 
 ### Comments 
 
-<write your comments here>
+The method can create a player from a string, and the work is well done. Also, I think the method is useful because
+we only need to parse in a well-formed string. As a result, the player can be initialised by a string once, and can be called
+many times after that.
+
 
 

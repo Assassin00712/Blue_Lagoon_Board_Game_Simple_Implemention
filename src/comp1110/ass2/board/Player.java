@@ -122,6 +122,14 @@ public class Player {
 
         return player;
     }
+
+    public static void main(String[] args) {
+        String stringPLAYER1 = "p 1 42 1 2 3 4 5 S 5,6 8,7 T 1,2;";
+        Player player1 = playerFromString(stringPLAYER1);
+        System.out.println(player1.playId);
+        System.out.println(player1.getScore());
+    }
+
 }
 
 
