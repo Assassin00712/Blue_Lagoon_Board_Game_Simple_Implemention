@@ -14,6 +14,10 @@ public class Coordinate {
         this.row = row;
         this.col = col;
     }
+    public Coordinate(){
+        this.row = 0;
+        this.col = 0;
+    }
 
     public Coordinate(String cord){
         this.cord = cord.split(",");
@@ -43,9 +47,9 @@ public class Coordinate {
         this.col = col;
     }
 
-    public int hashCode() {
-        return Objects.hash(row, col);
-    }
+//    public int hashCode() {
+//        return Objects.hash(row, col);
+//    }
 
     /**
      * test if a coordinate is in bound
@@ -82,13 +86,24 @@ public class Coordinate {
         return  row + "," + col;
     }
 
+    /**
+     * get the coordinate from a string
+    @param s a string represent a coordinate, must be with length 3
+     */
+
     public static Coordinate corFromString(String s) {
-        Coordinate c = null;
+        Coordinate c = new Coordinate();
         int row = Integer.parseInt(String.valueOf(s.charAt(0)));
-        int col = Integer.parseInt(String.valueOf(s.charAt(3)));
+        int col = Integer.parseInt(String.valueOf(s.charAt(2)));
         c.setCol(col);
         c.setRow(row);
         return c;
     }
 
+    @Override
+    public boolean equals(Object other) {
+        return (other instanceof Coordinate) &&
+                row == ((Coordinate) other).row &&
+                col == ((Coordinate) other).col;
+    }
 }
