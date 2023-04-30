@@ -755,50 +755,37 @@ public class BlueLagoon {
                                 }
                             }
                             //Check 6 situations of adjacent
-                            int moveleftnumI = Integer.parseInt(moveLeftnum);
-                            int moveRightnumI = Integer.parseInt(moveRightnum);
-                            int leftnumI = Integer.parseInt(leftnum);
-                            int rightnumI = Integer.parseInt(rightnum);
+                            int moveleftI = Integer.parseInt(moveLeftnum);
+                            int moveRightI = Integer.parseInt(moveRightnum);
+                            int leftI = Integer.parseInt(leftnum);
+                            int rightI = Integer.parseInt(rightnum);
 
-                            if (moveleftnumI % 2 != 0) {
+                            if (moveleftI % 2 != 0) {
 
-                                if (leftnumI == moveleftnumI - 1 && rightnumI == moveRightnumI - 1) {
-                                    return true;
-                                }
-                                if (leftnumI == moveleftnumI - 1 && rightnumI == moveRightnumI) {
-                                    return true;
-                                }
-                                if (leftnumI == moveleftnumI && rightnumI == moveRightnumI - 1) {
-                                    return true;
-                                }
-                                if (leftnumI == moveleftnumI && rightnumI == moveRightnumI + 1) {
-                                    return true;
-                                }
-                                if (leftnumI == moveleftnumI + 1 && rightnumI == moveRightnumI - 1) {
-                                    return true;
-                                }
-                                if (leftnumI == moveleftnumI + 1 && rightnumI == moveRightnumI) {
+                                if (Math.abs(leftI - moveleftI) == 1 && (rightI == moveRightI - 1
+                                        || rightI == moveRightI) || (leftI == moveleftI &&
+                                        Math.abs(rightI - moveRightI) == 1)) {
                                     return true;
                                 }
                             }
 
-                            if (moveleftnumI % 2 == 0) {
-                                if (leftnumI == moveleftnumI - 1 && rightnumI == moveRightnumI) {
+                            if (moveleftI % 2 == 0) {
+                                if (leftI == moveleftI - 1 && rightI == moveRightI) {
                                     return true;
                                 }
-                                if (leftnumI == moveleftnumI - 1 && rightnumI == moveRightnumI + 1) {
+                                if (leftI == moveleftI - 1 && rightI == moveRightI + 1) {
                                     return true;
                                 }
-                                if (leftnumI == moveleftnumI && rightnumI == moveRightnumI - 1) {
+                                if (leftI == moveleftI && rightI == moveRightI - 1) {
                                     return true;
                                 }
-                                if (leftnumI == moveleftnumI && rightnumI == moveRightnumI + 1) {
+                                if (leftI == moveleftI && rightI == moveRightI + 1) {
                                     return true;
                                 }
-                                if (leftnumI == moveleftnumI + 1 && rightnumI == moveRightnumI) {
+                                if (leftI == moveleftI + 1 && rightI == moveRightI) {
                                     return true;
                                 }
-                                if (leftnumI == moveleftnumI + 1 && rightnumI == moveRightnumI + 1) {
+                                if (leftI == moveleftI + 1 && rightI == moveRightI + 1) {
                                     return true;
                                 }
                             }
