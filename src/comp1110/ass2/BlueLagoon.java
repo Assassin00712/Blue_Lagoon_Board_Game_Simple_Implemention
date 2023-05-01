@@ -13,6 +13,7 @@ import java.util.*;
 
 import static comp1110.ass2.board.Island.getIslandScore;
 import static comp1110.ass2.board.Player.allSettlersVillages;
+import static comp1110.ass2.board.Player.playerFromString;
 
 public class BlueLagoon {
     // The Game Strings for five maps have been created for you.
@@ -1143,14 +1144,14 @@ public class BlueLagoon {
      * the score for each player
      */
     public static int[] calculateTotalIslandsScore(String stateString){
-         Player[] players = Player.playersFromString(stateString);
+         List<Player> players = Player.playersFromString(stateString);
          for (Player player:players){
              System.out.println(player.toString());
          }
-         int[] totalIslandScore = new int[players.length];
+         int[] totalIslandScore = new int[players.size()];
          Island[] islands = Island.getIslands(stateString);
         Coordinate[][] occupied = allSettlersVillages(stateString);
-        for (int i = 0; i < players.length; i++){
+        for (int i = 0; i < players.size(); i++){
             Coordinate[] cors = occupied[i];
             int scoreAtI = getIslandScore(cors,islands);
             totalIslandScore[i] = scoreAtI;
@@ -1266,8 +1267,8 @@ public class BlueLagoon {
 
         endPhaseString += getArrangementStatement(stateString) +";";
         endPhaseString += getCurrentStateStatement(stateString).replace("E","S") + ";";
-        endPhaseString += getIslandStatement(stateString) + ";";
-        endPhaseString += getStoneStatement(stateString) + ";";
+        endPhaseString += getIslandStatement(stateString);
+        endPhaseString += getStoneStatement(stateString) + "; ";
 
         // Fill the resources again
         String resourceString = getUnclaimedResourcesandStatuettesStatement(stateString) +";";
@@ -1297,7 +1298,6 @@ public class BlueLagoon {
             resourceString += " " + b;
         }
 
-
         // Refill the water to 6
         List<String> newWaterList = getWater(stateString);
         if (newWaterList.size() < 6){
@@ -1323,11 +1323,10 @@ public class BlueLagoon {
             resourceString += " " + p;
         }
 
-
-        // Refill the precious stone to 6
+        // Refill the Statuette to 8
         List<String> newStatuetteList = getStatuette(stateString);
-        if (newStatuetteList.size() < 6){
-            for (int i = 0 ; i < 6 - getStatuette(stateString).size(); i++){
+        if (newStatuetteList.size() < 8){
+            for (int i = 0 ; i < 8 - getStatuette(stateString).size(); i++){
                 newStoneList.add(Coordinate.randomCord().toString());
             }
         }
@@ -1336,12 +1335,25 @@ public class BlueLagoon {
             resourceString += " " + s;
         }
         System.out.println(resourceString);
+        endPhaseString += resourceString + "; ";
 
 
         // Calculate Player Score
-        endPhaseString += getPlayerStatement(stateString);
+        List<Player> players = new ArrayList<>();
+        String[] playersStatement = getPlayerStatement(stateString).split(";");
+        for (String s : playersStatement){
+            players.add(playerFromString(s.strip()));
+        }
 
-        return endPhaseString; // FIXME Task 12
+        for (Player player: players) {
+            player.clearResources();
+            player.clearSettlers();
+            endPhaseString += player.toStateString() + " ";
+        }
+        System.out.println(stateString);
+        System.out.println(endPhaseString);
+
+        return endPhaseString.strip(); // FIXME Task 12
     }
 
     /**
