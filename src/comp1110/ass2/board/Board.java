@@ -17,7 +17,7 @@ public class Board {
             cor.setRow(row);
             while (col < BOARD_HEIGHT) {
                 cor.setCol(col);
-                board[row][col].setsCor(cor);
+                board[row][col].sCor = (cor);
                 col++;
             }
             col = 0;
@@ -36,11 +36,11 @@ public class Board {
         Coordinate[] villages = player.getVillages();
         for (int i = 0; i < settlers.length; i++){
             Spot spot = spotFromCor(settlers[i]);
-            spot.setOccupier(1000+(playId)*100+i+1);
+            spot.occupier = (1000+(playId)*100+i+1);
         }
         for (int j = 0; j < villages.length; j++){
             Spot spot = spotFromCor(settlers[j]);
-            spot.setOccupier(2000+(playId)*100+j+1);
+            spot.occupier = (2000+(playId)*100+j+1);
         }
     }
 
@@ -54,34 +54,34 @@ public class Board {
             while ( j < coordinates.length){
                 if (coordinates[0].equals("i")){
                     Coordinate c = corFromString(coordinates[j]);
-                    board[c.getRow()][c.getCol()].setIsland(true);
+                    board[c.getRow()][c.getCol()].isIsland = true;
                     j++;
                 }
                 if (coordinates[0].equals("s")){
                     Coordinate c = corFromString(coordinates[j]);
-                    board[c.getRow()][c.getCol()].setStone(true);
+                    board[c.getRow()][c.getCol()].isStone = true;
                     j++;
                 }if (coordinates[0].equals("r")){
                     if (coordinates[0].equals("C")){
                         j++;
                         Coordinate c = corFromString(coordinates[j]);
-                        board[c.getRow()][c.getCol()].setResources(Resources.COCONUTS);
+                        board[c.getRow()][c.getCol()].resources = Resources.COCONUTS;
                     }if (coordinates[0].equals("W")){
                         j++;
                         Coordinate c = corFromString(coordinates[j]);
-                        board[c.getRow()][c.getCol()].setResources(Resources.WATER);
+                        board[c.getRow()][c.getCol()].resources = Resources.WATER;
                     }if (coordinates[0].equals("P")){
                         j++;
                         Coordinate c = corFromString(coordinates[j]);
-                        board[c.getRow()][c.getCol()].setResources(Resources.PRECIOUS_STONE);
+                        board[c.getRow()][c.getCol()].resources = Resources.PRECIOUS_STONE;
                     }if (coordinates[0].equals("B")){
                         j++;
                         Coordinate c = corFromString(coordinates[j]);
-                        board[c.getRow()][c.getCol()].setResources(Resources.BAMBOO);
+                        board[c.getRow()][c.getCol()].resources = Resources.BAMBOO;
                     }if (coordinates[0].equals("S")){
                         j++;
                         Coordinate c = corFromString(coordinates[j]);
-                        board[c.getRow()][c.getCol()].setResources(Resources.STATUETTS);
+                        board[c.getRow()][c.getCol()].resources = Resources.STATUETTS;
                     }
                 }
             }

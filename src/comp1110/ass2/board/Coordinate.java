@@ -106,4 +106,9 @@ public class Coordinate {
                 row == ((Coordinate) other).row &&
                 col == ((Coordinate) other).col;
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(row, col);
+    }
 }

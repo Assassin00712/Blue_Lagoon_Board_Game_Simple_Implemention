@@ -2,6 +2,8 @@ package comp1110.ass2;
 
 import comp1110.ass2.board.Board;
 import comp1110.ass2.board.Coordinate;
+import comp1110.ass2.board.Spot;
+import comp1110.ass2.board.Coordinate;
 import comp1110.ass2.board.Island;
 import comp1110.ass2.board.Player;
 import comp1110.ass2.gui.Viewer;
@@ -37,7 +39,7 @@ public class BlueLagoon {
     // Return  Game Arrangement Statement
     public static String getArrangementStatement(String stateString){
         String[] s1 = stateString.split(";");
-        return " " + s1[0];
+        return s1[0];
     }
 
     //Return Current State Statement
@@ -54,7 +56,7 @@ public class BlueLagoon {
         int islandLength = 0;
         while (s1[i].charAt(1) == 'i') {
             String a = s1[i];
-            islandStatement = islandStatement + a;
+            islandStatement = islandStatement + a + ";";
             islandLength = islandLength + 1;
             i++;
         }
@@ -1260,7 +1262,17 @@ public class BlueLagoon {
      * @return a string representing the new state achieved by following the end of phase rules
      */
     public static String endPhase(String stateString){
-         return ""; // FIXME Task 12
+        String endPhaseString = "";
+
+        endPhaseString += getArrangementStatement(stateString) +";";
+        endPhaseString += getCurrentStateStatement(stateString).replace("E","S") + ";";
+        endPhaseString += getIslandStatement(stateString) + ";";
+        endPhaseString += getStoneStatement(stateString) + ";";
+        endPhaseString += getUnclaimedResourcesandStatuettesStatement(stateString) +";";
+        Spot spot = new Spot(new Coordinate(1,1));
+        endPhaseString += getPlayerStatement(stateString);
+
+        return endPhaseString; // FIXME Task 12
     }
 
     /**
@@ -1276,7 +1288,7 @@ public class BlueLagoon {
      * @return a string representing the new state after the move is applied to the board
      */
     public static String applyMove(String stateString, String moveString){
-         return ""; // FIXME Task 13
+         return stateString; // FIXME Task 13
     }
 
     /**
