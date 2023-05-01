@@ -1119,8 +1119,8 @@ public class BlueLagoon {
 
     /**
      * Given a state string, calculate the "Islands" portion of the score for
-     * each player as if it were the end of a phase. The return value is an
-     * integer array sorted by player number containing the calculated score
+     *      * each player as if it were the end of a phase. The return value is an
+     *      * integer array sorted by player number containing the calculated score
      * for the respective player.
      * <p>
      * The "Islands" portion is calculated for each player as follows:
