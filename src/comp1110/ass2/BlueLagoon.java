@@ -1,6 +1,7 @@
 package comp1110.ass2;
 
 import comp1110.ass2.board.Board;
+import comp1110.ass2.board.Player;
 import comp1110.ass2.gui.Viewer;
 import gittest.C;
 
@@ -1120,7 +1121,10 @@ public class BlueLagoon {
      * the score for each player
      */
     public static int[] calculateTotalIslandsScore(String stateString){
-         return new int[]{0, 0}; // FIXME Task 11
+         Player[] players = Player.playersFromString(stateString);
+         int[] totalIslandScore = new int[players.length];
+
+        return new int[]{0, 0}; // FIXME Task 11
     }
 
     /**

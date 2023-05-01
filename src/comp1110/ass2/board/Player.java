@@ -126,19 +126,34 @@ public class Player {
         return player;
     }
 
-    public static Player[] playersFromString (String gameStates){
-        String[] states = gameStates.split(";");
+    /** Turn a stateString into an array of player strings
+     * output starts with "p";
+     * ex: players[0] == "p 1 42 1 2 3 4 5 S 5,6 8,7 T 1,2";
+     */
+
+    public static String[] extractPlayers(String stateString){
+        String[] states = stateString.split(";");
         List<String> playerStates = new ArrayList<String>();
         for (String state : states){
             if (state.startsWith("p")) playerStates.add(state);
         }
-        Player[] players = new Player[playerStates.size()];
+        String[] players = (String[]) playerStates.toArray();
+        return players;
+    }
+
+    /** Turn a stateString into an array of players
+     */
+
+    public static Player[] playersFromString (String gameStates){
+       String[] playerStrings = extractPlayers(gameStates);
+        Player[] players = new Player[playerStrings.length];
         for (int i = 0; i < players.length; i ++){
-             String playerString = playerStates.get(i);
+             String playerString = playerStrings[i];
             players[i] = playerFromString(playerString);
         }
-        return  players;
+        return players;
     }
+
 
     public static void main(String[] args) {
         String stringPLAYER1 = "p 1 42 1 2 3 4 5 S 5,6 8,7 T 1,2;";
