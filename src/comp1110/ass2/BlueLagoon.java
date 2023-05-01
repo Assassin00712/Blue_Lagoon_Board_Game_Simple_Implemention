@@ -1296,7 +1296,6 @@ public class BlueLagoon {
         for (String b: newBambooList){
             resourceString += " " + b;
         }
-        System.out.println(resourceString);
 
 
         // Refill the water to 6
@@ -1309,6 +1308,32 @@ public class BlueLagoon {
         resourceString += " W";
         for (String w: newWaterList){
             resourceString += " " + w;
+        }
+
+
+        // Refill the precious stone to 6
+        List<String> newStoneList = getPreciousStone(stateString);
+        if (newStoneList.size() < 6){
+            for (int i = 0 ; i < 6 - getPreciousStone(stateString).size(); i++){
+                newStoneList.add(Coordinate.randomCord().toString());
+            }
+        }
+        resourceString += " P";
+        for (String p: newStoneList){
+            resourceString += " " + p;
+        }
+
+
+        // Refill the precious stone to 6
+        List<String> newStatuetteList = getStatuette(stateString);
+        if (newStatuetteList.size() < 6){
+            for (int i = 0 ; i < 6 - getStatuette(stateString).size(); i++){
+                newStoneList.add(Coordinate.randomCord().toString());
+            }
+        }
+        resourceString += " S";
+        for (String s: newStoneList){
+            resourceString += " " + s;
         }
         System.out.println(resourceString);
 
