@@ -4,6 +4,9 @@ import static comp1110.ass2.board.Coordinate.corFromString;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class Player {
@@ -121,6 +124,20 @@ public class Player {
             }
 
         return player;
+    }
+
+    public static Player[] playersFromString (String gameStates){
+        String[] states = gameStates.split(";");
+        List<String> playerStates = new ArrayList<String>();
+        for (String state : states){
+            if (state.startsWith("p")) playerStates.add(state);
+        }
+        Player[] players = new Player[playerStates.size()];
+        for (int i = 0; i < players.length; i ++){
+             String playerString = playerStates.get(i);
+            players[i] = playerFromString(playerString);
+        }
+        return  players;
     }
 
     public static void main(String[] args) {
