@@ -2,10 +2,12 @@ package comp1110.ass2.board;
 
 import static comp1110.ass2.board.Coordinate.corFromString;
 
+import gittest.C;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -74,6 +76,8 @@ public class Player {
         return settlers;
     }
 
+
+
     public void setSettlers(Coordinate[] settlers) {
         this.settlers = settlers;
     }
@@ -82,9 +86,12 @@ public class Player {
         return villages;
     }
 
+
+
     public void setVillages(Coordinate[] villages) {
         this.villages = villages;
     }
+
 
 
     public static Player playerFromString(String playerStates) {
@@ -137,7 +144,10 @@ public class Player {
         for (String state : states){
             if (state.startsWith("p")) playerStates.add(state);
         }
-        String[] players = (String[]) playerStates.toArray();
+        String[] players = new String[playerStates.size()];
+        for(int i = 0; i < players.length; i++){
+            players[i] = playerStates.get(i);
+        }
         return players;
     }
 
@@ -152,6 +162,37 @@ public class Player {
             players[i] = playerFromString(playerString);
         }
         return players;
+    }
+
+    /**
+     * get all coordinates occupied by a player regardless if it is a village or settler
+     * @param playerStates String represents player
+     * @return array of all coordinates occupied by a player
+     */
+    public static Coordinate[] combineSettlersVillages (String playerStates) {
+        Player player = playerFromString(playerStates);
+        Coordinate[] settlers = player.getSettlers();
+        Coordinate[] villages = player.getVillages();
+        Coordinate[] combined = new Coordinate[settlers.length+villages.length];
+        System.arraycopy(settlers,0, combined,0,settlers.length);
+        System.arraycopy(villages,0, combined,settlers.length-1,villages.length);
+        return combined;
+    }
+
+    /**
+     * get all coordinates occupied by all players
+     * @param stateString String represents current states
+     * @return array of Coordinates occupied by all players
+     */
+
+    public static Coordinate[][] allSettlersVillages (String stateString){
+        String[] players = extractPlayers(stateString);
+        List<Coordinate[]> all = new ArrayList<>();
+        for (String player: players){
+            Coordinate[] each = combineSettlersVillages(player);
+            all.add(each);
+        }
+        return all.toArray(new Coordinate[0][0]);
     }
 
 

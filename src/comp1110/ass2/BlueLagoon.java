@@ -1,11 +1,16 @@
 package comp1110.ass2;
 
 import comp1110.ass2.board.Board;
+import comp1110.ass2.board.Coordinate;
+import comp1110.ass2.board.Island;
 import comp1110.ass2.board.Player;
 import comp1110.ass2.gui.Viewer;
 import gittest.C;
 
 import java.util.*;
+
+import static comp1110.ass2.board.Island.getIslandScore;
+import static comp1110.ass2.board.Player.allSettlersVillages;
 
 public class BlueLagoon {
     // The Game Strings for five maps have been created for you.
@@ -1106,6 +1111,21 @@ public class BlueLagoon {
     }
 
     /**
+     * a helper for task 11
+     * get the sum of scores from two scores array
+     * @param a first int array
+     * @param b second int array, must have same length as a
+     * @return c third array, must have same length as a and b
+     */
+    public static int[] sumScores (int[] a, int[] b){
+        int[] c = new int[a.length];
+        for (int i = 0; i < c.length; i++){
+            c[i] = a[i] + b[i];
+        }
+        return c;
+    }
+
+    /**
      * Given a state string, calculate the "Islands" portion of the score for
      *      * each player as if it were the end of a phase. The return value is an
      *      * integer array sorted by player number containing the calculated score
@@ -1122,9 +1142,18 @@ public class BlueLagoon {
      */
     public static int[] calculateTotalIslandsScore(String stateString){
          Player[] players = Player.playersFromString(stateString);
+         for (Player player:players){
+             System.out.println(player.toString());
+         }
          int[] totalIslandScore = new int[players.length];
-
-        return new int[]{0, 0}; // FIXME Task 11
+         Island[] islands = Island.getIslands(stateString);
+        Coordinate[][] occupied = allSettlersVillages(stateString);
+        for (int i = 0; i < players.length; i++){
+            Coordinate[] cors = occupied[i];
+            int scoreAtI = getIslandScore(cors,islands);
+            totalIslandScore[i] = scoreAtI;
+        }
+        return totalIslandScore; // FIXME Task 11
     }
 
     /**

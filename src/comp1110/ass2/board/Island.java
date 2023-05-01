@@ -3,6 +3,7 @@ package comp1110.ass2.board;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Island {
     /**
@@ -59,7 +60,13 @@ public class Island {
         return island;
     }
 
-    public static List<Island> getIslands (String gameState){
+    /**
+     * get a list of islands from a gameState
+     * @param gameState same as stateString in BlueLagoon.java
+     * @return A list of islands
+     */
+
+    public static Island[] getIslands (String gameState){
         String[] gameStates = gameState.split(";");
         List<String> islandStrings = new ArrayList<>();
         for (String state : gameStates){
@@ -71,7 +78,7 @@ public class Island {
             Island island = getIslandFromString(islandStrings.get(i),islandNum);
             islands.add(island);
         }
-        return islands;
+        return islands.toArray(new Island[0]);
     }
 
     /**
@@ -90,6 +97,31 @@ public class Island {
                 output = island.getIslandNum();
                 break;
             }
+        }
+        return output;
+    }
+
+    /**
+     *  a helper method for totalIslandScore in task11
+     * @param cors an array of Coordinates which can be gotten from player's settlers and villages
+     * @param islands the array of island given by the stateString
+     * @return the score given the number of islands occupied
+     */
+
+    public static int getIslandScore (Coordinate[] cors, Island[] islands){
+        List<Integer> islandOccupied = new ArrayList<Integer>();
+        for (Coordinate cor : cors){
+            int islandNum = getIslandNumber(cor,islands);
+            islandOccupied.add(islandNum);
+        }
+        List<Integer> islandsToCount = islandOccupied.stream()
+                .distinct()
+                .collect(Collectors.toList());
+        int output = 0;
+        switch (islandsToCount.size()){
+            case 8 -> output = 20;
+            case 7 -> output = 10;
+            default -> output = 0;
         }
         return output;
     }
