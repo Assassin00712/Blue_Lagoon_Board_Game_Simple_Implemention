@@ -111,4 +111,12 @@ public class Coordinate {
     public int hashCode() {
         return Objects.hash(row, col);
     }
+
+
+    public static Coordinate randomCord(){
+        int x = (int) (Math.random() * 12);
+        int y = (int) (Math.random() * 12);
+
+        return new Coordinate(x, y);
+    }
 }

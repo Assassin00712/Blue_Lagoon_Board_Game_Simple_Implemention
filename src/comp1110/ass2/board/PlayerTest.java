@@ -28,16 +28,16 @@ public class PlayerTest {
                     new Coordinate(8, 7)};
             Coordinate[] village1 = {new Coordinate(0, 5)};
             Coordinate[] village2 = {new Coordinate(1, 2)};
-            assertEquals(0, playerFromString(DEFAULT_PLAYER1).getPlayId());
-            assertEquals(1, playerFromString(DEFAULT_PLAYER2).getPlayId());
-            assertEquals(42, playerFromString(DEFAULT_PLAYER2).getScore());
-            assertArrayEquals(resources1, playerFromString(DEFAULT_PLAYER1).getResources());
-            assertArrayEquals(resources2, playerFromString(DEFAULT_PLAYER2).getResources());
+            assertEquals(0, playerFromString(DEFAULT_PLAYER1).playId);
+            assertEquals(1, playerFromString(DEFAULT_PLAYER2).playId);
+            assertEquals(42, playerFromString(DEFAULT_PLAYER2).score);
+            assertArrayEquals(resources1, playerFromString(DEFAULT_PLAYER1).resources);
+            assertArrayEquals(resources2, playerFromString(DEFAULT_PLAYER2).resources);
             //System.out.println(Arrays.toString(playerFromString(DEFAULT_PLAYER1).getSettlers()));
-            assertArrayEquals(settler1, playerFromString(DEFAULT_PLAYER1).getSettlers());
-            assertArrayEquals(settler2, playerFromString(DEFAULT_PLAYER2).getSettlers());
-            assertArrayEquals(village1, playerFromString(DEFAULT_PLAYER1).getVillages());
-            assertArrayEquals(village2, playerFromString(DEFAULT_PLAYER2).getVillages());
+            assertArrayEquals(settler1, playerFromString(DEFAULT_PLAYER1).settlers);
+            assertArrayEquals(settler2, playerFromString(DEFAULT_PLAYER2).settlers);
+            assertArrayEquals(village1, playerFromString(DEFAULT_PLAYER1).villages);
+            assertArrayEquals(village2, playerFromString(DEFAULT_PLAYER2).villages);
         }
 
 }

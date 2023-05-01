@@ -2,6 +2,7 @@ package comp1110.ass2.board;
 
 import static comp1110.ass2.board.Coordinate.corFromString;
 
+import gittest.A;
 import gittest.C;
 import org.junit.jupiter.api.Test;
 
@@ -14,82 +15,34 @@ import static org.junit.jupiter.api.Assertions.*;
 public class Player {
 
 
-    int playId;
-    int score;
-    int[] resources;
-    Coordinate[] settlers;
-    Coordinate[] villages;
+    public int playId;
+    public int score;
+    public List<Integer> resources;
+    public List<Coordinate> settlers;
+    public List<Coordinate> villages;
 
 
-    public Player(int playId,
-                  int score,
-                  int[] resources,
-                  Coordinate[] settlers,
-                  Coordinate[] villages) {
+    public Player(int playId) {
         this.playId = playId;
-        this.score = score;
-        this.resources = resources;
-        // {coconut, bamboo, water, preciousStone, statuette}
-        this.settlers = settlers;
-        this.villages = villages;
     }
 
 
-    public final Coordinate[] blankC = new Coordinate[0];
-    public final int[] blankI = new int[0];
 
     public Player() {
         this.playId = 0;
         this.score = 0;
-        this.resources = blankI;
+        this.resources = null;
         // {coconut, bamboo, water, preciousStone, statuette}
-        this.settlers = blankC;
-        this.villages = blankC;
+        this.settlers = null;
+        this.villages = null;
 
     }
 
-    public int getPlayId() {
-        return playId;
-    }
-
-    public void setPlayId(int playId) {
-        this.playId = playId;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public int[] getResources() {
-        return resources;
-    }
-
-    public void setResources(int[] resources) {
-        this.resources = resources;
-    }
-
-    public Coordinate[] getSettlers() {
-        return settlers;
-    }
 
 
 
-    public void setSettlers(Coordinate[] settlers) {
-        this.settlers = settlers;
-    }
-
-    public Coordinate[] getVillages() {
-        return villages;
-    }
-
-
-
-    public void setVillages(Coordinate[] villages) {
-        this.villages = villages;
+    public void addSettlers(Coordinate settler) {
+        this.settlers.add(settler);
     }
 
 
@@ -97,18 +50,18 @@ public class Player {
     public static Player playerFromString(String playerStates) {
         Player player = new Player();
         String[] players = playerStates.split(" ");
-        player.setPlayId(Integer.parseInt(players[1]));
-        player.setScore(Integer.parseInt(players[2]));
-        int[] resources = new int[5];
+        player.playId = Integer.parseInt(players[1]);
+        player.score = Integer.parseInt(players[2]);
+        List<Integer> resources = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            resources[i] = Integer.parseInt(players[i + 3]);
+            resources.add(i, Integer.parseInt(players[i + 3]));
         }
 //        resources[0] = Integer.parseInt(players[3]);
 //        resources[1] = Integer.parseInt(players[4]);
 //        resources[2] = Integer.parseInt(players[5]);
 //        resources[3] = Integer.parseInt(players[6]);
 //        resources[4] = Integer.parseInt(players[7]);
-        player.setResources(resources);
+        player.resources = resources;
         int settlerStarts = 0;
         int villageStarts = 0;
         for (int j = 5; j < players.length; j++) {
@@ -118,16 +71,16 @@ public class Player {
             if (players[j].equals("T")) {
                 villageStarts = j;
             } }
-            Coordinate[] corS = new Coordinate[villageStarts - settlerStarts-1];
-            for (int k = 0; k < corS.length; k++) {
-             corS[k] = corFromString(players[settlerStarts + k + 1]);
-             player.setSettlers(corS);
+            List<Coordinate> corS = new ArrayList<>();
+            for (int k = 0; k < corS.size(); k++) {
+             corS.add(k, corFromString(players[settlerStarts + k + 1]));
+             player.settlers = corS;
             }
 
-            Coordinate[] corV = new Coordinate[players.length - villageStarts-1];
-            for (int l = 0; l < corV.length; l++) {
-              corV[l] = corFromString(players[villageStarts + l + 1]);
-              player.setVillages(corV);
+            List<Coordinate> corV = new ArrayList<>();
+            for (int l = 0; l < corV.size(); l++) {
+              corV.add(l, corFromString(players[villageStarts + l + 1]));
+              player.villages = corV;
             }
 
         return player;
@@ -169,13 +122,13 @@ public class Player {
      * @param playerStates String represents player
      * @return array of all coordinates occupied by a player
      */
-    public static Coordinate[] combineSettlersVillages (String playerStates) {
+    public static List<Coordinate> combineSettlersVillages (String playerStates) {
         Player player = playerFromString(playerStates);
-        Coordinate[] settlers = player.getSettlers();
-        Coordinate[] villages = player.getVillages();
-        Coordinate[] combined = new Coordinate[settlers.length+villages.length];
-        System.arraycopy(settlers,0, combined,0,settlers.length);
-        System.arraycopy(villages,0, combined,settlers.length-1,villages.length);
+        List<Coordinate> settlers = player.settlers;
+        List<Coordinate> villages = player.villages;
+        List<Coordinate> combined = new ArrayList<>();
+        System.arraycopy(settlers,0, combined,0,settlers.size());
+        System.arraycopy(villages,0, combined,settlers.size()-1,villages.size());
         return combined;
     }
 
@@ -187,10 +140,10 @@ public class Player {
 
     public static Coordinate[][] allSettlersVillages (String stateString){
         String[] players = extractPlayers(stateString);
-        List<Coordinate[]> all = new ArrayList<>();
+        List<Coordinate> all = new ArrayList<>();
         for (String player: players){
-            Coordinate[] each = combineSettlersVillages(player);
-            all.add(each);
+            List<Coordinate> each = combineSettlersVillages(player);
+            all.add((Coordinate) each);
         }
         return all.toArray(new Coordinate[0][0]);
     }
@@ -200,7 +153,7 @@ public class Player {
         String stringPLAYER1 = "p 1 42 1 2 3 4 5 S 5,6 8,7 T 1,2;";
         Player player1 = playerFromString(stringPLAYER1);
         System.out.println(player1.playId);
-        System.out.println(player1.getScore());
+        System.out.println(player1.score);
     }
 
 }

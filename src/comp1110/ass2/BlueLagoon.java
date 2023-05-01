@@ -1268,8 +1268,52 @@ public class BlueLagoon {
         endPhaseString += getCurrentStateStatement(stateString).replace("E","S") + ";";
         endPhaseString += getIslandStatement(stateString) + ";";
         endPhaseString += getStoneStatement(stateString) + ";";
-        endPhaseString += getUnclaimedResourcesandStatuettesStatement(stateString) +";";
-        Spot spot = new Spot(new Coordinate(1,1));
+
+        // Fill the resources again
+        String resourceString = getUnclaimedResourcesandStatuettesStatement(stateString) +";";
+
+        // Refill the coconuts to 6
+        List<String> newCoconutList = getCoconutList(stateString);
+        if (newCoconutList.size() < 6){
+            for (int i = 0 ; i < 6 - getCoconutList(stateString).size(); i++){
+                newCoconutList.add(Coordinate.randomCord().toString());
+            }
+        }
+        resourceString = "r C";
+        for (String c: newCoconutList){
+            resourceString += " " + c;
+        }
+
+
+        // Refill the bamboo to 6
+        List<String> newBambooList = getBamboo(stateString);
+        if (newBambooList.size() < 6){
+            for (int i = 0 ; i < 6 - getBamboo(stateString).size(); i++){
+                newBambooList.add(Coordinate.randomCord().toString());
+            }
+        }
+        resourceString += " B";
+        for (String b: newBambooList){
+            resourceString += " " + b;
+        }
+        System.out.println(resourceString);
+
+
+        // Refill the water to 6
+        List<String> newWaterList = getWater(stateString);
+        if (newWaterList.size() < 6){
+            for (int i = 0 ; i < 6 - getWater(stateString).size(); i++){
+                newWaterList.add(Coordinate.randomCord().toString());
+            }
+        }
+        resourceString += " W";
+        for (String w: newWaterList){
+            resourceString += " " + w;
+        }
+        System.out.println(resourceString);
+
+
+        // Calculate Player Score
         endPhaseString += getPlayerStatement(stateString);
 
         return endPhaseString; // FIXME Task 12
