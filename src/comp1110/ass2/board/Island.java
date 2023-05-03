@@ -108,8 +108,8 @@ public class Island {
      * @return the score given the number of islands occupied
      */
 
-    public static int getIslandScore (Coordinate[] cors, Island[] islands){
-        List<Integer> islandOccupied = new ArrayList<Integer>();
+    public static int getIslandScore (List<Coordinate> cors, Island[] islands){
+        List<Integer> islandOccupied = new ArrayList<>();
         for (Coordinate cor : cors){
             int islandNum = getIslandNumber(cor,islands);
             islandOccupied.add(islandNum);

@@ -100,7 +100,9 @@ public class Coordinate {
         }
         String[] tmp = s.split(",");
         int row = Integer.parseInt(tmp[0].strip());
+        //System.out.println("the row of the Coordinate dealing with is " + row);
         int col = Integer.parseInt(tmp[1].strip());
+        //System.out.println("the column of the Coordinate dealing with is " + col);
         c.col = col;
         c.row = row;
         return c;
