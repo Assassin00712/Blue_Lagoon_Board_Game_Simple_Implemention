@@ -2,6 +2,8 @@ package comp1110.ass2;
 
 import comp1110.ass2.board.Board;
 import comp1110.ass2.board.Coordinate;
+import comp1110.ass2.board.Spot;
+import comp1110.ass2.board.Coordinate;
 import comp1110.ass2.board.Island;
 import comp1110.ass2.board.Player;
 import comp1110.ass2.gui.Viewer;
@@ -11,6 +13,7 @@ import java.util.*;
 
 import static comp1110.ass2.board.Island.getIslandScore;
 import static comp1110.ass2.board.Player.allSettlersVillages;
+import static comp1110.ass2.board.Player.playerFromString;
 
 public class BlueLagoon {
     // The Game Strings for five maps have been created for you.
@@ -54,7 +57,7 @@ public class BlueLagoon {
         int islandLength = 0;
         while (s1[i].charAt(1) == 'i') {
             String a = s1[i];
-            islandStatement = islandStatement + a;
+            islandStatement = islandStatement + a + ";";
             islandLength = islandLength + 1;
             i++;
         }
@@ -1141,12 +1144,14 @@ public class BlueLagoon {
      * the score for each player
      */
     public static int[] calculateTotalIslandsScore(String stateString){
-         Player[] players = Player.playersFromString(stateString);
-
-         int[] totalIslandScore = new int[players.length];
+         List<Player> players = Player.playersFromString(stateString);
+         for (Player player:players){
+             System.out.println(player.toString());
+         }
+         int[] totalIslandScore = new int[players.size()];
          Island[] islands = Island.getIslands(stateString);
         Coordinate[][] occupied = allSettlersVillages(stateString);
-        for (int i = 0; i < players.length; i++){
+        for (int i = 0; i < players.size(); i++){
             Coordinate[] cors = occupied[i];
             int scoreAtI = getIslandScore(cors,islands);
             totalIslandScore[i] = scoreAtI;
@@ -1258,7 +1263,97 @@ public class BlueLagoon {
      * @return a string representing the new state achieved by following the end of phase rules
      */
     public static String endPhase(String stateString){
-         return ""; // FIXME Task 12
+        String endPhaseString = "";
+
+        endPhaseString += getArrangementStatement(stateString) +";";
+        endPhaseString += getCurrentStateStatement(stateString).replace("E","S") + ";";
+        endPhaseString += getIslandStatement(stateString);
+        endPhaseString += getStoneStatement(stateString) + "; ";
+
+        // Fill the resources again
+        String resourceString = getUnclaimedResourcesandStatuettesStatement(stateString) +";";
+
+        // Refill the coconuts to 6
+        List<String> newCoconutList = getCoconutList(stateString);
+        if (newCoconutList.size() < 6){
+            for (int i = 0 ; i < 6 - getCoconutList(stateString).size(); i++){
+                newCoconutList.add(Coordinate.randomCord().toString());
+            }
+        }
+        resourceString = "r C";
+        for (String c: newCoconutList){
+            resourceString += " " + c;
+        }
+
+
+        // Refill the bamboo to 6
+        List<String> newBambooList = getBamboo(stateString);
+        if (newBambooList.size() < 6){
+            for (int i = 0 ; i < 6 - getBamboo(stateString).size(); i++){
+                newBambooList.add(Coordinate.randomCord().toString());
+            }
+        }
+        resourceString += " B";
+        for (String b: newBambooList){
+            resourceString += " " + b;
+        }
+
+        // Refill the water to 6
+        List<String> newWaterList = getWater(stateString);
+        if (newWaterList.size() < 6){
+            for (int i = 0 ; i < 6 - getWater(stateString).size(); i++){
+                newWaterList.add(Coordinate.randomCord().toString());
+            }
+        }
+        resourceString += " W";
+        for (String w: newWaterList){
+            resourceString += " " + w;
+        }
+
+
+        // Refill the precious stone to 6
+        List<String> newStoneList = getPreciousStone(stateString);
+        if (newStoneList.size() < 6){
+            for (int i = 0 ; i < 6 - getPreciousStone(stateString).size(); i++){
+                newStoneList.add(Coordinate.randomCord().toString());
+            }
+        }
+        resourceString += " P";
+        for (String p: newStoneList){
+            resourceString += " " + p;
+        }
+
+        // Refill the Statuette to 8
+        List<String> newStatuetteList = getStatuette(stateString);
+        if (newStatuetteList.size() < 8){
+            for (int i = 0 ; i < 8 - getStatuette(stateString).size(); i++){
+                newStoneList.add(Coordinate.randomCord().toString());
+            }
+        }
+        resourceString += " S";
+        for (String s: newStoneList){
+            resourceString += " " + s;
+        }
+        System.out.println(resourceString);
+        endPhaseString += resourceString + "; ";
+
+
+        // Calculate Player Score
+        List<Player> players = new ArrayList<>();
+        String[] playersStatement = getPlayerStatement(stateString).split(";");
+        for (String s : playersStatement){
+            players.add(playerFromString(s.strip()));
+        }
+
+        for (Player player: players) {
+            player.clearResources();
+            player.clearSettlers();
+            endPhaseString += player.toStateString() + " ";
+        }
+        System.out.println(stateString);
+        System.out.println(endPhaseString);
+
+        return endPhaseString.strip(); // FIXME Task 12
     }
 
     /**

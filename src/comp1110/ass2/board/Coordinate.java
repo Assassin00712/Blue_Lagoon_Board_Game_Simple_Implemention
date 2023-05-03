@@ -5,8 +5,8 @@ import java.util.Objects;
 public class Coordinate {
 
     // I changed Position into Coordinate since the format given in state strings are not a typical position format
-    int row;
-    int col;
+    public int row;
+    public int col;
     String[] cord;
 
 
@@ -95,10 +95,14 @@ public class Coordinate {
 
     public static Coordinate corFromString(String s) {
         Coordinate c = new Coordinate();
-        int row = Integer.parseInt(String.valueOf(s.charAt(0)));
-        int col = Integer.parseInt(String.valueOf(s.charAt(2)));
-        c.setCol(col);
-        c.setRow(row);
+        if (s.charAt(s.length()-1) == ';'){
+            s = s.substring(0, s.length()-1);
+        }
+        String[] tmp = s.split(",");
+        int row = Integer.parseInt(tmp[0].strip());
+        int col = Integer.parseInt(tmp[1].strip());
+        c.col = col;
+        c.row = row;
         return c;
     }
 
@@ -107,5 +111,18 @@ public class Coordinate {
         return (other instanceof Coordinate) &&
                 row == ((Coordinate) other).row &&
                 col == ((Coordinate) other).col;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(row, col);
+    }
+
+
+    public static Coordinate randomCord(){
+        int x = (int) (Math.random() * 12);
+        int y = (int) (Math.random() * 12);
+
+        return new Coordinate(x, y);
     }
 }

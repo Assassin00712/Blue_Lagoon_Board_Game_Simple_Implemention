@@ -1,5 +1,7 @@
 package comp1110.ass2.board;
 
+import java.util.List;
+
 import static comp1110.ass2.board.Coordinate.corFromString;
 
 public class Board {
@@ -17,7 +19,7 @@ public class Board {
             cor.setRow(row);
             while (col < BOARD_HEIGHT) {
                 cor.setCol(col);
-                board[row][col].setsCor(cor);
+                board[row][col].sCor = (cor);
                 col++;
             }
             col = 0;
@@ -31,16 +33,16 @@ public class Board {
     }
 
     public void spotFromPlayer(Player player){
-        int playId = player.getPlayId();
-        Coordinate[] settlers = player.getSettlers();
-        Coordinate[] villages = player.getVillages();
-        for (int i = 0; i < settlers.length; i++){
-            Spot spot = spotFromCor(settlers[i]);
-            spot.setOccupier(1000+(playId)*100+i+1);
+        int playId = player.playId;
+        List<Coordinate> settlers = player.settlers;
+        List<Coordinate> villages = player.villages;
+        for (int i = 0; i < settlers.size(); i++){
+            Spot spot = spotFromCor(settlers.get(i));
+            spot.occupier = (1000+(playId)*100+i+1);
         }
-        for (int j = 0; j < villages.length; j++){
-            Spot spot = spotFromCor(settlers[j]);
-            spot.setOccupier(2000+(playId)*100+j+1);
+        for (int j = 0; j < villages.size(); j++){
+            Spot spot = spotFromCor(settlers.get(j));
+            spot.occupier = (2000+(playId)*100+j+1);
         }
     }
 
@@ -54,41 +56,39 @@ public class Board {
             while ( j < coordinates.length){
                 if (coordinates[0].equals("i")){
                     Coordinate c = corFromString(coordinates[j]);
-                    board[c.getRow()][c.getCol()].setIsland(true);
+                    board[c.getRow()][c.getCol()].isIsland = true;
                     j++;
                 }
                 if (coordinates[0].equals("s")){
                     Coordinate c = corFromString(coordinates[j]);
-                    board[c.getRow()][c.getCol()].setStone(true);
+                    board[c.getRow()][c.getCol()].isStone = true;
                     j++;
                 }if (coordinates[0].equals("r")){
                     if (coordinates[0].equals("C")){
                         j++;
                         Coordinate c = corFromString(coordinates[j]);
-                        board[c.getRow()][c.getCol()].setResources(Resources.COCONUTS);
+                        board[c.getRow()][c.getCol()].resources = Resources.COCONUTS;
                     }if (coordinates[0].equals("W")){
                         j++;
                         Coordinate c = corFromString(coordinates[j]);
-                        board[c.getRow()][c.getCol()].setResources(Resources.WATER);
+                        board[c.getRow()][c.getCol()].resources = Resources.WATER;
                     }if (coordinates[0].equals("P")){
                         j++;
                         Coordinate c = corFromString(coordinates[j]);
-                        board[c.getRow()][c.getCol()].setResources(Resources.PRECIOUS_STONE);
+                        board[c.getRow()][c.getCol()].resources = Resources.PRECIOUS_STONE;
                     }if (coordinates[0].equals("B")){
                         j++;
                         Coordinate c = corFromString(coordinates[j]);
-                        board[c.getRow()][c.getCol()].setResources(Resources.BAMBOO);
+                        board[c.getRow()][c.getCol()].resources = Resources.BAMBOO;
                     }if (coordinates[0].equals("S")){
                         j++;
                         Coordinate c = corFromString(coordinates[j]);
-                        board[c.getRow()][c.getCol()].setResources(Resources.STATUETTS);
+                        board[c.getRow()][c.getCol()].resources = Resources.STATUETTS;
                     }
                 }
             }
             if (gameStates[i].startsWith("p")){
-                Coordinate[] blankC = new Coordinate[0];
-                int[] blankI = new int[0];
-                Player player = new Player(0,0,blankI,blankC,blankC);
+                Player player = new Player();
                 player.playerFromString(gameStates[i]);
                 spotFromPlayer(player);
             }

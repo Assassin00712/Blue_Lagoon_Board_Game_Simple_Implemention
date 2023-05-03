@@ -1,6 +1,8 @@
 package comp1110.ass2.board;
 
 
+import java.util.Objects;
+
 import static comp1110.ass2.board.Board.board;
 import static comp1110.ass2.board.Coordinate.corFromString;
 
@@ -9,11 +11,11 @@ public class Spot {
 
     // In format of (Coordinate (col row), isIsland, isStone, Resources, occupier)
 
-    Coordinate sCor;
-    Boolean isIsland;
-    Boolean isStone;
-    Resources resources;
-    int occupier;
+    public Coordinate sCor;
+    public Boolean isIsland;
+    public Boolean isStone;
+    public Resources resources;
+    public int occupier;
     //1101 if the spot is occupied by first settler of player 1
     //2101 if the spot is occupied by first settler of player 2
     //1101 if the spot is occupied by first village of player 1
@@ -22,57 +24,16 @@ public class Spot {
     // must not be greater than number of players
 
 
-    public Spot(Coordinate sCor,
-                Boolean isIsland,
-                Boolean isStone,
-                Resources resources,
-                int occupier) {
-        this.sCor = sCor;
-        this.isIsland = isIsland;
-        this.isStone = isStone;
-        this.resources = resources;
-        this.occupier = occupier;
-    }
-
-
-    public Coordinate getsCor() {
-        return sCor;
-    }
-
-    public void setsCor(Coordinate sCor) {
+    public Spot(Coordinate sCor) {
         this.sCor = sCor;
     }
 
-    public Boolean getIsland() {
-        return isIsland;
-    }
 
-    public void setIsland(Boolean island) {
-        isIsland = island;
+    public int getsCorX() {
+        return sCor.col;
     }
-
-    public Boolean getStone() {
-        return isStone;
-    }
-
-    public void setStone(Boolean stone) {
-        isStone = stone;
-    }
-
-    public Resources getResources() {
-        return resources;
-    }
-
-    public void setResources(Resources resources) {
-        this.resources = resources;
-    }
-
-    public int getOccupier() {
-        return occupier;
-    }
-
-    public void setOccupier(int occupier) {
-        this.occupier = occupier;
+    public int getsCorY() {
+        return sCor.row;
     }
 
 
@@ -84,6 +45,13 @@ public class Spot {
     public static String[] splitStates (String s){
         String[] coordinates = s.split(" ");
         return coordinates;
+    }
+
+    public boolean isOccupied (){
+        if (this.occupier > 0){
+            return true;
+        }
+        return false;
     }
 
 
@@ -99,5 +67,18 @@ public class Spot {
                 ", resources=" + resources +
                 ", occupier=" + occupier +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Spot spot = (Spot) o;
+        return Objects.equals(sCor, spot.sCor);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sCor);
     }
 }
