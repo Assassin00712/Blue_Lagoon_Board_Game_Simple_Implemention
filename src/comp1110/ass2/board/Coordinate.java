@@ -67,18 +67,20 @@ public class Coordinate {
      * @param cor2 the coordinate to compare, taken from the occupied coordinates of the player
      * @return true if coordinates are linked, false otherwise
      */
-    public static boolean isLinked (Coordinate cor1, Coordinate cor2){
+    public static boolean isLinked (Coordinate cor1, Coordinate cor2) {
         int row1 = cor1.getRow();
         int row2 = cor2.getRow();
         int col1 = cor1.getCol();
         int col2 = cor2.getCol();
-        if (row1 == row2){
-            return ((col1 == col2 + 1) || (col1 == col2 - 1));
-        }else if ((row1 == row2 - 1) || (row1 == row2 + 1)){
-            return (col1 == col2);
-        }else if ((col1 == col2 - 1) || (col1 == col2 + 1)){
-            return (row1 == row2);}
-        return false;
+        if (col1 == col2) {
+            return ((row1 == row2 + 1) || (row1 == row2 - 1));
+        } else if (col1 % 2 == 0) {
+            return ((col1 == col2 - 1) || (col1 == col2 + 1)
+                    && (row1 == row2 - 1) || (row1 == row2));
+        } else {
+            return ((col1 == col2 - 1) || (col1 == col2 + 1)
+                    && (row1 == row2 + 1) || (row1 == row2));
+        }
     }
 
     @Override

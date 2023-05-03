@@ -1142,9 +1142,7 @@ public class BlueLagoon {
      */
     public static int[] calculateTotalIslandsScore(String stateString){
          Player[] players = Player.playersFromString(stateString);
-         for (Player player:players){
-             System.out.println(player.toString());
-         }
+
          int[] totalIslandScore = new int[players.length];
          Island[] islands = Island.getIslands(stateString);
         Coordinate[][] occupied = allSettlersVillages(stateString);
