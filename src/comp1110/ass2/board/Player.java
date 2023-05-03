@@ -60,9 +60,6 @@ public class Player {
             if (playerStates.length() >=19){
                 System.out.println("the playerString is valid");
             String[] players = playerStates.split(" ");
-            for (String p : players){
-                System.out.println(p);
-            }
             player.playId = Integer.parseInt(players[1]);
             player.score = Integer.parseInt(players[2]);
             List<Integer> resources = new ArrayList<>();
@@ -72,13 +69,16 @@ public class Player {
             player.resources = resources;
             int settlerStarts = 0;
             int villageStarts = 0;
+                System.out.println("The String has length "+players.length);
             for (int j = 5; j < players.length; j++) {
                 if (players[j].equals("S")) {
                     // actual settler locate at j+1
                     settlerStarts = j;
+                    System.out.println(players[settlerStarts]+" starts at " + settlerStarts);
                 }
                 if (players[j].equals("T")) {
                     villageStarts = j;
+                    System.out.println(players[villageStarts]+" starts at " + villageStarts);
                 }
             }
             // test if there is settler for a player, if string "S" is followed by "T"
