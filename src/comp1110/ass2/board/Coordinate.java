@@ -99,6 +99,7 @@ public class Coordinate {
             s = s.substring(0, s.length()-1);
         }
         String[] tmp = s.split(",");
+
         int row = Integer.parseInt(tmp[0].strip());
         //System.out.println("the row of the Coordinate dealing with is " + row);
         int col = Integer.parseInt(tmp[1].strip());

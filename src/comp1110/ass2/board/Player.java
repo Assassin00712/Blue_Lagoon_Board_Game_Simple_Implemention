@@ -58,7 +58,7 @@ public class Player {
         List<Coordinate> corS = new ArrayList<>();
         List<Coordinate> corV = new ArrayList<>();
             if (playerStates.length() >=19){
-                System.out.println("the playerString is valid");
+                //System.out.println("the playerString is valid");
             String[] players = playerStates.split(" ");
             player.playId = Integer.parseInt(players[1]);
             player.score = Integer.parseInt(players[2]);
@@ -69,17 +69,13 @@ public class Player {
             player.resources = resources;
             int settlerStarts = 0;
             int villageStarts = 0;
-                System.out.println("The String has length "+players.length);
             for (int j = 5; j < players.length; j++) {
                 if (players[j].equals("S")) {
                     // actual settler locate at j+1
                     settlerStarts = j;
-                    System.out.println(players[settlerStarts]+" starts at " + settlerStarts);
                 }
-                if (players[j].equals("T")) {
-                    villageStarts = j;
-                    System.out.println(players[villageStarts]+" starts at " + villageStarts);
-                }
+                else if (players[j].startsWith("T")) {
+                    villageStarts = j;}
             }
             // test if there is settler for a player, if string "S" is followed by "T"
         // then the player has no settler, the corS will remain blank
@@ -215,19 +211,7 @@ public class Player {
 
 
     public static void main(String[] args) {
-        String testPlayer =  "p 1 42 1 2 3 4 5 S 5,6 8,7 T 1,2;";
-        //System.out.println(testPlayer);
-        //System.out.println(playerFromString(testPlayer).toString());
-        List<Player> testDefault = playersFromString(DEFAULT_GAME);
-        for (Player player : testDefault){
-           System.out.println("playersFromString is executing");
-            System.out.println(player.toString());
-        }
-        List<Player> testWhells = playersFromString(WHEELS_GAME);
-        for (Player player : testWhells){
-            System.out.println("playersFromString is executing");
-            System.out.println(player.toString());
-        }
+        String testPlayer = "p 1 42 1 2 3 4 5 S 5,6 8,7 T 1,2;";
     }
 
 

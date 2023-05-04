@@ -1146,7 +1146,7 @@ public class BlueLagoon {
     public static int[] calculateTotalIslandsScore(String stateString){
          List<Player> players = Player.playersFromString(stateString);
          for (Player player:players){
-             System.out.println(player.toString());
+            System.out.println(player.toString());
          }
          int[] totalIslandScore = new int[players.size()];
          Island[] islands = Island.getIslands(stateString);
