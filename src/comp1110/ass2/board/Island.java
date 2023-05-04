@@ -1,10 +1,9 @@
 package comp1110.ass2.board;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static comp1110.ass2.board.Player.getChainedOccupier;
 
 public class Island {
     /**
@@ -121,6 +120,25 @@ public class Island {
     }
 
     /**
+     * givem list of settlers and villages,
+     * @param cors list of settlers and villages(combined)
+     * @param islands list of islands given by gameState
+     * @return to a hashset of intergers, represents island numbers occupied,
+     * no duplicates or 0s permitted
+     */
+    public static HashSet<Integer> getOccupiedIslands (List<Coordinate> cors, List<Island> islands){
+        HashSet<Integer> islandsOccupied = new HashSet<>();
+        for (Coordinate cor : cors){
+            int islandNum = getIslandNumber(cor,islands);
+            islandsOccupied.add(islandNum);
+        }
+        // islands with islandNum 0 are not island, so we remove them
+        islandsOccupied.remove(0);
+        return  islandsOccupied;
+
+    }
+
+    /**
      *  a helper method for totalIslandScore in task11
      * @param cors an array of Coordinates which can be gotten from player's settlers and villages
      * @param islands the list of islands given by the stateString
@@ -128,14 +146,7 @@ public class Island {
      */
 
     public static int getIslandScore (List<Coordinate> cors, List<Island> islands){
-        HashSet<Integer> islandsOccupied = new HashSet<Integer>();
-        for (Coordinate cor : cors){
-            int islandNum = getIslandNumber(cor,islands);
-            islandsOccupied.add(islandNum);
-        }
-        // islands with islandNum 0 are not island, so we remove them
-        islandsOccupied.remove(0);
-
+        HashSet<Integer> islandsOccupied = getOccupiedIslands(cors,islands);
         int output;
         //somehow when there are more than 8 islands, the scores remains 20
         switch (islandsOccupied.size()){
@@ -145,6 +156,25 @@ public class Island {
         }
         //System.out.println(islandsOccupied.size() + " islands with score " + output);
         return output;
+    }
+
+    /**
+     * helper method for task11 part2
+     */
+    public static int getLinkedScore(List<Coordinate> cors, List<Island> islands){
+        List<List<Coordinate>> separated =  getChainedOccupier(new ArrayList<>(),cors);
+        List<Integer> scores = new ArrayList<>();
+        // for each separated linked coordinates, score them in terms of islands occupied
+        for (List<Coordinate> each : separated){
+            HashSet<Integer> islandsOccupied = getOccupiedIslands(each,islands);
+            int score = islandsOccupied.size()*5;
+            scores.add(score);
+            System.out.println(score);
+        }
+        if (scores.size()==0){
+            return 0;
+        }
+        return Collections.max(scores);
     }
 
     public static final String DEFAULT_GAME = "a 13 2; c 0 E; i 6 0,0 0,1 0,2 0,3 1,0 1,1 1,2 1,3 1,4 2,0 2,1; i 6 0,5 0,6 0,7 1,6 1,7 1,8 2,6 2,7 2,8 3,7 3,8; i 6 7,12 8,11 9,11 9,12 10,10 10,11 11,10 11,11 11,12 12,10 12,11; i 8 0,9 0,10 0,11 1,10 1,11 1,12 2,10 2,11 3,10 3,11 3,12 4,10 4,11 5,11 5,12; i 8 4,0 5,0 5,1 6,0 6,1 7,0 7,1 7,2 8,0 8,1 8,2 9,0 9,1 9,2; i 8 10,3 10,4 11,0 11,1 11,2 11,3 11,4 11,5 12,0 12,1 12,2 12,3 12,4 12,5; i 10 3,3 3,4 3,5 4,2 4,3 4,4 4,5 5,3 5,4 5,5 5,6 6,3 6,4 6,5 6,6 7,4 7,5 7,6 8,4 8,5; i 10 5,8 5,9 6,8 6,9 7,8 7,9 7,10 8,7 8,8 8,9 9,7 9,8 9,9 10,6 10,7 10,8 11,7 11,8 12,7 12,8; s 0,0 0,5 0,9 1,4 1,8 1,12 2,1 3,5 3,7 3,10 3,12 4,0 4,2 5,9 5,11 6,3 6,6 7,0 7,8 7,12 8,2 8,5 9,0 9,9 10,3 10,6 10,10 11,0 11,5 12,2 12,8 12,11; r C B W P S; " +

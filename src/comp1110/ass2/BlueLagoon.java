@@ -12,6 +12,7 @@ import gittest.C;
 import java.util.*;
 
 import static comp1110.ass2.board.Island.getIslandScore;
+import static comp1110.ass2.board.Island.getLinkedScore;
 import static comp1110.ass2.board.Player.allSettlersVillages;
 import static comp1110.ass2.board.Player.playerFromString;
 
@@ -1174,7 +1175,16 @@ public class BlueLagoon {
      * the score for each player
      */
     public static int[] calculateIslandLinksScore(String stateString){
-         return new int[]{0, 0}; // FIXME Task 11
+        List<Player> players = Player.playersFromString(stateString);
+        int[] linkedIslandScore = new int[players.size()];
+        List<Island> islands = Island.getIslands(stateString);
+        List<Coordinate>[] occupied = allSettlersVillages(stateString);
+        for (int i = 0; i < players.size(); i++){
+            List<Coordinate> cors = occupied[i];
+            int scoreAtI = getLinkedScore(cors,islands);
+            linkedIslandScore[i] = scoreAtI;
+        }
+        return linkedIslandScore;// FIXME Task 11
     }
 
     /**

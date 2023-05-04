@@ -129,8 +129,4 @@ public class Coordinate {
         return new Coordinate(x, y);
     }
 
-    public static void main(String[] args) {
-        Coordinate test = corFromString("1,2");
-        System.out.println(test.toString());
-    }
 }

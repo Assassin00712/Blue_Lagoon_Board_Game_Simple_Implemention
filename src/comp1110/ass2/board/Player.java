@@ -1,6 +1,9 @@
 package comp1110.ass2.board;
 
+import gittest.C;
+
 import static comp1110.ass2.board.Coordinate.corFromString;
+import static comp1110.ass2.board.Coordinate.isLinked;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,6 +144,49 @@ public class Player {
             return combined;
         }
 
+    /**
+     * check if a coordinate is chained to a list of Coordinate
+     * it is chained with the list if it is contained in the list
+     * it is not chained if it is not linked in any entries in the list
+     * @param cor the coordinate to check
+     * @param compare the coordinate to be checked
+     * @return true if the cor is chained with the list, false otherwise
+     */
+        public static boolean isChained (Coordinate cor, List<Coordinate> compare){
+            for (Coordinate c : compare){
+                if (isLinked(cor,c)||cor.equals(c)){
+                    return true;
+                }}
+            return false;
+        }
+
+    /**
+     * a method to get the chained settlers and villages
+     * @param accumulated the list of lists of coordinates that have already passed the test
+     *                    starts at blank
+     * @param all all coordinates occupied by a player
+     * @return a list of lists of Coordinates that are chained
+     * lenght of 1 is allowed for each list
+     */
+
+    public static List<List<Coordinate>> getChainedOccupier (List<List<Coordinate>> accumulated, List<Coordinate> all){
+        if (all.size()==0){
+            return accumulated;
+        }
+        List<Coordinate> toCheck = new ArrayList<>(all);
+        List<Coordinate> thrown = new ArrayList<>();
+        // for every entry in all, check if they are linked with every other entries
+        // if any of them are not linked, throw them to the next list in accumulate
+        for (Coordinate c : toCheck) {
+            if (!isChained(c, all)) {
+                all.remove(c);
+                thrown.add(c);
+            }
+        }
+        accumulated.add(all);
+        return getChainedOccupier(accumulated,thrown);
+        }
+
         /**
          * get all coordinates occupied by all players
          * @param stateString String represents current states
@@ -166,7 +212,7 @@ public class Player {
         public String toStateString () {
             String resourceState = "";
             String settlerState = "S ";
-            String villageState = "T";
+            String villageState = "T ";
 
             for (int i : resources) {
                 resourceState += i + " ";
@@ -213,8 +259,6 @@ public class Player {
     public static void main(String[] args) {
         String testPlayer = "p 1 42 1 2 3 4 5 S 5,6 8,7 T 1,2;";
     }
-
-
     }
 
 
