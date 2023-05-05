@@ -4,7 +4,7 @@ import gittest.C;
 
 import java.util.Objects;
 
-public class Coordinate {
+public class Coordinate implements Comparable<Coordinate>{
 
     // I changed Position into Coordinate since the format given in state strings are not a typical position format
     public int row; // Row is from up-down
@@ -87,13 +87,22 @@ public class Coordinate {
     @Override
     public boolean equals(Object other) {
         return (other instanceof Coordinate) &&
-                col == ((Coordinate) other).col &&
-                row == ((Coordinate) other).row;
+                row == ((Coordinate) other).row &&
+                col == ((Coordinate) other).col;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(col, row);
+        return Objects.hash(row, col);
+    }
+
+    @Override
+    public int compareTo(Coordinate o) {
+        if (this.row == o.row) {
+            return this.col - o.col; // If row is equal, sort by col in ascending order
+        } else {
+            return this.row - o.row; // If row is not equal, sort by row in ascending order
+        }
     }
 
 

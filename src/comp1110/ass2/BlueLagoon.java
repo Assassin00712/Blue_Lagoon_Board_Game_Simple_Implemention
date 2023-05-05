@@ -1407,8 +1407,52 @@ public class BlueLagoon {
      * @return a string representing the new state after the move is applied to the board
      */
     public static String applyMove(String stateString, String moveString){
+        int currentPlayer = Integer.parseInt(String.valueOf(getCurrentStateStatement(stateString).charAt(3)));
+        String settlerOrVillage = moveString.substring(0,1);
+        Coordinate moveCoordinate = new Coordinate(moveString.substring(2));
+        System.out.println(moveString);
+        System.out.println(stateString);
 
-        return ""; // FIXME Task 13
+        board = Board.fromStateString(stateString);
+
+
+        // Move Player
+        List<Player> players =  playersFromString(stateString);
+
+        if (board.spotMatrix[moveCoordinate.row][moveCoordinate.col].resources != null){
+            players.get(currentPlayer).resources.set(board.spotMatrix[moveCoordinate.row][moveCoordinate.col].resources.ordinal(),
+                    players.get(currentPlayer).resources.get(board.spotMatrix[moveCoordinate.row][moveCoordinate.col].resources.ordinal()) + 1);
+            board.spotMatrix[moveCoordinate.row][moveCoordinate.col].resources = null;
+        }
+
+        if (settlerOrVillage.equals("S")){
+            players.get(currentPlayer).settlers.add(moveCoordinate);
+        } else if (settlerOrVillage.equals("T")){
+            players.get(currentPlayer).villages.add(moveCoordinate);
+        }
+
+        String applyMoveString = "";
+
+        applyMoveString += getArrangementStatement(stateString) +";";
+        if (getCurrentStateStatement(stateString).contains("1")){
+            applyMoveString += getCurrentStateStatement(stateString).replace('1','0') + ";";
+        } else if (getCurrentStateStatement(stateString).contains("0")) {
+            applyMoveString += getCurrentStateStatement(stateString).replace('0','1') + ";";
+        }
+
+        applyMoveString += getIslandStatement(stateString);
+        applyMoveString += getStoneStatement(stateString) + "; ";
+        applyMoveString += ((getUnclaimedResourcesandStatuettesStatement(stateString) + ";")
+                .replace((" " + moveCoordinate.toString() + " ")," "))
+                .replace((" " + moveCoordinate.toString() + ';'),"")
+                +"; ";
+        for (int i = 0; i < players.size(); i++) {
+            applyMoveString += players.get(i).toStateString() + " ";
+        }
+
+
+
+        return applyMoveString; // FIXME Task 13
     }
 
     /**
@@ -1430,7 +1474,7 @@ public class BlueLagoon {
 
     public static void main(String[] args) {
         String stateString = "a 13 2; c 0 E; i 6 0,0 0,1 0,2 0,3 0,4 0,5 0,6 0,7 0,8 0,9 0,10 0,11 1,0 1,12 2,0 2,11 3,0 3,12 4,0 4,11 5,0 5,12 6,0 6,11 7,0 7,12 8,0 8,11 9,0 9,12 10,0 10,11 11,0 11,12 12,0 12,1 12,2 12,3 12,4 12,5 12,6 12,7 12,8 12,9 12,10 12,11; i 6 2,4 2,5 2,6 2,7; i 9 4,4 4,5 4,6 4,7; i 9 6,5 6,6 7,5 7,7 8,5 8,6; i 12 2,2 3,2 3,3 4,2 5,2 5,3 6,2 7,2 7,3; i 12 2,9 3,9 3,10 4,9 5,9 5,10 6,9 7,9 7,10; i 12 9,2 9,10 10,2 10,3 10,4 10,5 10,6 10,7 10,8 10,9; s 0,3 0,8 1,0 1,12 2,2 2,4 2,7 2,9 4,2 4,5 4,6 4,9 5,0 5,12 6,2 6,5 6,6 6,9 8,0 8,5 8,6 8,11 9,2 9,10 10,3 10,5 10,6 10,8 11,0 11,12 12,4 12,7; r C 1,1 B 5,2 W P 1,4 S; p 0 0 0 0 0 0 0 S T; p 1 42 1 2 3 4 5 S 5,6 8,7 T 1,2;";
-        System.out.println(getAllIslandStatementList(stateString));
+        System.out.println(getCurrentStateStatement(stateString).charAt(2));
 
 
     }

@@ -5,9 +5,7 @@ import gittest.C;
 
 import static comp1110.ass2.board.Coordinate.isLinked;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Player {
 
@@ -218,10 +216,12 @@ public class Player {
             resourceState += i + " ";
         }
 
+        Collections.sort(this.settlers);
         for (Coordinate c : settlers) {
             settlerState += c + " ";
         }
 
+        Collections.sort(this.villages);
         for (Coordinate c : villages) {
             villageState += " " + c;
         }
