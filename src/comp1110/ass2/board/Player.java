@@ -179,11 +179,14 @@ public class Player {
         // if any of them are not linked, throw them to the next list in accumulate
         for (Coordinate c : toCheck) {
             if (!isChained(c, all)) {
+                System.out.println(c.toString());
                 all.remove(c);
                 thrown.add(c);
             }
         }
         accumulated.add(all);
+        System.out.println("accumulated is " + accumulated.toString());
+        System.out.println("all is " + all.toString());
         return getChainedOccupier(accumulated,thrown);
         }
 

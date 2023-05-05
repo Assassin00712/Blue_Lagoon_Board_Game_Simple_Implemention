@@ -1,5 +1,7 @@
 package comp1110.ass2.board;
 
+import gittest.C;
+
 import java.util.Objects;
 
 public class Coordinate {
@@ -68,18 +70,18 @@ public class Coordinate {
      * @return true if coordinates are linked, false otherwise
      */
     public static boolean isLinked (Coordinate cor1, Coordinate cor2) {
-        int row1 = cor1.getRow();
-        int row2 = cor2.getRow();
-        int col1 = cor1.getCol();
-        int col2 = cor2.getCol();
-        if (col1 == col2) {
-            return ((row1 == row2 + 1) || (row1 == row2 - 1));
-        } else if (col1 % 2 == 0) {
-            return ((col1 == col2 - 1) || (col1 == col2 + 1)
-                    && (row1 == row2 - 1) || (row1 == row2));
+        int x1 = cor1.getRow();
+        int x = cor2.getRow();
+        int y1 = cor1.getCol();
+        int y = cor2.getCol();
+        if (x == x1) {
+            return ((y1 == y + 1) || (y1 == y - 1));
+        } else if (x % 2 == 0) {
+            return ((x == x1 - 1) || (x == x1 + 1)
+                    && (y == y1 - 1) || (y == y1));
         } else {
-            return ((col1 == col2 - 1) || (col1 == col2 + 1)
-                    && (row1 == row2 + 1) || (row1 == row2));
+            return ((x == x1 - 1) || (x == x1 + 1)
+                    && (y == y1 + 1) || (y == y1));
         }
     }
 
@@ -127,6 +129,21 @@ public class Coordinate {
         int y = (int) (Math.random() * 12);
 
         return new Coordinate(x, y);
+    }
+
+    public static void main(String[] args) {
+        Coordinate cor1 = new Coordinate(0,5);
+        Coordinate cor2 = new Coordinate(3,7);
+        Coordinate cor3 = new Coordinate(7,11);
+        Coordinate cor4 = new Coordinate(6,10);
+        Coordinate cor5 = new Coordinate(6,11);
+        System.out.println(isLinked(cor1,cor2) + " should be false");
+        System.out.println(isLinked(cor2,cor3)+ " should be false");
+        System.out.println(isLinked(cor3,cor4)+ " should be true");
+        System.out.println(isLinked(cor4,cor5)+ " should be true");
+        System.out.println(isLinked(cor5,cor1)+ " should be false");
+
+
     }
 
 }

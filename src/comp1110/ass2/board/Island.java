@@ -169,7 +169,6 @@ public class Island {
             HashSet<Integer> islandsOccupied = getOccupiedIslands(each,islands);
             int score = islandsOccupied.size()*5;
             scores.add(score);
-            System.out.println(score);
         }
         if (scores.size()==0){
             return 0;
