@@ -11,9 +11,9 @@ public class Spot {
     // In format of (Coordinate (col row), isIsland, isStone, Resources, occupier)
 
 
-    public Boolean isIsland;
-    public Boolean isStone;
-    public Resources resources;
+    public Boolean isIsland = false;
+    public Boolean isStone = false;
+    public Resources resources = null;
 
     // -1 if not occupied
     public int settler = -1;

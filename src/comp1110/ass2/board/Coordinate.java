@@ -7,51 +7,40 @@ import java.util.Objects;
 public class Coordinate {
 
     // I changed Position into Coordinate since the format given in state strings are not a typical position format
-    public int row;
-    public int col;
+    public int col; // Column is x-axis
+    public int row; // Row is x-axis
+
     String[] cord;
 
 
-    public Coordinate(int row,int col) {
-        this.row = row;
+    public Coordinate(int col,int row) {
         this.col = col;
+        this.row = row;
+
     }
     public Coordinate(){
-        this.row = 0;
         this.col = 0;
+        this.row = 0;
     }
 
     public Coordinate(String cord){
-        this.cord = cord.split(",");
-    }
-
-    public int getRow() {
-        return row;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
+        this.cord = cord.replace(';',' ').strip().split(",");
     }
 
     public int getCol() {
         return col;
     }
+    public int getRow() {
+        return row;
+    }
 
     public int stringToX(){
         return Integer.parseInt(cord[0]);
     }
-
     public int stringToY(){
         return Integer.parseInt(cord[1]);
     }
 
-    public void setCol(int col) {
-        this.col = col;
-    }
-
-//    public int hashCode() {
-//        return Objects.hash(row, col);
-//    }
 
     /**
      * test if a coordinate is in bound
@@ -70,10 +59,10 @@ public class Coordinate {
      * @return true if coordinates are linked, false otherwise
      */
     public static boolean isLinked (Coordinate cor1, Coordinate cor2) {
-        int x1 = cor1.getRow();
-        int x = cor2.getRow();
-        int y1 = cor1.getCol();
-        int y = cor2.getCol();
+        int x1 = cor1.col;
+        int x = cor2.col;
+        int y1 = cor1.row;
+        int y = cor2.row;
         if (x == x1) {
             return ((y1 == y + 1) || (y1 == y - 1));
         } else if (x % 2 == 0) {
@@ -87,7 +76,7 @@ public class Coordinate {
 
     @Override
     public String toString() {
-        return  row + "," + col;
+        return  col + "," + row;
     }
 
     /**
@@ -102,10 +91,10 @@ public class Coordinate {
         }
         String[] tmp = s.split(",");
 
-        int row = Integer.parseInt(tmp[0].strip());
-        //System.out.println("the row of the Coordinate dealing with is " + row);
-        int col = Integer.parseInt(tmp[1].strip());
-        //System.out.println("the column of the Coordinate dealing with is " + col);
+        int col = Integer.parseInt(tmp[0].strip());
+
+        int row = Integer.parseInt(tmp[1].strip());
+
         c.col = col;
         c.row = row;
         return c;
@@ -114,13 +103,13 @@ public class Coordinate {
     @Override
     public boolean equals(Object other) {
         return (other instanceof Coordinate) &&
-                row == ((Coordinate) other).row &&
-                col == ((Coordinate) other).col;
+                col == ((Coordinate) other).col &&
+                row == ((Coordinate) other).row;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(row, col);
+        return Objects.hash(col, row);
     }
 
 

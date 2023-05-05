@@ -19,7 +19,7 @@ public class Board {
     //   x corresponds to the column, working left to right, and
     //   y corresponds to the row, working top to bottom.
     // Values default to null where there are no spots
-    public static Spot[][] spotMatrix = new Spot[BOARD_WIDTH][BOARD_HEIGHT];
+    public Spot[][] spotMatrix = new Spot[BOARD_WIDTH][BOARD_HEIGHT];
 
 
     // initialize a board by creating an array/list of spots
@@ -49,7 +49,7 @@ public class Board {
         }
 
         // Set the spot isStone if it's a stone
-        for (var cord: BlueLagoon.getAllIslandStatementList(stateString)){
+        for (var cord: BlueLagoon.getAllStoneList(stateString)){
             board.spotMatrix[new Coordinate((String) cord).stringToX()][new Coordinate((String) cord).stringToY()]
                     .isStone = true;
         }
