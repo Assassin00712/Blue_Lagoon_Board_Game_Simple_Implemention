@@ -56,7 +56,7 @@ public class Player {
         List<Coordinate> corV = new ArrayList<>();
         if (playerStates.length() >=19){
             //System.out.println("the playerString is valid");
-        String[] players = playerStates.split(" ");
+        String[] players = playerStates.strip().split(" ");
         player.playId = Integer.parseInt(players[1]);
         player.score = Integer.parseInt(players[2]);
         List<Integer> resources = new ArrayList<>();
@@ -105,7 +105,7 @@ public class Player {
         List<String> playerStates = new ArrayList<>();
         for (String state : states) {
             if (state.startsWith("p")) {
-                playerStates.add(state);
+                playerStates.add(state.strip());
             }
         }
         return playerStates;
@@ -118,7 +118,7 @@ public class Player {
         List<String> playerStrings = extractPlayers(gameStates);
         List<Player> players = new ArrayList<>();
         for (String playerString : playerStrings) {
-            players.add(playerFromString(playerString));
+            players.add(playerFromString(playerString.strip()));
         }
         return players;
     }
@@ -257,10 +257,10 @@ public class Player {
     }
 
     // Calculate player's score
-    public void calculateScore(){
+    public int getResourcesAndStatuettesScore(){
         // score of every type of resources
         int score = 0;
-        for (int numbers: resources){
+        for (int numbers: resources.subList(0, resources.size()-1)){
             if (numbers >= 4){
                 score += 20;
             } else if (numbers == 3) {
@@ -277,6 +277,11 @@ public class Player {
             resources.get(3) > 0 ){
             score += 10;
         }
+
+        score += resources.get(4) * 4;
+
+
+        return score;
 
     }
 

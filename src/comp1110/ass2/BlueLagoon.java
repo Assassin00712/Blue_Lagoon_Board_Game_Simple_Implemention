@@ -13,8 +13,7 @@ import java.util.*;
 
 import static comp1110.ass2.board.Island.getIslandScore;
 import static comp1110.ass2.board.Island.getLinkedScore;
-import static comp1110.ass2.board.Player.allSettlersVillages;
-import static comp1110.ass2.board.Player.playerFromString;
+import static comp1110.ass2.board.Player.*;
 
 public class BlueLagoon {
     // The Game Strings for five maps have been created for you.
@@ -1120,7 +1119,8 @@ public class BlueLagoon {
      * @return a new state string achieved by placing the move on the board
      */
     public static String placePiece(String stateString, String moveString){
-         return ""; // FIXME Task 10
+        board = Board.fromStateString(stateString);
+        return ""; // FIXME Task 10
     }
 
     /**
@@ -1154,9 +1154,9 @@ public class BlueLagoon {
      * the score for each player
      */
     public static int[] calculateTotalIslandsScore(String stateString){
-         List<Player> players = Player.playersFromString(stateString);
-         int[] totalIslandScore = new int[players.size()];
-         List<Island> islands = Island.getIslands(stateString);
+        List<Player> players = Player.playersFromString(stateString);
+        int[] totalIslandScore = new int[players.size()];
+        List<Island> islands = Island.getIslands(stateString);
         List<Coordinate>[] occupied = allSettlersVillages(stateString);
         for (int i = 0; i < players.size(); i++){
             List<Coordinate> cors = occupied[i];
@@ -1243,7 +1243,14 @@ public class BlueLagoon {
      * portions of the score for each player
      */
     public static int[] calculateResourcesAndStatuettesScore(String stateString){
-         return new int[]{0, 0}; // FIXME Task 11
+        // Use the method inside Player class
+        List<Player> players = playersFromString(stateString);
+        int[] resourcesAndStatuettesScore = new int[players.size()];
+        for (int i = 0; i < players.size(); i++){
+            resourcesAndStatuettesScore[i] = players.get(i).getResourcesAndStatuettesScore();
+        }
+
+        return resourcesAndStatuettesScore; // FIXME Task 11
     }
 
     /**
@@ -1364,7 +1371,7 @@ public class BlueLagoon {
         }
 
         for (Player player: players) {
-            player.calculateScore(); // Calculate Player Score
+            //player.calculateScore(); // Calculate Player Score
             player.clearResources(); // Remove player's all resources
             player.clearSettlers(); // Remove player's all settlers
             player.clearVillages(); // Remove player's village if it's on a stone
