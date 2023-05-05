@@ -3,7 +3,6 @@ package comp1110.ass2.board;
 import comp1110.ass2.BlueLagoon;
 import gittest.C;
 
-import static comp1110.ass2.board.Coordinate.corFromString;
 import static comp1110.ass2.board.Coordinate.isLinked;
 
 import java.util.ArrayList;
@@ -78,13 +77,13 @@ public class Player {
         // then the player has no settler, the corS will remain blank
             if (!(settlerStarts == villageStarts-1)){
             for (int k = settlerStarts + 1; k < villageStarts; k++) {
-                corS.add(corFromString(players[k]));
+                corS.add(new Coordinate(players[k]));
             }}
             // test if there is village for a player, if player array ends with "T"
         // then the player has no villages, the corV will remain blank
             if (!(villageStarts == players.length-1)) {
             for (int l = villageStarts + 1; l < players.length; l++) {
-                corV.add(corFromString(players[l]));
+                corV.add(new Coordinate(players[l]));
                 }
             }
         }
@@ -249,7 +248,7 @@ public class Player {
     public void clearVillages(){
         List<Coordinate> validVillages = new ArrayList<>();
         for (Coordinate coordinate: this.villages){
-            if (!(BlueLagoon.board.spotMatrix[coordinate.col][coordinate.row].isStone)){
+            if (!(BlueLagoon.board.spotMatrix[coordinate.row][coordinate.col].isStone)){
                 validVillages.add(coordinate);
             }
         }

@@ -50,7 +50,7 @@ public class Island {
         Coordinate[] islandCords = new Coordinate[coordinates.length-2];
         for (int i = 0; i < islandCords.length; i++){
             int islandLocate = i + 2;
-            islandCords[i] = Coordinate.corFromString(coordinates[islandLocate]);
+            islandCords[i] = new Coordinate(coordinates[islandLocate]);
         }
         island.islandCor = islandCords;
         return island;

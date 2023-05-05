@@ -1265,7 +1265,18 @@ public class BlueLagoon {
      * @return an integer array containing the calculated scores for each player
      */
     public static int[] calculateScores(String stateString){
-         return new int[]{0, 0}; // FIXME Task 11
+        int[] scores = new int[2];
+
+        for (int i = 0; i < scores.length; i++){
+            int tmp = 0;
+            tmp += calculateIslandLinksScore(stateString)[i];
+            tmp += calculateResourcesAndStatuettesScore(stateString)[i];
+            tmp += calculateIslandMajoritiesScore(stateString)[i];
+            tmp += calculateTotalIslandsScore(stateString)[i];
+            scores[i] = tmp;
+        }
+
+        return scores; // FIXME Task 11
     }
 
     /**
@@ -1364,18 +1375,15 @@ public class BlueLagoon {
 
 
         // Reset Player's State
-        List<Player> players = new ArrayList<>();
-        String[] playersStatement = getPlayerStatement(stateString).split(";");
-        for (String s : playersStatement){
-            players.add(playerFromString(s.strip()));
-        }
+        List<Player> players =  playersFromString(stateString);
 
-        for (Player player: players) {
-            //player.calculateScore(); // Calculate Player Score
-            player.clearResources(); // Remove player's all resources
-            player.clearSettlers(); // Remove player's all settlers
-            player.clearVillages(); // Remove player's village if it's on a stone
-            endPhaseString += player.toStateString() + " ";
+
+        for (int i = 0; i < players.size(); i++) {
+            players.get(i).score = calculateScores(stateString)[i]; // Calculate Player Score
+            players.get(i).clearResources(); // Remove player's all resources
+            players.get(i).clearSettlers(); // Remove player's all settlers
+            players.get(i).clearVillages(); // Remove player's village if it's on a stone
+            endPhaseString += players.get(i).toStateString() + " ";
         }
 
 
@@ -1399,7 +1407,8 @@ public class BlueLagoon {
      * @return a string representing the new state after the move is applied to the board
      */
     public static String applyMove(String stateString, String moveString){
-         return ""; // FIXME Task 13
+
+        return ""; // FIXME Task 13
     }
 
     /**

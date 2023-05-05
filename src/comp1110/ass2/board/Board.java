@@ -6,7 +6,6 @@ import javafx.scene.paint.Color;
 import java.util.Arrays;
 import java.util.List;
 
-import static comp1110.ass2.board.Coordinate.corFromString;
 
 public class Board {
     // The width of the board (left to right)
@@ -15,18 +14,18 @@ public class Board {
     public final static int BOARD_HEIGHT = 13;
 
     // The matrix of spots representing the board
-    // For spotMatrix[x][y]:
-    //   x corresponds to the column, working left to right, and
-    //   y corresponds to the row, working top to bottom.
+    // For spotMatrix[row][col]:
+    //   row corresponds to the row, working top to bottom, and
+    //   col corresponds to the column, working left to right.
     // Values default to null where there are no spots
-    public Spot[][] spotMatrix = new Spot[BOARD_WIDTH][BOARD_HEIGHT];
+    public Spot[][] spotMatrix = new Spot[BOARD_HEIGHT][BOARD_WIDTH];
 
 
     // initialize a board by creating an array/list of spots
     public void initialize() {
-        for (int x = 0; x < BOARD_WIDTH; x++) {
-            for (int y = 0; y < BOARD_HEIGHT; y++) {
-                spotMatrix[x][y] = new Spot();
+        for (int row = 0; row < BOARD_HEIGHT; row++) {
+            for (int col = 0; col < BOARD_WIDTH; col++) {
+                spotMatrix[row][col] = new Spot();
             }
         }
     }
@@ -44,20 +43,20 @@ public class Board {
 
         // Set the spot isIsland if it's an island
         for (var cord: BlueLagoon.getAllIslandStatementList(stateString)){
-            board.spotMatrix[new Coordinate((String) cord).stringToX()][new Coordinate((String) cord).stringToY()]
+            board.spotMatrix[new Coordinate((String) cord).stringToRow()][new Coordinate((String) cord).stringToCol()]
                     .isIsland = true;
         }
 
         // Set the spot isStone if it's a stone
         for (var cord: BlueLagoon.getAllStoneList(stateString)){
-            board.spotMatrix[new Coordinate((String) cord).stringToX()][new Coordinate((String) cord).stringToY()]
+            board.spotMatrix[new Coordinate((String) cord).stringToRow()][new Coordinate((String) cord).stringToCol()]
                     .isStone = true;
         }
 
         // Set Bamboo
         if (BlueLagoon.getBamboo(stateString).size() > 0){
             for (var cord: BlueLagoon.getBamboo(stateString)){
-                board.spotMatrix[new Coordinate((String) cord).stringToX()][new Coordinate((String) cord).stringToY()]
+                board.spotMatrix[new Coordinate((String) cord).stringToRow()][new Coordinate((String) cord).stringToCol()]
                         .resources = Resources.BAMBOO;
             }
         }
@@ -65,7 +64,7 @@ public class Board {
         // Set Coconut
         if (BlueLagoon.getCoconutList(stateString).size() > 0){
             for (var cord: BlueLagoon.getCoconutList(stateString)){
-                board.spotMatrix[new Coordinate((String) cord).stringToX()][new Coordinate((String) cord).stringToY()]
+                board.spotMatrix[new Coordinate((String) cord).stringToRow()][new Coordinate((String) cord).stringToCol()]
                         .resources = Resources.COCONUTS;
             }
         }
@@ -73,7 +72,7 @@ public class Board {
         // Set Water
         if (BlueLagoon.getWater(stateString).size() > 0){
             for (var cord: BlueLagoon.getWater(stateString)){
-                board.spotMatrix[new Coordinate((String) cord).stringToX()][new Coordinate((String) cord).stringToY()]
+                board.spotMatrix[new Coordinate((String) cord).stringToRow()][new Coordinate((String) cord).stringToCol()]
                         .resources = Resources.WATER;
             }
         }
@@ -81,7 +80,7 @@ public class Board {
         // Set Precious Stone
         if (BlueLagoon.getPreciousStone(stateString).size() > 0){
             for (var cord: BlueLagoon.getPreciousStone(stateString)){
-                board.spotMatrix[new Coordinate((String) cord).stringToX()][new Coordinate((String) cord).stringToY()]
+                board.spotMatrix[new Coordinate((String) cord).stringToRow()][new Coordinate((String) cord).stringToCol()]
                         .resources = Resources.PRECIOUS_STONE;
             }
         }
@@ -89,7 +88,7 @@ public class Board {
         // Draw statuette
         if (BlueLagoon.getStatuette(stateString).size() > 0){
             for (var cord: BlueLagoon.getStatuette(stateString)){
-                board.spotMatrix[new Coordinate((String) cord).stringToX()][new Coordinate((String) cord).stringToY()]
+                board.spotMatrix[new Coordinate((String) cord).stringToRow()][new Coordinate((String) cord).stringToCol()]
                         .resources = Resources.STATUETTE;
             }
         }
@@ -107,7 +106,7 @@ public class Board {
                 // If playerState==0, set the settler
                 if (c.matches("\\d+,\\d+") && playerState == 0){
                     for (var cord: BlueLagoon.getBamboo(stateString)){
-                        board.spotMatrix[new Coordinate((String) cord).stringToX()][new Coordinate((String) cord).stringToY()]
+                        board.spotMatrix[new Coordinate((String) cord).stringToRow()][new Coordinate((String) cord).stringToCol()]
                                 .settler = playerNumber;
                     }
                 }
@@ -115,7 +114,7 @@ public class Board {
                 // If playerState==1, set the village
                 if (c.matches("\\d+,\\d+") && playerState == 1){
                     for (var cord: BlueLagoon.getBamboo(stateString)){
-                        board.spotMatrix[new Coordinate((String) cord).stringToX()][new Coordinate((String) cord).stringToY()]
+                        board.spotMatrix[new Coordinate((String) cord).stringToRow()][new Coordinate((String) cord).stringToCol()]
                                 .village = playerNumber;
                     }
                 }

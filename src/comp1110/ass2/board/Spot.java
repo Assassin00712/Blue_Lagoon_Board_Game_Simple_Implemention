@@ -3,7 +3,6 @@ package comp1110.ass2.board;
 
 import java.util.Objects;
 
-import static comp1110.ass2.board.Coordinate.corFromString;
 
 public class Spot {
 

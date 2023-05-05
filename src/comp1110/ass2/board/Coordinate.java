@@ -7,24 +7,28 @@ import java.util.Objects;
 public class Coordinate {
 
     // I changed Position into Coordinate since the format given in state strings are not a typical position format
-    public int col; // Column is x-axis
-    public int row; // Row is x-axis
+    public int row; // Row is from up-down
+    public int col; // Column is from left-right
+
 
     String[] cord;
 
 
-    public Coordinate(int col,int row) {
-        this.col = col;
+    public Coordinate(int row,int col) {
         this.row = row;
+        this.col = col;
 
     }
     public Coordinate(){
-        this.col = 0;
         this.row = 0;
+        this.col = 0;
     }
 
-    public Coordinate(String cord){
-        this.cord = cord.replace(';',' ').strip().split(",");
+    public Coordinate(String cordString){
+
+        this.cord = cordString.replace(';',' ').strip().split(",");
+        this.row = Integer.parseInt(this.cord[0]);
+        this.col = Integer.parseInt(this.cord[1]);
     }
 
     public int getCol() {
@@ -34,10 +38,10 @@ public class Coordinate {
         return row;
     }
 
-    public int stringToX(){
+    public int stringToRow(){
         return Integer.parseInt(cord[0]);
     }
-    public int stringToY(){
+    public int stringToCol(){
         return Integer.parseInt(cord[1]);
     }
 
@@ -76,29 +80,9 @@ public class Coordinate {
 
     @Override
     public String toString() {
-        return  col + "," + row;
+        return  row + "," + col;
     }
 
-    /**
-     * get the coordinate from a string
-    @param s a string represent a coordinate, must be with length 3
-     */
-
-    public static Coordinate corFromString(String s) {
-        Coordinate c = new Coordinate();
-        if (s.charAt(s.length()-1) == ';'){
-            s = s.substring(0, s.length()-1);
-        }
-        String[] tmp = s.split(",");
-
-        int col = Integer.parseInt(tmp[0].strip());
-
-        int row = Integer.parseInt(tmp[1].strip());
-
-        c.col = col;
-        c.row = row;
-        return c;
-    }
 
     @Override
     public boolean equals(Object other) {
@@ -126,11 +110,8 @@ public class Coordinate {
         Coordinate cor3 = new Coordinate(7,11);
         Coordinate cor4 = new Coordinate(6,10);
         Coordinate cor5 = new Coordinate(6,11);
-        System.out.println(isLinked(cor1,cor2) + " should be false");
-        System.out.println(isLinked(cor2,cor3)+ " should be false");
-        System.out.println(isLinked(cor3,cor4)+ " should be true");
-        System.out.println(isLinked(cor4,cor5)+ " should be true");
-        System.out.println(isLinked(cor5,cor1)+ " should be false");
+        Coordinate cor6 = new Coordinate("6,12");
+        System.out.println(cor6.row);
 
 
     }
