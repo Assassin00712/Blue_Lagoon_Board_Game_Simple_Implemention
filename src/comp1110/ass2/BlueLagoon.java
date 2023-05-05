@@ -1444,10 +1444,15 @@ public class BlueLagoon {
         applyMoveString += getStoneStatement(stateString) + "; ";
         applyMoveString += ((getUnclaimedResourcesandStatuettesStatement(stateString) + ";")
                 .replace((" " + moveCoordinate.toString() + " ")," "))
-                .replace((" " + moveCoordinate.toString() + ';'),"")
-                +"; ";
+                .replace((" " + moveCoordinate.toString() + ';'),";")
+                +" ";
         for (int i = 0; i < players.size(); i++) {
             applyMoveString += players.get(i).toStateString() + " ";
+        }
+
+        // After all moves, if the phase is over, end the phase
+        if (isPhaseOver(applyMoveString)){
+            applyMoveString = endPhase(applyMoveString);
         }
 
 
