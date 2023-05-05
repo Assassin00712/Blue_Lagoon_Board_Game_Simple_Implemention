@@ -245,10 +245,10 @@ public class Player {
         settlers.clear();
     }
 
+    // Remove village if it's on a stone
     public void clearVillages(){
         List<Coordinate> validVillages = new ArrayList<>();
         for (Coordinate coordinate: this.villages){
-            // Remove village if it's on a stone
             if (!(BlueLagoon.board.spotMatrix[coordinate.col][coordinate.row].isStone)){
                 validVillages.add(coordinate);
             }
@@ -256,6 +256,7 @@ public class Player {
         this.villages = validVillages;
     }
 
+    // Calculate player's score
     public void calculateScore(){
         // score of every type of resources
         int score = 0;
