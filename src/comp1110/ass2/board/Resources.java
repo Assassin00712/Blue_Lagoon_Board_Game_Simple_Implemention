@@ -5,16 +5,16 @@ public enum Resources {
     BAMBOO (6,'B'),
     WATER (6,'W'),
     PRECIOUS_STONE (6,'P'),
-    STATUETTS (8,'S');
+    STATUETTE (8,'S');
     
 
-    final int maximun;
+    final int maximum;
     final char shortDescription;
 
 
 
     Resources (int maximum, char shortDescription) {
-        this.maximun = maximum;
+        this.maximum = maximum;
         this.shortDescription = shortDescription;
     }
 
