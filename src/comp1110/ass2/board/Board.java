@@ -40,6 +40,7 @@ public class Board {
 
     public static Board fromStateString(String stateString) {
         Board board = new Board();
+        board.initialize();
 
         // Set the spot isIsland if it's an island
         for (var cord: BlueLagoon.getAllIslandStatementList(stateString)){
