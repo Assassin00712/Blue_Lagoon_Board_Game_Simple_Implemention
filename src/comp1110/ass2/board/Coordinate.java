@@ -4,11 +4,13 @@ import gittest.C;
 
 import java.util.Objects;
 
-public class Coordinate {
+public class Coordinate implements Comparable<Coordinate>{
 
     // I changed Position into Coordinate since the format given in state strings are not a typical position format
-    public int row;
-    public int col;
+    public int row; // Row is from up-down
+    public int col; // Column is from left-right
+
+
     String[] cord;
 
 
@@ -21,27 +23,21 @@ public class Coordinate {
         this.col = 0;
     }
 
-    public Coordinate(String cord){
-        this.cord = cord.split(",");
-    }
+    public Coordinate(String cordString){
 
-    public int getRow() {
-        return row;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
+        this.cord = cordString.replace(';',' ').strip().split(",");
+        this.row = Integer.parseInt(this.cord[0]);
+        this.col = Integer.parseInt(this.cord[1]);
     }
 
     public int getCol() {
         return col;
     }
 
-    public int stringToX(){
+    public int stringToRow(){
         return Integer.parseInt(cord[0]);
     }
-
-    public int stringToY(){
+    public int stringToCol(){
         return Integer.parseInt(cord[1]);
     }
 
@@ -70,10 +66,10 @@ public class Coordinate {
      * @return true if coordinates are linked, false otherwise
      */
     public static boolean isLinked (Coordinate cor1, Coordinate cor2) {
-        int x1 = cor1.getRow();
-        int x = cor2.getRow();
-        int y1 = cor1.getCol();
-        int y = cor2.getCol();
+        int x1 = cor1.col;
+        int x = cor2.col;
+        int y1 = cor1.row;
+        int y = cor2.row;
         if (x == x1) {
             return ((y1 == y + 1) || (y1 == y - 1));
         } else if (x % 2 == 0) {
@@ -123,6 +119,15 @@ public class Coordinate {
         return Objects.hash(row, col);
     }
 
+    @Override
+    public int compareTo(Coordinate o) {
+        if (this.row == o.row) {
+            return this.col - o.col; // If row is equal, sort by col in ascending order
+        } else {
+            return this.row - o.row; // If row is not equal, sort by row in ascending order
+        }
+    }
+
 
     public static Coordinate randomCord(){
         int x = (int) (Math.random() * 12);
@@ -137,14 +142,8 @@ public class Coordinate {
         Coordinate cor3 = new Coordinate(7,11);
         Coordinate cor4 = new Coordinate(6,10);
         Coordinate cor5 = new Coordinate(6,11);
-        Coordinate cor6 = new Coordinate(0,4);
-        Coordinate cor7 = new Coordinate(0,8);
-        System.out.println(isLinked(cor1,cor2) + " should be false");
-        System.out.println(isLinked(cor2,cor3)+ " should be false");
-        System.out.println(isLinked(cor3,cor4)+ " should be true");
-        System.out.println(isLinked(cor4,cor5)+ " should be true");
-        System.out.println(isLinked(cor5,cor1)+ " should be false");
-        System.out.println(isLinked(cor6,cor7)+ " should be false");
+        Coordinate cor6 = new Coordinate("6,12");
+        System.out.println(cor6.row);
 
 
     }

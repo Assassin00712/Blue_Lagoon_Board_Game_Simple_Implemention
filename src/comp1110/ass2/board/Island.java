@@ -9,13 +9,13 @@ public class Island {
     /**
      * arrange each island with a distinct number
      */
-    int islandNum;
-    int bonus;
-    Coordinate[] islandCor;
+    public int islandNum;
+    public int bonus;
+    public Coordinate[] islandCor;
 
     public Island(int islandNum, Coordinate[] islandCor) {
         this.islandNum = islandNum;
-        this.bonus = bonus;
+
         this.islandCor = islandCor;
     }
 
@@ -25,25 +25,6 @@ public class Island {
         this.islandCor = new Coordinate[0];
     }
 
-    public int getIslandNum() {
-        return islandNum;
-    }
-
-    public void setBonus(int bonus) {
-        this.bonus = bonus;
-    }
-
-    public void setIslandNum(int islandNum) {
-        this.islandNum = islandNum;
-    }
-
-    public Coordinate[] getIslandCor() {
-        return islandCor;
-    }
-
-    public void setIslandCor(Coordinate[] islandCor) {
-        this.islandCor = islandCor;
-    }
 
     @Override
     public String toString() {
@@ -55,23 +36,23 @@ public class Island {
 
     /**
      *
-     * @param islandString eg.  "i 6 7,12 8,11 9,11 9,12 10,10 10,11 11,10 11,11 11,12 12,10 12,11"
+     * @param islandString eg.  "i 6 7,12 8,11 9,11 9,12 10,10 10,11 11,10 11,11 11,12 12,10 12,11;"
      *
      * @return to an island with arranged number
      */
 
     public static Island getIslandFromString (String islandString, int islandNum) {
         Island island = new Island();
-        island.setIslandNum(islandNum);
+        island.islandNum = islandNum;
+
         String[] coordinates = islandString.split(" ");
-        int bonusNum = Integer.parseInt(coordinates[1]);
-        island.setBonus(bonusNum);
+        island.bonus = Integer.parseInt(coordinates[1]);
         Coordinate[] islandCords = new Coordinate[coordinates.length-2];
         for (int i = 0; i < islandCords.length; i++){
             int islandLocate = i + 2;
-            islandCords[i] = Coordinate.corFromString(coordinates[islandLocate]);
+            islandCords[i] = new Coordinate(coordinates[islandLocate]);
         }
-        island.setIslandCor(islandCords);
+        island.islandCor = islandCords;
         return island;
     }
 
@@ -109,9 +90,9 @@ public class Island {
     public static int getIslandNumber (Coordinate cor, List<Island> islands){
         int output = 0;
         for (Island island : islands){
-            List<Coordinate> cors = Arrays.asList(island.getIslandCor());
+            List<Coordinate> cors = Arrays.asList(island.islandCor);
             if (cors.contains(cor)){
-                output = island.getIslandNum();
+                output = island.islandNum;
                 break;
             }
         }
@@ -189,11 +170,10 @@ public class Island {
 
 
     public static void main(String[] args) {
-        String testIsland = "i 6 0,0 0,1 0,2 0,3 1,0 1,1 1,2 1,3 1,4 2,0 2,1";
+
         List<Island> defaultIsland = getIslands(DEFAULT_GAME);
         for (Island i : defaultIsland){
-            System.out.println("getIslands is executing...");
-            System.out.println(i.toString());
+            System.out.println(i);
         }
 
     }

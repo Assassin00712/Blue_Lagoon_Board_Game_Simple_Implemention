@@ -5,9 +5,7 @@ import gittest.C;
 import static comp1110.ass2.board.Coordinate.corFromString;
 import static comp1110.ass2.board.Coordinate.isLinked;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Player {
 
@@ -21,11 +19,7 @@ public class Player {
 
     public Player(int playId) {
         this.playId = playId;
-        this.score = score;
-        this.resources = resources;
-        // {coconut, bamboo, water, preciousStone, statuette}
-        this.settlers = settlers;
-        this.villages = villages;
+
     }
 
 
@@ -39,10 +33,6 @@ public class Player {
     }
         public void setResources (List<Integer> resources) {
             this.resources = resources;
-        }
-
-        public void addSettlers (Coordinate settler){
-            this.settlers.add(settler);
         }
 
     @Override
@@ -60,89 +50,93 @@ public class Player {
         Player player = new Player();
         List<Coordinate> corS = new ArrayList<>();
         List<Coordinate> corV = new ArrayList<>();
-            if (playerStates.length() >=19){
-                //System.out.println("the playerString is valid");
-            String[] players = playerStates.split(" ");
-            player.playId = Integer.parseInt(players[1]);
-            player.score = Integer.parseInt(players[2]);
-            List<Integer> resources = new ArrayList<>();
-            for (int i = 0; i < 5; i++) {
-                resources.add(i, Integer.parseInt(players[i + 3]));
+        if (playerStates.length() >=19){
+            //System.out.println("the playerString is valid");
+        String[] players = playerStates.strip().split(" ");
+        player.playId = Integer.parseInt(players[1]);
+        player.score = Integer.parseInt(players[2]);
+        List<Integer> resources = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            resources.add(i, Integer.parseInt(players[i + 3]));
+        }
+        player.resources = resources;
+        int settlerStarts = 0;
+        int villageStarts = 0;
+        for (int j = 5; j < players.length; j++) {
+            if (players[j].equals("S")) {
+                // actual settler locate at j+1
+                settlerStarts = j;
             }
-            player.resources = resources;
-            int settlerStarts = 0;
-            int villageStarts = 0;
-            for (int j = 5; j < players.length; j++) {
-                if (players[j].equals("S")) {
-                    // actual settler locate at j+1
-                    settlerStarts = j;
-                }
-                else if (players[j].startsWith("T")) {
-                    villageStarts = j;}
-            }
-            // test if there is settler for a player, if string "S" is followed by "T"
+            else if (players[j].startsWith("T")) {
+                villageStarts = j;}
+        }
+        // test if there is settler for a player, if string "S" is followed by "T"
         // then the player has no settler, the corS will remain blank
             if (!(settlerStarts == villageStarts-1)){
             for (int k = settlerStarts + 1; k < villageStarts; k++) {
-                corS.add(corFromString(players[k]));
+                corS.add(new Coordinate(players[k]));
             }}
             // test if there is village for a player, if player array ends with "T"
         // then the player has no villages, the corV will remain blank
             if (!(villageStarts == players.length-1)) {
             for (int l = villageStarts + 1; l < players.length; l++) {
-                corV.add(corFromString(players[l]));
-            }}}
-        player.settlers = corS;
-        player.villages = corV;
-            return player;
-        }
-
-        /** Turn a stateString into a list of player strings
-         * each output starts with "p";
-         * ex: players.get(0) == "p 1 42 1 2 3 4 5 S 5,6 8,7 T 1,2";
-         */
-
-        public static List<String> extractPlayers (String stateString){
-            String[] states = stateString.split("; ");
-            List<String> playerStates = new ArrayList<>();
-            for (String state : states) {
-                if (state.startsWith("p")) {
-                    playerStates.add(state);
+                corV.add(new Coordinate(players[l]));
                 }
             }
-            return playerStates;
         }
+        player.settlers = corS;
+        player.villages = corV;
+        player.statuette = player.resources.get(player.resources.size()-1);
 
-        /** Turn a stateString into an array of players
-         */
+        return player;
+    }
 
-        public static List<Player> playersFromString (String gameStates){
-            List<String> playerStrings = extractPlayers(gameStates);
-            List<Player> players = new ArrayList<>();
-            for (String playerString : playerStrings) {
-                players.add(playerFromString(playerString));
+    /** Turn a stateString into a list of player strings
+     * each output starts with "p";
+     * ex: players.get(0) == "p 1 42 1 2 3 4 5 S 5,6 8,7 T 1,2";
+     */
+
+    public static List<String> extractPlayers (String stateString){
+        String[] states = stateString.split("; ");
+        List<String> playerStates = new ArrayList<>();
+        for (String state : states) {
+            if (state.startsWith("p")) {
+                playerStates.add(state.strip());
             }
-            return players;
         }
+        return playerStates;
+    }
 
-        /**
-         * get all coordinates occupied by a player regardless if it is a village or settler
-         * @param playerStates String represents player
-         * @return array of all coordinates occupied by a player
-         */
-        public static List<Coordinate> combineSettlersVillages (String playerStates){
-            Player player = playerFromString(playerStates);
-            List<Coordinate> settlers = player.settlers;
-            List<Coordinate> villages = player.villages;
-            List<Coordinate> combined = new ArrayList<>();
-            for (Coordinate settler : settlers){
-                combined.add(settler);
-            }
-            for (Coordinate village : villages){
-                combined.add(village);
-            }
-            return combined;
+    /** Turn a stateString into an array of players
+     */
+
+    public static List<Player> playersFromString (String gameStates){
+        List<String> playerStrings = extractPlayers(gameStates);
+        List<Player> players = new ArrayList<>();
+        for (String playerString : playerStrings) {
+            players.add(playerFromString(playerString.strip()));
         }
+        return players;
+    }
+
+    /**
+     * get all coordinates occupied by a player regardless if it is a village or settler
+     * @param playerStates String represents player
+     * @return array of all coordinates occupied by a player
+     */
+    public static List<Coordinate> combineSettlersVillages (String playerStates){
+        Player player = playerFromString(playerStates);
+        List<Coordinate> settlers = player.settlers;
+        List<Coordinate> villages = player.villages;
+        List<Coordinate> combined = new ArrayList<>();
+        for (Coordinate settler : settlers){
+            combined.add(settler);
+        }
+        for (Coordinate village : villages){
+            combined.add(village);
+        }
+        return combined;
+    }
 
     /**
      * check if a coordinate is chained to a list
@@ -195,64 +189,106 @@ public class Player {
         //System.out.println("accumulated is " + accumulated);
         //System.out.println("all is " + all);
         return getChainedOccupier(accumulated,thrown);
+    }
+
+    /**
+     * get all coordinates occupied by all players
+     * @param stateString String represents current states
+     * @return array of Coordinates occupied by all players
+     */
+
+    public static List<Coordinate>[] allSettlersVillages (String stateString){
+        List<String> players = extractPlayers(stateString);
+        List<Coordinate>[] all = new ArrayList[players.size()];
+        for (int i = 0; i < all.length; i++) {
+            List<Coordinate> each = combineSettlersVillages(players.get(i));
+            all[i] = each;
+        }
+        return all;
+    }
+
+
+    /**
+     * Transform players back to statement from
+     *
+     * @return String of one player's statement
+     */
+    public String toStateString () {
+        String resourceState = "";
+        String settlerState = "S ";
+        String villageState = "T";
+
+        for (int i : resources) {
+            resourceState += i + " ";
         }
 
-        /**
-         * get all coordinates occupied by all players
-         * @param stateString String represents current states
-         * @return array of Coordinates occupied by all players
-         */
-
-        public static List<Coordinate>[] allSettlersVillages (String stateString){
-            List<String> players = extractPlayers(stateString);
-            List<Coordinate>[] all = new ArrayList[players.size()];
-            for (int i = 0; i < all.length; i++) {
-                List<Coordinate> each = combineSettlersVillages(players.get(i));
-                all[i] = each;
-            }
-            return all;
+        Collections.sort(this.settlers);
+        for (Coordinate c : settlers) {
+            settlerState += c + " ";
         }
 
-
-        /**
-         * Transform players back to statement from
-         *
-         * @return String of one player's statement
-         */
-        public String toStateString () {
-            String resourceState = "";
-            String settlerState = "S ";
-            String villageState = "T ";
-
-            for (int i : resources) {
-                resourceState += i + " ";
-            }
-
-            for (Coordinate c : settlers) {
-                settlerState += c + " ";
-            }
-
-            for (Coordinate c : villages) {
-                villageState += " " + c;
-            }
-
-            return "p " + playId +
-                    " " + score +
-                    " " + resourceState +
-                    settlerState +
-                    villageState +
-                    ";";
+        Collections.sort(this.villages);
+        for (Coordinate c : villages) {
+            villageState += " " + c;
         }
 
-        public void clearResources () {
-            for (int i = 0; i < resources.size(); i++) {
-                resources.set(i, 0);
+        return "p " + playId +
+                " " + score +
+                " " + resourceState +
+                settlerState +
+                villageState +
+                ";";
+    }
+
+    public void clearResources () {
+        for (int i = 0; i < resources.size(); i++) {
+            resources.set(i, 0);
+        }
+    }
+
+    public void clearSettlers () {
+        settlers.clear();
+    }
+
+    // Remove village if it's on a stone
+    public void clearVillages(){
+        List<Coordinate> validVillages = new ArrayList<>();
+        for (Coordinate coordinate: this.villages){
+            if (!(BlueLagoon.board.spotMatrix[coordinate.row][coordinate.col].isStone)){
+                validVillages.add(coordinate);
+            }
+        }
+        this.villages = validVillages;
+    }
+
+    // Calculate player's score
+    public int getResourcesAndStatuettesScore(){
+        // score of every type of resources
+        int score = 0;
+        for (int numbers: resources.subList(0, resources.size()-1)){
+            if (numbers >= 4){
+                score += 20;
+            } else if (numbers == 3) {
+                score += 10;
+            } else if (numbers == 2) {
+                score += 5;
             }
         }
 
-        public void clearSettlers () {
-            settlers.clear();
+        // score of different type of resources
+        if (resources.get(0) > 0 &&
+            resources.get(1) > 0 &&
+            resources.get(2) > 0 &&
+            resources.get(3) > 0 ){
+            score += 10;
         }
+
+        score += resources.get(4) * 4;
+
+
+        return score;
+
+    }
 
     public static final String DEFAULT_GAME = "a 13 2; c 0 E; i 6 0,0 0,1 0,2 0,3 1,0 1,1 1,2 1,3 1,4 2,0 2,1; i 6 0,5 0,6 0,7 1,6 1,7 1,8 2,6 2,7 2,8 3,7 3,8; i 6 7,12 8,11 9,11 9,12 10,10 10,11 11,10 11,11 11,12 12,10 12,11; i 8 0,9 0,10 0,11 1,10 1,11 1,12 2,10 2,11 3,10 3,11 3,12 4,10 4,11 5,11 5,12; i 8 4,0 5,0 5,1 6,0 6,1 7,0 7,1 7,2 8,0 8,1 8,2 9,0 9,1 9,2; i 8 10,3 10,4 11,0 11,1 11,2 11,3 11,4 11,5 12,0 12,1 12,2 12,3 12,4 12,5; i 10 3,3 3,4 3,5 4,2 4,3 4,4 4,5 5,3 5,4 5,5 5,6 6,3 6,4 6,5 6,6 7,4 7,5 7,6 8,4 8,5; i 10 5,8 5,9 6,8 6,9 7,8 7,9 7,10 8,7 8,8 8,9 9,7 9,8 9,9 10,6 10,7 10,8 11,7 11,8 12,7 12,8; s 0,0 0,5 0,9 1,4 1,8 1,12 2,1 3,5 3,7 3,10 3,12 4,0 4,2 5,9 5,11 6,3 6,6 7,0 7,8 7,12 8,2 8,5 9,0 9,9 10,3 10,6 10,10 11,0 11,5 12,2 12,8 12,11; r C B W P S; " +
             "p 0 0 0 0 0 0 0 S T; p 1 42 1 2 3 4 5 S 5,6 8,7 T 1,2;";
@@ -268,6 +304,9 @@ public class Player {
 
     public static void main(String[] args) {
         String testPlayer = "p 1 42 1 2 3 4 5 S 5,6 8,7 T 1,2;";
+        Player player0 = playerFromString(testPlayer);
+        System.out.println(player0);
+        System.out.println(player0.toStateString());
     }
     }
 
