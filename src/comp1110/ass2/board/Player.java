@@ -145,20 +145,36 @@ public class Player {
         }
 
     /**
-     * check if a coordinate is chained to a list of Coordinate
-     * it is chained with the list if it is contained in the list
-     * it is not chained if it is not linked in any entries in the list
-     * @param cor the coordinate to check
-     * @param compare the coordinate to be checked
-     * @return true if the cor is chained with the list, false otherwise
+     * check if a coordinate is chained to a list
      */
+
         public static boolean isChained (Coordinate cor, List<Coordinate> compare){
             for (Coordinate c : compare){
-                if (isLinked(cor,c)||cor.equals(c)){
+                if (isLinked(cor, c)){
                     return true;
-                }}
-            return false;
+                }
+            }return false;
         }
+
+    /**
+     * check if there is ant Coordinate in a list of Coordinate that is not chained
+     * a coordinate is not chained if it is not linked in any entries in the list
+     * @param compare the coordinate to be checked
+     * @return the list of coordinates that are not chained
+     */
+        public static List<Coordinate> notChained (List<Coordinate> compare){
+            List<Coordinate> notChained = new ArrayList<>();
+            // copy the compare list so that it can be treated separately
+            List <Coordinate> forCheck = new ArrayList<>();
+            forCheck.addAll(compare);
+            for (Coordinate c : compare){
+               if (!isChained(c,forCheck)){
+                   notChained.add(c);
+               }
+            }
+            return notChained;
+        }
+
 
     /**
      * a method to get the chained settlers and villages
@@ -173,20 +189,11 @@ public class Player {
         if (all.size()==0){
             return accumulated;
         }
-        List<Coordinate> toCheck = new ArrayList<>(all);
-        List<Coordinate> thrown = new ArrayList<>();
-        // for every entry in all, check if they are linked with every other entries
-        // if any of them are not linked, throw them to the next list in accumulate
-        for (Coordinate c : toCheck) {
-            if (!isChained(c, all)) {
-                System.out.println(c.toString());
-                all.remove(c);
-                thrown.add(c);
-            }
-        }
+        List<Coordinate> thrown = notChained(all);
+        all.removeAll(thrown);
         accumulated.add(all);
-        System.out.println("accumulated is " + accumulated.toString());
-        System.out.println("all is " + all.toString());
+        //System.out.println("accumulated is " + accumulated);
+        //System.out.println("all is " + all);
         return getChainedOccupier(accumulated,thrown);
         }
 

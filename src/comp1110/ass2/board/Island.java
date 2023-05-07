@@ -134,7 +134,7 @@ public class Island {
         }
         // islands with islandNum 0 are not island, so we remove them
         islandsOccupied.remove(0);
-        return  islandsOccupied;
+        return islandsOccupied;
 
     }
 

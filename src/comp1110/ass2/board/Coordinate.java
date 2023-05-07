@@ -137,11 +137,14 @@ public class Coordinate {
         Coordinate cor3 = new Coordinate(7,11);
         Coordinate cor4 = new Coordinate(6,10);
         Coordinate cor5 = new Coordinate(6,11);
+        Coordinate cor6 = new Coordinate(0,4);
+        Coordinate cor7 = new Coordinate(0,8);
         System.out.println(isLinked(cor1,cor2) + " should be false");
         System.out.println(isLinked(cor2,cor3)+ " should be false");
         System.out.println(isLinked(cor3,cor4)+ " should be true");
         System.out.println(isLinked(cor4,cor5)+ " should be true");
         System.out.println(isLinked(cor5,cor1)+ " should be false");
+        System.out.println(isLinked(cor6,cor7)+ " should be false");
 
 
     }
