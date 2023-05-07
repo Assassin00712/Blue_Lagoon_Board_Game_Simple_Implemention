@@ -2,12 +2,8 @@ package comp1110.ass2;
 
 import comp1110.ass2.board.Board;
 import comp1110.ass2.board.Coordinate;
-import comp1110.ass2.board.Spot;
-import comp1110.ass2.board.Coordinate;
 import comp1110.ass2.board.Island;
 import comp1110.ass2.board.Player;
-import comp1110.ass2.gui.Viewer;
-import gittest.C;
 
 import java.util.*;
 
@@ -48,6 +44,12 @@ public class BlueLagoon {
     public static String getCurrentStateStatement(String stateString){
         String[] s1 = stateString.split(";");
         return s1[1];
+    }
+
+    //Get current player number
+    public static String getCurrentPlayerNumber(String stateString){
+        String[] currentStatement = getCurrentStateStatement(stateString).split(" ");
+        return currentStatement[2];
     }
 
     //Return Current State Statement
@@ -108,7 +110,7 @@ public class BlueLagoon {
     }
 
     //Return all stone coordinates as a list to solve task 5
-    public static List getAllStoneList(String stateString){
+    public static List<String> getAllStoneList(String stateString){
         List<String> AllstoneList = new ArrayList<>();
         String StoneStatement = getStoneStatement(stateString);
         String[] CoordinatesList = StoneStatement.split(" ");
@@ -284,6 +286,27 @@ public class BlueLagoon {
             a = a + containers + ";";
         }
         return a;
+    }
+
+    public static String getCurrentPlayerStatement(String stateString){
+        //Get current player statement and number
+        String[] playerStatementList = getPlayerStatement(stateString).split(";");
+        String[] currentStateList = getCurrentStateStatement(stateString).split(" ");
+        String currentPlayerNum = currentStateList[2];
+        return playerStatementList[Integer.parseInt(currentPlayerNum)];
+    }
+
+
+    //Return the number of resources of all players
+    public static int getAllPlayerResourcesNumber(String stateString){
+        String PlayerStatement = getPlayerStatement(stateString);
+        String[] PlayerStatementSplit = PlayerStatement.split(";");
+        int NumofAllPlayerResources = 0;
+        for (int i = 0;i<=PlayerStatementSplit.length - 1;i++){
+            String[] EachPlayer = PlayerStatementSplit[i].split(" ");
+            NumofAllPlayerResources = NumofAllPlayerResources + Integer.parseInt(EachPlayer[4]) + Integer.parseInt(EachPlayer[5]) + Integer.parseInt(EachPlayer[6]) + Integer.parseInt(EachPlayer[7]);
+        }
+        return NumofAllPlayerResources;
     }
 
 
@@ -735,12 +758,6 @@ public class BlueLagoon {
                 String currentVillageNoT = currentVillages.substring(1);
                 String[] currentVillageList = currentVillageNoT.split(" ");
 
-//                    //Add two string arrays to one, after this currentSettltersList is the combined array
-//                    int arryLen1 = currentSettlersList.length;
-//                    int arryLen2 = currentVillageList.length;
-//
-//                    currentSettlersList = Arrays.copyOf(currentSettlersList, arryLen1 + arryLen2);
-//                    System.arraycopy(currentVillageList, 0, currentSettlersList, arryLen1, arryLen2);
 
                 //currentSettlersNoS have an empty in the beginning
                 //Check if move position is adjacent to the settlers
@@ -1096,6 +1113,25 @@ public class BlueLagoon {
      * @return true if the state is at the end of either phase and false otherwise
      */
     public static boolean isPhaseOver(String stateString){
+//        String AllPlayerStatement = getPlayerStatement(stateString);
+//        String[] ALLPlayerStatementSplit = AllPlayerStatement.split(";");
+//        int PlayerNum = ALLPlayerStatementSplit.length;
+//        boolean NoinvaildMoves = false;
+//        String originalStateString = stateString;
+//        for (int i = 0;i<=PlayerNum-1;i++){
+//            String currentPlayer = stateString.substring(10,11);
+//            for (int j = 0;j<=stateString.length() - 1;j++){
+//                if (j>=2 && j<=stateString.length() - 3) {
+//                    if (stateString.charAt(j - 2) == 'c' && stateString.charAt(j + 2) == 'E' || stateString.charAt(j + 2) == 'S') {
+//                        stateString.replace("c" + currentPlayer + "E", "c" + i + "E");
+//                    }
+//                }
+//            }
+//            if (generateAllValidMoves(stateString).size() == 0){return !NoinvaildMoves;}
+//        }
+//        stateString = originalStateString;
+        if (generateAllValidMoves(stateString).size() == 0){return true;}
+        if (getAllPlayerResourcesNumber(stateString) == 24){return true;}
          return false; // FIXME Task 9
     }
 
@@ -1111,7 +1147,68 @@ public class BlueLagoon {
      * @return a new state string achieved by placing the move on the board
      */
     public static String placePiece(String stateString, String moveString){
-         return ""; // FIXME Task 10
+        /**Check if the move is placed on the stone**/
+        //Get stone coordinates and move coordinate
+        List<String> StoneList = getAllStoneList(stateString);
+        String[] moveStringSplit = moveString.split(" ");
+        String moveCoordinate = moveStringSplit[1];
+
+        //Get current player statement and number
+        String currentPlayerStatement = getCurrentPlayerStatement(stateString);
+        String currentPlayerNum = getCurrentPlayerNumber(stateString);
+        String[] currentPlayerStatementSplit = currentPlayerStatement.split(" ");
+        String newPlayerStatement = "";
+
+        //Get moveString is "S" or "T"
+        String moveType = moveString.substring(0,1);
+
+        //Split the stateString
+        String[] stateStringSplit = stateString.split(";");
+        String newStateString = "";
+
+
+
+        System.out.println(moveString);
+//        for(String containers: stateStringSplit) {
+//            System.out.println(containers);
+//        }
+        for(int i = 0;i<= StoneList.size()-1;i++){
+            if (moveCoordinate.equals(StoneList.get(i))){
+                //If the move is placed on the stone, check whether there are any resources
+
+            }else {//If it's not on the stone, add the coordinate on current player statement
+                if (moveType.equals("S")){
+
+                    for (int j=0;j<=currentPlayerStatementSplit.length-1;j++){
+
+                        if (currentPlayerStatementSplit[j].equals("T")){
+                            newPlayerStatement = newPlayerStatement + moveCoordinate + " ";
+                        }
+                        newPlayerStatement = newPlayerStatement + currentPlayerStatementSplit[j] + " ";
+                    }
+                    //Replace the old playerstatement with the new one
+                    stateStringSplit[2+getIslandLength(stateString)+2+Integer.parseInt(currentPlayerNum)] = newPlayerStatement;
+                    for (int m=0;m<=stateStringSplit.length-1;m++){
+                        newStateString = newStateString + stateStringSplit[m] + ";";
+                    }
+                    System.out.println(newStateString);
+                    return newStateString;
+
+                }else {
+                    newPlayerStatement = currentPlayerStatement + " " + moveCoordinate;
+                    //Replace the old playerstatement with the new one
+                    stateStringSplit[2+getIslandLength(stateString)+2+Integer.parseInt(currentPlayerNum)] = newPlayerStatement;
+                    for (int m=0;m<=stateStringSplit.length-1;m++){
+                        newStateString = newStateString + stateStringSplit[m] + ";";
+                    }
+//                    System.out.println(newStateString);
+                    return newStateString;
+
+                }
+            }
+        }
+
+         return stateString; // FIXME Task 10
     }
 
     /**

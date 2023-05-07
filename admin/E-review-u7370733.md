@@ -1,14 +1,14 @@
 ## Code Review
 
-Reviewed by: <Wangtao Jia>, <u7370733>
+Reviewed by: Wangtao Jia, u7370733
 
-Reviewing code written by: <Hank Lin> <u7426529>
+Reviewing code written by: Hank Lin u7426529
 
-Component: <isStateStringWellFormed from line 293 to 315>
+Component: isStateStringWellFormed
 
 ### Comments 
 
-<The best feature: The structure of the codes is clear and regular expressions are used, which is good.>
+The best feature: The structure of the codes is clear and regular expressions are used, which is good.
 The code is relative well-documented and describes the job of code in different parts.
 There is no method necessary in this simple task and the code have no methods as well.
 Variables are properly named and easy to be understood.
