@@ -1205,9 +1205,9 @@ public class BlueLagoon {
      */
     public static int[] findmax (int[] array){
         List<Integer> maxAt = new ArrayList<>();
-        maxAt.add(0);
         int max = array[0];
         int maxesLength = 2;
+        System.out.println(array.length);
         for (int i = 0; i < array.length; i++){
             if (array[i] == max) {
                 maxesLength += 1;
@@ -1219,14 +1219,18 @@ public class BlueLagoon {
                 maxAt.clear();
                 maxAt.add(i);
             }
+            System.out.println("i is "+i);
+            System.out.println("length is "+maxesLength);
+            System.out.println("maxAt is " + maxAt);
         }
         int[] maxes = new int[maxesLength];
         maxes[0] = max;
         for (int j = 1; j < maxesLength; j++){
-            maxes[j] = maxAt.get(j-1);
+            maxes[j] = maxAt.get(j);
         }
         return maxes;
     }
+
 
     /**
      * Given a state string, calculate the "Majorities" portion of the score for
