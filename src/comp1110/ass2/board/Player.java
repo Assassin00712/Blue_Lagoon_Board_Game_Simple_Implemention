@@ -1,5 +1,6 @@
 package comp1110.ass2.board;
 
+import comp1110.ass2.BlueLagoon;
 import gittest.C;
 
 import static comp1110.ass2.board.Coordinate.corFromString;
@@ -86,7 +87,7 @@ public class Player {
         }
         player.settlers = corS;
         player.villages = corV;
-        player.statuette = player.resources.get(player.resources.size()-1);
+        //player.statuette = player.resources.get(player.resources.size()-1);
 
         return player;
     }

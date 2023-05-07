@@ -9,10 +9,10 @@ import comp1110.ass2.board.Player;
 import comp1110.ass2.gui.Viewer;
 import gittest.C;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
-import static comp1110.ass2.board.Island.getIslandScore;
-import static comp1110.ass2.board.Island.getLinkedScore;
+import static comp1110.ass2.board.Island.*;
 import static comp1110.ass2.board.Player.*;
 
 public class BlueLagoon {
@@ -1197,6 +1197,38 @@ public class BlueLagoon {
     }
 
     /**
+     * a method to find the maximum int in an array
+     * @param array the array to be checked
+     * @return an int array called maxes where
+     * maxes[0] = maximum number
+     * maxes[1] and afterwards = where the maximum number exists
+     */
+    public static int[] findmax (int[] array){
+        List<Integer> maxAt = new ArrayList<>();
+        maxAt.add(0);
+        int max = array[0];
+        int maxesLength = 2;
+        for (int i = 0; i < array.length; i++){
+            if (array[i] == max) {
+                maxesLength += 1;
+                maxAt.add(i);
+            }
+            if (array[i] > max){
+                maxesLength = 2;
+                max = array[i];
+                maxAt.clear();
+                maxAt.add(i);
+            }
+        }
+        int[] maxes = new int[maxesLength];
+        maxes[0] = max;
+        for (int j = 1; j < maxesLength; j++){
+            maxes[j] = maxAt.get(j-1);
+        }
+        return maxes;
+    }
+
+    /**
      * Given a state string, calculate the "Majorities" portion of the score for
      * each player as if it were the end of a phase. The return value is an
      * integer array sorted by player number containing the calculated score
@@ -1216,7 +1248,45 @@ public class BlueLagoon {
      * of the score for each player
      */
     public static int[] calculateIslandMajoritiesScore(String stateString){
-         return new int[]{0, 0}; // FIXME Task 11
+        List<Player> players = Player.playersFromString(stateString);
+        int[] majIslandScore = new int[players.size()];
+        List<Island> islands = Island.getIslands(stateString);
+        List<Coordinate>[] occupied = allSettlersVillages(stateString);
+        for (List<Coordinate> l : occupied){
+            System.out.println("this player has settlers and villages on "+l);
+        }
+        List<int[]> occupants = new ArrayList<>();
+        for (List<Coordinate> l : occupied){
+            occupants.add(getOccupiedNumbers(l,islands));
+            System.out.println("this player's number of occupants on each island is "+ Arrays.toString(getOccupiedNumbers(l,islands)));
+        }
+        // occupants should have same size as players
+        for (int i = 1; i <= islands.size(); i++){
+            // i represents island number
+            int[] islandIOccupants = new int[players.size()];
+            for (int j = 0; j < players.size(); j++){
+                // j represents player number
+                int[] playerJOccupants = occupants.get(j);
+                islandIOccupants[j] = playerJOccupants[i-1];
+            }
+            // islandIOccupants should be complete at this step
+            System.out.println("this island has these occupants "+ Arrays.toString(islandIOccupants));
+            int [] majority = findmax(islandIOccupants);
+            System.out.println("majority turns out to be "+ Arrays.toString(majority));
+            // if an island has no pieces on it,it will not be scored
+            if(majority[0]!=0) {
+            int totalScore = islands.get(i-1).getBonus();
+            int scorer = majority.length-1;
+            int scoreDistributed = totalScore/scorer;
+            System.out.println("totalScore is " + totalScore);
+            System.out.println("there are "+scorer+" scorers");
+            System.out.println("each scorer gets " + scoreDistributed);
+            for (int k = 1; k < majority.length; k++){
+                    majIslandScore[majority[k]] += scoreDistributed;
+                }
+            }
+        }
+         return majIslandScore; // FIXME Task 11
     }
 
     /**

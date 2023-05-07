@@ -30,6 +30,10 @@ public class Coordinate implements Comparable<Coordinate>{
         this.col = Integer.parseInt(this.cord[1]);
     }
 
+    public int getRow() {
+        return row;
+    }
+
     public int getCol() {
         return col;
     }
