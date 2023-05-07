@@ -1,55 +1,50 @@
 package comp1110.ass2.board;
 
+import gittest.C;
+
 import java.util.Objects;
 
-public class Coordinate {
+public class Coordinate implements Comparable<Coordinate>{
 
     // I changed Position into Coordinate since the format given in state strings are not a typical position format
-    public int row;
-    public int col;
+    public int row; // Row is from up-down
+    public int col; // Column is from left-right
+
+
     String[] cord;
 
 
     public Coordinate(int row,int col) {
         this.row = row;
         this.col = col;
+
     }
     public Coordinate(){
         this.row = 0;
         this.col = 0;
     }
 
-    public Coordinate(String cord){
-        this.cord = cord.split(",");
-    }
+    public Coordinate(String cordString){
 
-    public int getRow() {
-        return row;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
+        this.cord = cordString.replace(';',' ').strip().split(",");
+        this.row = Integer.parseInt(this.cord[0]);
+        this.col = Integer.parseInt(this.cord[1]);
     }
 
     public int getCol() {
         return col;
     }
-
-    public int stringToX(){
-        return Integer.parseInt(cord[0]);
+    public int getRow() {
+        return row;
     }
 
-    public int stringToY(){
+    public int stringToRow(){
+        return Integer.parseInt(cord[0]);
+    }
+    public int stringToCol(){
         return Integer.parseInt(cord[1]);
     }
 
-    public void setCol(int col) {
-        this.col = col;
-    }
-
-//    public int hashCode() {
-//        return Objects.hash(row, col);
-//    }
 
     /**
      * test if a coordinate is in bound
@@ -68,18 +63,18 @@ public class Coordinate {
      * @return true if coordinates are linked, false otherwise
      */
     public static boolean isLinked (Coordinate cor1, Coordinate cor2) {
-        int row1 = cor1.getRow();
-        int row2 = cor2.getRow();
-        int col1 = cor1.getCol();
-        int col2 = cor2.getCol();
-        if (col1 == col2) {
-            return ((row1 == row2 + 1) || (row1 == row2 - 1));
-        } else if (col1 % 2 == 0) {
-            return ((col1 == col2 - 1) || (col1 == col2 + 1)
-                    && (row1 == row2 - 1) || (row1 == row2));
+        int x1 = cor1.col;
+        int x = cor2.col;
+        int y1 = cor1.row;
+        int y = cor2.row;
+        if (x == x1) {
+            return ((y1 == y + 1) || (y1 == y - 1));
+        } else if (x % 2 == 0) {
+            return ((x == x1 - 1) || (x == x1 + 1)
+                    && (y == y1 - 1) || (y == y1));
         } else {
-            return ((col1 == col2 - 1) || (col1 == col2 + 1)
-                    && (row1 == row2 + 1) || (row1 == row2));
+            return ((x == x1 - 1) || (x == x1 + 1)
+                    && (y == y1 + 1) || (y == y1));
         }
     }
 
@@ -88,26 +83,6 @@ public class Coordinate {
         return  row + "," + col;
     }
 
-    /**
-     * get the coordinate from a string
-    @param s a string represent a coordinate, must be with length 3
-     */
-
-    public static Coordinate corFromString(String s) {
-        Coordinate c = new Coordinate();
-        if (s.charAt(s.length()-1) == ';'){
-            s = s.substring(0, s.length()-1);
-        }
-        String[] tmp = s.split(",");
-
-        int row = Integer.parseInt(tmp[0].strip());
-        //System.out.println("the row of the Coordinate dealing with is " + row);
-        int col = Integer.parseInt(tmp[1].strip());
-        //System.out.println("the column of the Coordinate dealing with is " + col);
-        c.col = col;
-        c.row = row;
-        return c;
-    }
 
     @Override
     public boolean equals(Object other) {
@@ -121,12 +96,33 @@ public class Coordinate {
         return Objects.hash(row, col);
     }
 
+    @Override
+    public int compareTo(Coordinate o) {
+        if (this.row == o.row) {
+            return this.col - o.col; // If row is equal, sort by col in ascending order
+        } else {
+            return this.row - o.row; // If row is not equal, sort by row in ascending order
+        }
+    }
+
 
     public static Coordinate randomCord(){
         int x = (int) (Math.random() * 12);
         int y = (int) (Math.random() * 12);
 
         return new Coordinate(x, y);
+    }
+
+    public static void main(String[] args) {
+        Coordinate cor1 = new Coordinate(0,5);
+        Coordinate cor2 = new Coordinate(3,7);
+        Coordinate cor3 = new Coordinate(7,11);
+        Coordinate cor4 = new Coordinate(6,10);
+        Coordinate cor5 = new Coordinate(6,11);
+        Coordinate cor6 = new Coordinate("6,12");
+        System.out.println(cor6.row);
+
+
     }
 
 }

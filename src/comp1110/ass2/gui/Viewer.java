@@ -169,20 +169,20 @@ public class Viewer extends Application {
 
         // Set Hexagon color to green if it's an island
         for (Object cord: BlueLagoon.getAllIslandStatementList(stateString)){
-            cordToHexagon(new Coordinate((String) cord).stringToX(), new Coordinate((String) cord).stringToY())
+            cordToHexagon(new Coordinate((String) cord).stringToRow(), new Coordinate((String) cord).stringToCol())
                     .setFill(Color.GREEN);
         }
 
         // Set Hexagon color to black if it's a stone
         for (Object cord: BlueLagoon.getAllStoneList(stateString)){
-            cordToHexagon(new Coordinate((String) cord).stringToX(), new Coordinate((String) cord).stringToY())
+            cordToHexagon(new Coordinate((String) cord).stringToRow(), new Coordinate((String) cord).stringToCol())
                     .setFill(Color.BLACK);
         }
 
         // Draw Bamboo
         if (BlueLagoon.getBamboo(stateString).size() > 0){
             for (Object cord: BlueLagoon.getBamboo(stateString)){
-                double[] draw = cordToXY(new Coordinate((String) cord).stringToX(), new Coordinate((String) cord).stringToY());
+                double[] draw = cordToXY(new Coordinate((String) cord).stringToRow(), new Coordinate((String) cord).stringToCol());
                 double x = draw[0];
                 double y = draw[1];
                 drawTriangleText(x, y,"B", Color.RED);
@@ -192,7 +192,7 @@ public class Viewer extends Application {
         // Draw Coconut
         if (BlueLagoon.getCoconutList(stateString).size() > 0){
             for (Object cord: BlueLagoon.getCoconutList(stateString)){
-                double[] draw = cordToXY(new Coordinate((String) cord).stringToX(), new Coordinate((String) cord).stringToY());
+                double[] draw = cordToXY(new Coordinate((String) cord).stringToRow(), new Coordinate((String) cord).stringToCol());
                 double x = draw[0];
                 double y = draw[1];
                 drawTriangleText(x, y,"C", Color.DARKGREEN);
@@ -202,7 +202,7 @@ public class Viewer extends Application {
         // Draw Water
         if (BlueLagoon.getWater(stateString).size() > 0){
             for (Object cord: BlueLagoon.getWater(stateString)){
-                double[] draw = cordToXY(new Coordinate((String) cord).stringToX(), new Coordinate((String) cord).stringToY());
+                double[] draw = cordToXY(new Coordinate((String) cord).stringToRow(), new Coordinate((String) cord).stringToCol());
                 double x = draw[0];
                 double y = draw[1];
                 drawTriangleText(x, y,"W", Color.DARKBLUE);
@@ -212,7 +212,7 @@ public class Viewer extends Application {
         // Draw Precious Stone
         if (BlueLagoon.getPreciousStone(stateString).size() > 0){
             for (Object cord: BlueLagoon.getPreciousStone(stateString)){
-                double[] draw = cordToXY(new Coordinate((String) cord).stringToX(), new Coordinate((String) cord).stringToY());
+                double[] draw = cordToXY(new Coordinate((String) cord).stringToRow(), new Coordinate((String) cord).stringToCol());
                 double x = draw[0];
                 double y = draw[1];
                 drawTriangleText(x, y,"P", Color.ORANGE);
@@ -222,7 +222,7 @@ public class Viewer extends Application {
         // Draw statuette
         if (BlueLagoon.getStatuette(stateString).size() > 0){
             for (Object cord: BlueLagoon.getStatuette(stateString)){
-                double[] draw = cordToXY(new Coordinate((String) cord).stringToX(), new Coordinate((String) cord).stringToY());
+                double[] draw = cordToXY(new Coordinate((String) cord).stringToRow(), new Coordinate((String) cord).stringToCol());
                 double x = draw[0];
                 double y = draw[1];
                 drawTriangleText(x, y,"S", Color.PURPLE);
@@ -241,7 +241,7 @@ public class Viewer extends Application {
 
                 // If playerState==0, draw a settler
                 if (c.matches("\\d+,\\d+") && playerState == 0){
-                    double[] draw = cordToXY(new Coordinate((String) c).stringToX(), new Coordinate((String) c).stringToY());
+                    double[] draw = cordToXY(new Coordinate((String) c).stringToRow(), new Coordinate((String) c).stringToCol());
                     double x = draw[0];
                     double y = draw[1];
                     drawTriangleText(x, y,"Se" + playerNumber, Color.DARKCYAN);
@@ -249,7 +249,7 @@ public class Viewer extends Application {
 
                 // If playerState==0, draw a village
                 if (c.matches("\\d+,\\d+") && playerState == 1){
-                    double[] draw = cordToXY(new Coordinate((String) c).stringToX(), new Coordinate((String) c).stringToY());
+                    double[] draw = cordToXY(new Coordinate((String) c).stringToRow(), new Coordinate((String) c).stringToCol());
                     double x = draw[0];
                     double y = draw[1];
                     drawTriangleText(x, y,"Vi" + playerNumber, Color.DARKORANGE);

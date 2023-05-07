@@ -1,105 +1,132 @@
 package comp1110.ass2.board;
 
+import comp1110.ass2.BlueLagoon;
+import javafx.scene.paint.Color;
+
+import java.util.Arrays;
 import java.util.List;
 
-import static comp1110.ass2.board.Coordinate.corFromString;
 
 public class Board {
+    // The width of the board (left to right)
+    public final static int BOARD_WIDTH = 13;
+    // The height of the board (top to bottom)
     public final static int BOARD_HEIGHT = 13;
 
-    static Spot[][] board = new Spot[BOARD_HEIGHT][BOARD_HEIGHT];
+    // The matrix of spots representing the board
+    // For spotMatrix[row][col]:
+    //   row corresponds to the row, working top to bottom, and
+    //   col corresponds to the column, working left to right.
+    // Values default to null where there are no spots
+    public Spot[][] spotMatrix = new Spot[BOARD_HEIGHT][BOARD_WIDTH];
 
 
-    // initialize a board by creating an array/list of spots with every coordinates within bound
-    public static void initialize(){
-        int col = 0;
-        int row = 0;
-        Coordinate cor = new Coordinate(0,0);
-        while (row < BOARD_HEIGHT){
-            cor.setRow(row);
-            while (col < BOARD_HEIGHT) {
-                cor.setCol(col);
-                board[row][col].sCor = (cor);
-                col++;
+    // initialize a board by creating an array/list of spots
+    public void initialize() {
+        for (int row = 0; row < BOARD_HEIGHT; row++) {
+            for (int col = 0; col < BOARD_WIDTH; col++) {
+                spotMatrix[row][col] = new Spot();
             }
-            col = 0;
-            row++;
         }
     }
 
     public Spot spotFromCor(Coordinate cor) {
-        Spot spot = board[cor.getRow()][cor.getCol()];
+        Spot spot = spotMatrix[cor.row][cor.col];
         return spot;
     }
 
-    public void spotFromPlayer(Player player){
-        int playId = player.playId;
-        List<Coordinate> settlers = player.settlers;
-        List<Coordinate> villages = player.villages;
-        for (int i = 0; i < settlers.size(); i++){
-            Spot spot = spotFromCor(settlers.get(i));
-            spot.occupier = (1000+(playId)*100+i+1);
+
+
+    public static Board fromStateString(String stateString) {
+        Board board = new Board();
+        board.initialize();
+
+        // Set the spot isIsland if it's an island
+        for (var cord: BlueLagoon.getAllIslandStatementList(stateString)){
+            board.spotMatrix[new Coordinate((String) cord).stringToRow()][new Coordinate((String) cord).stringToCol()]
+                    .isIsland = true;
         }
-        for (int j = 0; j < villages.size(); j++){
-            Spot spot = spotFromCor(settlers.get(j));
-            spot.occupier = (2000+(playId)*100+j+1);
+
+        // Set the spot isStone if it's a stone
+        for (var cord: BlueLagoon.getAllStoneList(stateString)){
+            board.spotMatrix[new Coordinate((String) cord).stringToRow()][new Coordinate((String) cord).stringToCol()]
+                    .isStone = true;
         }
-    }
 
+        // Set Bamboo
+        if (BlueLagoon.getBamboo(stateString).size() > 0){
+            for (var cord: BlueLagoon.getBamboo(stateString)){
+                board.spotMatrix[new Coordinate((String) cord).stringToRow()][new Coordinate((String) cord).stringToCol()]
+                        .resources = Resources.BAMBOO;
+            }
+        }
 
+        // Set Coconut
+        if (BlueLagoon.getCoconutList(stateString).size() > 0){
+            for (var cord: BlueLagoon.getCoconutList(stateString)){
+                board.spotMatrix[new Coordinate((String) cord).stringToRow()][new Coordinate((String) cord).stringToCol()]
+                        .resources = Resources.COCONUTS;
+            }
+        }
 
-    public void spotsFromString(String[] gameStates){
-        int j = 1;
-        for (int i = 0; i< gameStates.length; i++){
-            String[] coordinates = gameStates[i].split(" ");
+        // Set Water
+        if (BlueLagoon.getWater(stateString).size() > 0){
+            for (var cord: BlueLagoon.getWater(stateString)){
+                board.spotMatrix[new Coordinate((String) cord).stringToRow()][new Coordinate((String) cord).stringToCol()]
+                        .resources = Resources.WATER;
+            }
+        }
 
-            while ( j < coordinates.length){
-                if (coordinates[0].equals("i")){
-                    Coordinate c = corFromString(coordinates[j]);
-                    board[c.getRow()][c.getCol()].isIsland = true;
-                    j++;
-                }
-                if (coordinates[0].equals("s")){
-                    Coordinate c = corFromString(coordinates[j]);
-                    board[c.getRow()][c.getCol()].isStone = true;
-                    j++;
-                }if (coordinates[0].equals("r")){
-                    if (coordinates[0].equals("C")){
-                        j++;
-                        Coordinate c = corFromString(coordinates[j]);
-                        board[c.getRow()][c.getCol()].resources = Resources.COCONUTS;
-                    }if (coordinates[0].equals("W")){
-                        j++;
-                        Coordinate c = corFromString(coordinates[j]);
-                        board[c.getRow()][c.getCol()].resources = Resources.WATER;
-                    }if (coordinates[0].equals("P")){
-                        j++;
-                        Coordinate c = corFromString(coordinates[j]);
-                        board[c.getRow()][c.getCol()].resources = Resources.PRECIOUS_STONE;
-                    }if (coordinates[0].equals("B")){
-                        j++;
-                        Coordinate c = corFromString(coordinates[j]);
-                        board[c.getRow()][c.getCol()].resources = Resources.BAMBOO;
-                    }if (coordinates[0].equals("S")){
-                        j++;
-                        Coordinate c = corFromString(coordinates[j]);
-                        board[c.getRow()][c.getCol()].resources = Resources.STATUETTS;
+        // Set Precious Stone
+        if (BlueLagoon.getPreciousStone(stateString).size() > 0){
+            for (var cord: BlueLagoon.getPreciousStone(stateString)){
+                board.spotMatrix[new Coordinate((String) cord).stringToRow()][new Coordinate((String) cord).stringToCol()]
+                        .resources = Resources.PRECIOUS_STONE;
+            }
+        }
+
+        // Draw statuette
+        if (BlueLagoon.getStatuette(stateString).size() > 0){
+            for (var cord: BlueLagoon.getStatuette(stateString)){
+                board.spotMatrix[new Coordinate((String) cord).stringToRow()][new Coordinate((String) cord).stringToCol()]
+                        .resources = Resources.STATUETTE;
+            }
+        }
+
+        // Draw Players
+        if (BlueLagoon.getAllPlayers(stateString).size() > 0){
+            int playerNumber = 0;
+            int playerState = 0;
+            for (int i = 0; i < BlueLagoon.getAllPlayers(stateString).size(); i++){
+                String c = (String) BlueLagoon.getAllPlayers(stateString).get(i);
+                if (c.equals("p")){playerNumber = Integer.parseInt(BlueLagoon.getAllPlayers(stateString).get(i+1));}
+                if (c.equals("S")){playerState = 0;}
+                if (c.equals("T")){playerState = 1;}
+
+                // If playerState==0, set the settler
+                if (c.matches("\\d+,\\d+") && playerState == 0){
+                    for (var cord: BlueLagoon.getBamboo(stateString)){
+                        board.spotMatrix[new Coordinate((String) cord).stringToRow()][new Coordinate((String) cord).stringToCol()]
+                                .settler = playerNumber;
                     }
                 }
-            }
-            if (gameStates[i].startsWith("p")){
-                Player player = new Player();
-                player.playerFromString(gameStates[i]);
-                spotFromPlayer(player);
+
+                // If playerState==1, set the village
+                if (c.matches("\\d+,\\d+") && playerState == 1){
+                    for (var cord: BlueLagoon.getBamboo(stateString)){
+                        board.spotMatrix[new Coordinate((String) cord).stringToRow()][new Coordinate((String) cord).stringToCol()]
+                                .village = playerNumber;
+                    }
+                }
+
             }
         }
 
+
+    return board;
     }
 
 
-    private Board() {}
-        private void initializeResources () {
-        }
+}
 
-    }
 

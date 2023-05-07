@@ -2,15 +2,18 @@ package comp1110.ass2;
 
 import comp1110.ass2.board.Board;
 import comp1110.ass2.board.Coordinate;
+import comp1110.ass2.board.Spot;
+import comp1110.ass2.board.Coordinate;
 import comp1110.ass2.board.Island;
 import comp1110.ass2.board.Player;
+import comp1110.ass2.gui.Viewer;
+import gittest.C;
 
 import java.util.*;
 
 import static comp1110.ass2.board.Island.getIslandScore;
 import static comp1110.ass2.board.Island.getLinkedScore;
-import static comp1110.ass2.board.Player.allSettlersVillages;
-import static comp1110.ass2.board.Player.playerFromString;
+import static comp1110.ass2.board.Player.*;
 
 public class BlueLagoon {
     // The Game Strings for five maps have been created for you.
@@ -27,7 +30,16 @@ public class BlueLagoon {
     public static final String SIDES_GAME =  "a 7 2; c 0 E; i 4 0,0 0,1 0,2 0,3 1,0 1,1 1,2 1,3 2,0 2,1 2,2 2,3 3,0 3,1 3,2 3,3 4,0 4,1 4,2 4,3 5,0 5,1 5,2 5,3 6,0 6,1 6,2 6,3; i 20 0,5 1,5 1,6 2,5 3,5 3,6 4,5 5,5 5,6 6,5; s 0,0 0,1 0,2 0,3 1,1 1,2 1,3 1,5 1,6 2,0 2,1 2,2 2,3 3,0 3,1 3,2 3,3 3,5 3,6 4,0 4,1 4,2 4,3 5,1 5,2 5,3 5,5 5,6 6,0 6,1 6,2 6,3; r C B W P S; p 0 0 0 0 0 0 0 S T; p 1 0 0 0 0 0 0 S T;";
     public static final String SPACE_INVADERS_GAME = "a 23 2; c 0 E; i 6 0,2 0,7 1,3 1,7 2,2 2,3 2,4 2,5 2,6 2,7 3,2 3,4 3,5 3,6 3,8 4,0 4,1 4,2 4,3 4,4 4,5 4,6 4,7 4,8 4,9 5,0 5,1 5,3 5,4 5,5 5,6 5,7 5,9 5,10 6,0 6,2 6,7 6,9 7,3 7,4 7,6 7,7; i 6 0,14 0,19 1,15 1,19 2,14 2,15 2,16 2,17 2,18 2,19 3,14 3,16 3,17 3,18 3,20 4,12 4,13 4,14 4,15 4,16 4,17 4,18 4,19 4,20 4,21 5,12 5,13 5,15 5,16 5,17 5,18 5,19 5,21 5,22 6,12 6,14 6,19 6,21 7,15 7,16 7,18 7,19; i 6 17,9 18,8 18,9 19,6 19,7 19,8 19,9 19,10 19,11 19,12 20,5 20,6 20,7 20,8 20,9 20,10 20,11 20,12 21,5 21,6 21,7 21,8 21,9 21,10 21,11 21,12 21,13 22,5 22,6 22,7 22,8 22,9 22,10 22,11 22,12; i 8 12,3 12,5 13,3 13,4 13,5 13,6 14,1 14,2 14,3 14,4 14,5 15,1 15,2 15,3 16,1 16,2; i 8 12,17 12,18 12,19 13,17 13,18 13,19 13,20 14,17 14,18 14,19 14,20 15,19 15,20 15,21 16,19 16,20; i 8 13,14 14,13 14,14 15,13 15,14 15,15 16,13 16,14; i 8 14,7 15,7 15,8 16,7; i 10 8,9 9,9 10,9 11,9; i 10 8,12 9,13 10,12 11,13; i 10 9,1 10,1 11,1 12,1; i 10 9,22 10,21 11,22 12,21; i 10 13,10 14,10 15,10; i 10 17,0 18,0 19,0 20,0; i 10 17,16 18,16 19,16 20,16; s 0,2 0,7 0,14 0,19 3,5 3,17 6,0 6,9 6,12 6,21 7,4 7,6 7,16 7,18 11,9 11,13 12,1 12,19 12,21 13,10 15,2 15,8 15,14 15,20 17,9 18,8 18,9 20,0 20,16 21,6 21,9 21,12; r C B W P S; p 0 0 0 0 0 0 0 S T; p 1 0 0 0 0 0 0 S T;";
 
-    public static int numberOfPlayers = 0;
+    public final int numberOfPlayers;
+
+    public static Board board = new Board();
+
+
+    public BlueLagoon(int numberOfPlayers){
+        this.numberOfPlayers = numberOfPlayers;
+    }
+
+
     /** Split the StateString into different parts
      * @param stateString a string representing a game state
      * @return Different statements eg: Game Arrangement Statement and so on
@@ -110,7 +122,7 @@ public class BlueLagoon {
     }
 
     //Return all stone coordinates as a list to solve task 5
-    public static List<String> getAllStoneList(String stateString){
+    public static List getAllStoneList(String stateString){
         List<String> AllstoneList = new ArrayList<>();
         String StoneStatement = getStoneStatement(stateString);
         String[] CoordinatesList = StoneStatement.split(" ");
@@ -288,27 +300,6 @@ public class BlueLagoon {
         return a;
     }
 
-    public static String getCurrentPlayerStatement(String stateString){
-        //Get current player statement and number
-        String[] playerStatementList = getPlayerStatement(stateString).split(";");
-        String[] currentStateList = getCurrentStateStatement(stateString).split(" ");
-        String currentPlayerNum = currentStateList[2];
-        return playerStatementList[Integer.parseInt(currentPlayerNum)];
-    }
-
-
-    //Return the number of resources of all players
-    public static int getAllPlayerResourcesNumber(String stateString){
-        String PlayerStatement = getPlayerStatement(stateString);
-        String[] PlayerStatementSplit = PlayerStatement.split(";");
-        int NumofAllPlayerResources = 0;
-        for (int i = 0;i<=PlayerStatementSplit.length - 1;i++){
-            String[] EachPlayer = PlayerStatementSplit[i].split(" ");
-            NumofAllPlayerResources = NumofAllPlayerResources + Integer.parseInt(EachPlayer[4]) + Integer.parseInt(EachPlayer[5]) + Integer.parseInt(EachPlayer[6]) + Integer.parseInt(EachPlayer[7]);
-        }
-        return NumofAllPlayerResources;
-    }
-
 
     /**
      * Check if the string encoding of the game state is well-formed.
@@ -323,7 +314,7 @@ public class BlueLagoon {
      * @return true if stateString is well-formed and false otherwise
      */
     public static boolean isStateStringWellFormed(String stateString){
-        numberOfPlayers = 0;
+        int numberOfPlayers = 0;
         for (int i = 0; i < stateString.length(); i++) {
             if (stateString.charAt(i) == 'p') {
                 numberOfPlayers++;
@@ -758,6 +749,12 @@ public class BlueLagoon {
                 String currentVillageNoT = currentVillages.substring(1);
                 String[] currentVillageList = currentVillageNoT.split(" ");
 
+//                    //Add two string arrays to one, after this currentSettltersList is the combined array
+//                    int arryLen1 = currentSettlersList.length;
+//                    int arryLen2 = currentVillageList.length;
+//
+//                    currentSettlersList = Arrays.copyOf(currentSettlersList, arryLen1 + arryLen2);
+//                    System.arraycopy(currentVillageList, 0, currentSettlersList, arryLen1, arryLen2);
 
                 //currentSettlersNoS have an empty in the beginning
                 //Check if move position is adjacent to the settlers
@@ -1147,6 +1144,8 @@ public class BlueLagoon {
      * @return a new state string achieved by placing the move on the board
      */
     public static String placePiece(String stateString, String moveString){
+        board = Board.fromStateString(stateString);
+        return ""; // FIXME Task 10
         /**Check if the move is placed on the stone**/
         //Get stone coordinates and move coordinate
         List<String> StoneList = getAllStoneList(stateString);
@@ -1242,9 +1241,9 @@ public class BlueLagoon {
      * the score for each player
      */
     public static int[] calculateTotalIslandsScore(String stateString){
-         List<Player> players = Player.playersFromString(stateString);
-         int[] totalIslandScore = new int[players.size()];
-         List<Island> islands = Island.getIslands(stateString);
+        List<Player> players = Player.playersFromString(stateString);
+        int[] totalIslandScore = new int[players.size()];
+        List<Island> islands = Island.getIslands(stateString);
         List<Coordinate>[] occupied = allSettlersVillages(stateString);
         for (int i = 0; i < players.size(); i++){
             List<Coordinate> cors = occupied[i];
@@ -1331,7 +1330,14 @@ public class BlueLagoon {
      * portions of the score for each player
      */
     public static int[] calculateResourcesAndStatuettesScore(String stateString){
-         return new int[]{0, 0}; // FIXME Task 11
+        // Use the method inside Player class
+        List<Player> players = playersFromString(stateString);
+        int[] resourcesAndStatuettesScore = new int[players.size()];
+        for (int i = 0; i < players.size(); i++){
+            resourcesAndStatuettesScore[i] = players.get(i).getResourcesAndStatuettesScore();
+        }
+
+        return resourcesAndStatuettesScore; // FIXME Task 11
     }
 
     /**
@@ -1346,7 +1352,18 @@ public class BlueLagoon {
      * @return an integer array containing the calculated scores for each player
      */
     public static int[] calculateScores(String stateString){
-         return new int[]{0, 0}; // FIXME Task 11
+        int[] scores = new int[2];
+
+        for (int i = 0; i < scores.length; i++){
+            int tmp = 0;
+            tmp += calculateIslandLinksScore(stateString)[i];
+            tmp += calculateResourcesAndStatuettesScore(stateString)[i];
+            tmp += calculateIslandMajoritiesScore(stateString)[i];
+            tmp += calculateTotalIslandsScore(stateString)[i];
+            scores[i] = tmp;
+        }
+
+        return scores; // FIXME Task 11
     }
 
     /**
@@ -1367,6 +1384,7 @@ public class BlueLagoon {
      * @return a string representing the new state achieved by following the end of phase rules
      */
     public static String endPhase(String stateString){
+        board = Board.fromStateString(stateString);
         String endPhaseString = "";
 
         endPhaseString += getArrangementStatement(stateString) +";";
@@ -1431,29 +1449,32 @@ public class BlueLagoon {
         List<String> newStatuetteList = getStatuette(stateString);
         if (newStatuetteList.size() < 8){
             for (int i = 0 ; i < 8 - getStatuette(stateString).size(); i++){
-                newStoneList.add(Coordinate.randomCord().toString());
+                newStatuetteList.add(Coordinate.randomCord().toString());
             }
         }
+
         resourceString += " S";
-        for (String s: newStoneList){
+        for (String s: newStatuetteList){
             resourceString += " " + s;
         }
-        System.out.println(resourceString);
+
         endPhaseString += resourceString + "; ";
 
 
-        // Calculate Player Score
-        List<Player> players = new ArrayList<>();
-        String[] playersStatement = getPlayerStatement(stateString).split(";");
-        for (String s : playersStatement){
-            players.add(playerFromString(s.strip()));
+        // Reset Player's State
+        List<Player> players =  playersFromString(stateString);
+
+
+        for (int i = 0; i < players.size(); i++) {
+            players.get(i).score = calculateScores(stateString)[i]; // Calculate Player Score
+            players.get(i).clearResources(); // Remove player's all resources
+            players.get(i).clearSettlers(); // Remove player's all settlers
+            players.get(i).clearVillages(); // Remove player's village if it's on a stone
+            endPhaseString += players.get(i).toStateString() + " ";
         }
 
-        for (Player player: players) {
-            player.clearResources();
-            player.clearSettlers();
-            endPhaseString += player.toStateString() + " ";
-        }
+
+
         System.out.println(stateString);
         System.out.println(endPhaseString);
 
@@ -1473,7 +1494,57 @@ public class BlueLagoon {
      * @return a string representing the new state after the move is applied to the board
      */
     public static String applyMove(String stateString, String moveString){
-         return ""; // FIXME Task 13
+        int currentPlayer = Integer.parseInt(String.valueOf(getCurrentStateStatement(stateString).charAt(3)));
+        String settlerOrVillage = moveString.substring(0,1);
+        Coordinate moveCoordinate = new Coordinate(moveString.substring(2));
+        System.out.println(moveString);
+        System.out.println(stateString);
+
+        board = Board.fromStateString(stateString);
+
+
+        // Move Player
+        List<Player> players =  playersFromString(stateString);
+
+        if (board.spotMatrix[moveCoordinate.row][moveCoordinate.col].resources != null){
+            players.get(currentPlayer).resources.set(board.spotMatrix[moveCoordinate.row][moveCoordinate.col].resources.ordinal(),
+                    players.get(currentPlayer).resources.get(board.spotMatrix[moveCoordinate.row][moveCoordinate.col].resources.ordinal()) + 1);
+            board.spotMatrix[moveCoordinate.row][moveCoordinate.col].resources = null;
+        }
+
+        if (settlerOrVillage.equals("S")){
+            players.get(currentPlayer).settlers.add(moveCoordinate);
+        } else if (settlerOrVillage.equals("T")){
+            players.get(currentPlayer).villages.add(moveCoordinate);
+        }
+
+        String applyMoveString = "";
+
+        applyMoveString += getArrangementStatement(stateString) +";";
+        if (getCurrentStateStatement(stateString).contains("1")){
+            applyMoveString += getCurrentStateStatement(stateString).replace('1','0') + ";";
+        } else if (getCurrentStateStatement(stateString).contains("0")) {
+            applyMoveString += getCurrentStateStatement(stateString).replace('0','1') + ";";
+        }
+
+        applyMoveString += getIslandStatement(stateString);
+        applyMoveString += getStoneStatement(stateString) + "; ";
+        applyMoveString += ((getUnclaimedResourcesandStatuettesStatement(stateString) + ";")
+                .replace((" " + moveCoordinate.toString() + " ")," "))
+                .replace((" " + moveCoordinate.toString() + ';'),";")
+                +" ";
+        for (int i = 0; i < players.size(); i++) {
+            applyMoveString += players.get(i).toStateString() + " ";
+        }
+
+        // After all moves, if the phase is over, end the phase
+        if (isPhaseOver(applyMoveString)){
+            applyMoveString = endPhase(applyMoveString);
+        }
+
+
+
+        return applyMoveString; // FIXME Task 13
     }
 
     /**
@@ -1495,8 +1566,7 @@ public class BlueLagoon {
 
     public static void main(String[] args) {
         String stateString = "a 13 2; c 0 E; i 6 0,0 0,1 0,2 0,3 0,4 0,5 0,6 0,7 0,8 0,9 0,10 0,11 1,0 1,12 2,0 2,11 3,0 3,12 4,0 4,11 5,0 5,12 6,0 6,11 7,0 7,12 8,0 8,11 9,0 9,12 10,0 10,11 11,0 11,12 12,0 12,1 12,2 12,3 12,4 12,5 12,6 12,7 12,8 12,9 12,10 12,11; i 6 2,4 2,5 2,6 2,7; i 9 4,4 4,5 4,6 4,7; i 9 6,5 6,6 7,5 7,7 8,5 8,6; i 12 2,2 3,2 3,3 4,2 5,2 5,3 6,2 7,2 7,3; i 12 2,9 3,9 3,10 4,9 5,9 5,10 6,9 7,9 7,10; i 12 9,2 9,10 10,2 10,3 10,4 10,5 10,6 10,7 10,8 10,9; s 0,3 0,8 1,0 1,12 2,2 2,4 2,7 2,9 4,2 4,5 4,6 4,9 5,0 5,12 6,2 6,5 6,6 6,9 8,0 8,5 8,6 8,11 9,2 9,10 10,3 10,5 10,6 10,8 11,0 11,12 12,4 12,7; r C 1,1 B 5,2 W P 1,4 S; p 0 0 0 0 0 0 0 S T; p 1 42 1 2 3 4 5 S 5,6 8,7 T 1,2;";
-        System.out.println(getAllPlayers(stateString));
-        System.out.println(isStateStringWellFormed(stateString));
+        System.out.println(getCurrentStateStatement(stateString).charAt(2));
 
 
     }
