@@ -130,7 +130,7 @@ public class Island {
     }
 
     /**
-     * givem list of settlers and villages,
+     * given list of settlers and villages,
      * @param cors list of settlers and villages(combined)
      * @param islands list of islands given by gameState
      * @return to a hashset of intergers, represents island numbers occupied,
@@ -178,11 +178,13 @@ public class Island {
         // a list of lists of Coordinates of a player's occupiers that are chained
         List<List<Coordinate>> separated =  getChainedOccupier(new ArrayList<>(),cors);
         List<Integer> scores = new ArrayList<>();
+        System.out.println(separated);
         // for each separated linked coordinates, score them in terms of islands occupied
         for (List<Coordinate> each : separated){
+            //System.out.println("the player has occupied "+each);
             HashSet<Integer> islandsOccupied = getOccupiedIslands(each,islands);
             int score = islandsOccupied.size()*5;
-            System.out.println(islandsOccupied);
+            //System.out.println("has linked island "+islandsOccupied.size());
             scores.add(score);
         }
         if (scores.size()==0){

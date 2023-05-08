@@ -77,11 +77,13 @@ public class Coordinate implements Comparable<Coordinate>{
         if (x == x1) {
             return ((y1 == y + 1) || (y1 == y - 1));
         } else if (x % 2 == 0) {
-            return ((x == x1 - 1) || (x == x1 + 1)
-                    && (y == y1 - 1) || (y == y1));
+            boolean condition1 = (x == x1 - 1) || (x == x1 + 1);
+            boolean condition2 = (y == y1 - 1) || (y == y1);
+            return (condition1 && condition2);
         } else {
-            return ((x == x1 - 1) || (x == x1 + 1)
-                    && (y == y1 + 1) || (y == y1));
+            boolean condition1 = (x == x1 - 1) || (x == x1 + 1);
+            boolean condition2 = (y == y1 + 1) || (y == y1);
+            return (condition1 && condition2);
         }
     }
 
@@ -143,11 +145,11 @@ public class Coordinate implements Comparable<Coordinate>{
     public static void main(String[] args) {
         Coordinate cor1 = new Coordinate(0,5);
         Coordinate cor2 = new Coordinate(3,7);
-        Coordinate cor3 = new Coordinate(7,11);
+        Coordinate cor3 = new Coordinate(3,11);
         Coordinate cor4 = new Coordinate(6,10);
         Coordinate cor5 = new Coordinate(6,11);
         Coordinate cor6 = new Coordinate("6,12");
-        System.out.println(cor6.row);
+        System.out.println(isLinked(cor3,cor4));
 
 
     }
