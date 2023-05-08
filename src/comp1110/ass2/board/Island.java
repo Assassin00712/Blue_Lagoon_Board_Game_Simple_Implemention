@@ -150,7 +150,7 @@ public class Island {
 
     /**
      *  a helper method for totalIslandScore in task11
-     * @param cors an array of Coordinates which can be gotten from player's settlers and villages
+     * @param cors a list of Coordinates which can be gotten from player's settlers and villages
      * @param islands the list of islands given by the stateString
      * @return the score given the number of islands occupied
      */
@@ -170,14 +170,19 @@ public class Island {
 
     /**
      * helper method for task11 part2
+     * @param cors a list of Coordinates which can be gotten from player's settlers and villages
+     * @param islands the list of islands given by the stateString
+     * @return the score calculated by the maximun number of chained occupiers
      */
     public static int getLinkedScore(List<Coordinate> cors, List<Island> islands){
+        // a list of lists of Coordinates of a player's occupiers that are chained
         List<List<Coordinate>> separated =  getChainedOccupier(new ArrayList<>(),cors);
         List<Integer> scores = new ArrayList<>();
         // for each separated linked coordinates, score them in terms of islands occupied
         for (List<Coordinate> each : separated){
             HashSet<Integer> islandsOccupied = getOccupiedIslands(each,islands);
             int score = islandsOccupied.size()*5;
+            //System.out.println(islandsOccupied);
             scores.add(score);
         }
         if (scores.size()==0){

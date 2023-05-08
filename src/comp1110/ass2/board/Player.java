@@ -141,6 +141,7 @@ public class Player {
 
     /**
      * check if a coordinate is chained to a list
+     * return false if it is not linked with any of the coordinates in the list
      */
 
         public static boolean isChained (Coordinate cor, List<Coordinate> compare){
@@ -152,24 +153,32 @@ public class Player {
         }
 
     /**
-     * check if there is ant Coordinate in a list of Coordinate that is not chained
-     * a coordinate is not chained if it is not linked in any entries in the list
-     * @param compare the coordinate to be checked
-     * @return the list of coordinates that are not chained
+     * exact the coordinates that are chained with the first entry of the given list
+     * @param given the list given
+     * @return a list of chained coordinates chained with the first entry of the given list
      */
-        public static List<Coordinate> notChained (List<Coordinate> compare){
-            List<Coordinate> notChained = new ArrayList<>();
-            // copy the compare list so that it can be treated separately
-            List <Coordinate> forCheck = new ArrayList<>();
-            forCheck.addAll(compare);
-            for (Coordinate c : compare){
-               if (!isChained(c,forCheck)){
-                   notChained.add(c);
-               }
-            }
-            return notChained;
-        }
 
+    public static List<Coordinate> extractChain (List<Coordinate> given) {
+        List<Coordinate> chained = new ArrayList<>();
+        Coordinate first = given.get(0);
+        chained.add(first);
+        given.remove(first);
+        for (int i = 0; i < given.size(); i++) {
+            Coordinate test = given.get(i);
+            if (isLinked(first,test)){
+                chained.add(test);
+                System.out.println(chained.size());
+            for (int j = 1; i < chained.size(); j++){
+                // since chained[0] is the first entry in given
+                // start from chained[1]
+                Coordinate otherTest = chained.get(j);
+                if (isLinked(test,otherTest)){
+                    chained.add(test);
+                }
+            }}else{break;}
+        }
+        return chained;
+    }
 
     /**
      * a method to get the chained settlers and villages
@@ -184,12 +193,12 @@ public class Player {
         if (all.size()==0){
             return accumulated;
         }
-        List<Coordinate> thrown = notChained(all);
-        all.removeAll(thrown);
-        accumulated.add(all);
-        //System.out.println("accumulated is " + accumulated);
-        //System.out.println("all is " + all);
-        return getChainedOccupier(accumulated,thrown);
+        List<Coordinate> extracted = extractChain(all);
+        all.removeAll(extracted);
+        accumulated.add(extracted);
+        System.out.println("accumulated is " + accumulated);
+        System.out.println("all is " + all);
+        return getChainedOccupier(accumulated,all);
     }
 
     /**
