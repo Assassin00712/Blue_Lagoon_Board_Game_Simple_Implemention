@@ -163,12 +163,12 @@ public class Player {
         Coordinate first = given.get(0);
         chained.add(first);
         given.remove(first);
+        if (given.size()!= 0 ){
         for (int i = 0; i < given.size(); i++) {
             Coordinate test = given.get(i);
             if (isLinked(first,test)){
                 chained.add(test);
-                System.out.println(chained.size());
-            for (int j = 1; i < chained.size(); j++){
+            for (int j = 1; j < chained.size(); j++){
                 // since chained[0] is the first entry in given
                 // start from chained[1]
                 Coordinate otherTest = chained.get(j);
@@ -176,7 +176,7 @@ public class Player {
                     chained.add(test);
                 }
             }}else{break;}
-        }
+        }}
         return chained;
     }
 
@@ -196,8 +196,8 @@ public class Player {
         List<Coordinate> extracted = extractChain(all);
         all.removeAll(extracted);
         accumulated.add(extracted);
-        System.out.println("accumulated is " + accumulated);
-        System.out.println("all is " + all);
+        //System.out.println("accumulated is " + accumulated);
+        //System.out.println("all is " + all);
         return getChainedOccupier(accumulated,all);
     }
 

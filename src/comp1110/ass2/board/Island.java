@@ -182,7 +182,7 @@ public class Island {
         for (List<Coordinate> each : separated){
             HashSet<Integer> islandsOccupied = getOccupiedIslands(each,islands);
             int score = islandsOccupied.size()*5;
-            //System.out.println(islandsOccupied);
+            System.out.println(islandsOccupied);
             scores.add(score);
         }
         if (scores.size()==0){
