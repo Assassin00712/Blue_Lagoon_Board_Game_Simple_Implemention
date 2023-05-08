@@ -1839,11 +1839,18 @@ public class BlueLagoon {
      */
     // the first attempt was in depth 1, that is,
     // the AI apply the move where it can score the most in one turn
+    // this AI temps to move among the axes,
+    // since when there are few occupiers on the board,
+    // it would like to take the easiest move
+    // would be helpful when the game is about to end
     public static String generateAIMove(String stateString){
         // first determine which player is playing
         int aiNum = getCurrentPlayer(stateString);
         Set<String> allMoves = generateAllValidMoves(stateString);
         List<String> moves = new ArrayList<>();
+        /**
+         * below is the first attempt AI, works fine when the game is about to end
+         */
         // for each move, score them after all of them are applied
         // take the move with highest score
         List<Integer> scoresForMove = new ArrayList<>();
