@@ -1264,15 +1264,18 @@ public class BlueLagoon {
     public static int[] calculateIslandMajoritiesScore(String stateString){
         List<Player> players = Player.playersFromString(stateString);
         int[] majIslandScore = new int[players.size()];
+        for (int score : majIslandScore){
+            score = 0;
+        }
         List<Island> islands = Island.getIslands(stateString);
         List<Coordinate>[] occupied = allSettlersVillages(stateString);
         for (List<Coordinate> l : occupied){
-            System.out.println("this player has settlers and villages on "+l);
+            //System.out.println("this player has settlers and villages on "+l);
         }
         List<int[]> occupants = new ArrayList<>();
         for (List<Coordinate> l : occupied){
             occupants.add(getOccupiedNumbers(l,islands));
-            System.out.println("this player's number of occupants on each island is "+ Arrays.toString(getOccupiedNumbers(l,islands)));
+            //System.out.println("this player's number of occupants on each island is "+ Arrays.toString(getOccupiedNumbers(l,islands)));
         }
         // occupants should have same size as players
         for (int i = 1; i <= islands.size(); i++){
@@ -1284,17 +1287,14 @@ public class BlueLagoon {
                 islandIOccupants[j] = playerJOccupants[i-1];
             }
             // islandIOccupants should be complete at this step
-            System.out.println("this island has these occupants "+ Arrays.toString(islandIOccupants));
+            //System.out.println("this island has these occupants "+ Arrays.toString(islandIOccupants));
             int [] majority = findmax(islandIOccupants);
-            System.out.println("majority turns out to be "+ Arrays.toString(majority));
+            //System.out.println("majority turns out to be "+ Arrays.toString(majority));
             // if an island has no pieces on it,it will not be scored
             if(majority[0]!=0) {
             int totalScore = islands.get(i-1).getBonus();
             int scorer = majority.length-1;
             int scoreDistributed = totalScore/scorer;
-            System.out.println("totalScore is " + totalScore);
-            System.out.println("there are "+scorer+" scorers");
-            System.out.println("each scorer gets " + scoreDistributed);
             for (int k = 1; k < majority.length; k++){
                     majIslandScore[majority[k]] += scoreDistributed;
                 }

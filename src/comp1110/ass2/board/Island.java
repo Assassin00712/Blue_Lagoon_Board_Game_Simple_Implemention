@@ -120,8 +120,11 @@ public class Island {
     public static int[] getOccupiedNumbers (List<Coordinate> cors, List<Island> islands){
         int[] output = new int[islands.size()];
         for (Coordinate cor : cors){
+            // this islandNum can be 0
             int islandNum = getIslandNumber(cor,islands);
-            output[islandNum] += 1;
+            if (islandNum != 0){
+                output[islandNum-1] += 1;
+            }
         }
         return output;
     }
@@ -198,7 +201,6 @@ public class Island {
 
 
     public static void main(String[] args) {
-
         List<Island> defaultIsland = getIslands(DEFAULT_GAME);
         for (Island i : defaultIsland){
             System.out.println(i);
