@@ -1,7 +1,6 @@
 package comp1110.ass2.board;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static comp1110.ass2.board.Player.getChainedOccupier;
 

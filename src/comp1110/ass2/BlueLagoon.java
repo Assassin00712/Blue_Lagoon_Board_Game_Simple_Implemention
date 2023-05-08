@@ -1204,29 +1204,39 @@ public class BlueLagoon {
      * maxes[1] and afterwards = where the maximum number exists
      */
     public static int[] findmax (int[] array){
+        // this is a list in order to keep track on the indexes of the maximuns
         List<Integer> maxAt = new ArrayList<>();
         int max = array[0];
-        int maxesLength = 2;
-        System.out.println(array.length);
+        // this represents the length of the output
+        // the minimun length will be 2
+        int maxesLength = 1;
         for (int i = 0; i < array.length; i++){
             if (array[i] == max) {
+                // if the entry at i is equal to the current maximum;
+                // increase number of maximum by one
                 maxesLength += 1;
+                // record the index of maximun
                 maxAt.add(i);
             }
             if (array[i] > max){
+                // if the entry at i is greater than the current maximum;
+                // update the current maximum
+                // the index i is the first maximum detected so the length of output should be initialized
                 maxesLength = 2;
                 max = array[i];
+                // all the infomation about the previous maximum can be removed since it is useless
                 maxAt.clear();
+                // add the new index of new maximum into the list
                 maxAt.add(i);
             }
-            System.out.println("i is "+i);
-            System.out.println("length is "+maxesLength);
-            System.out.println("maxAt is " + maxAt);
         }
+
+        // this is the output
         int[] maxes = new int[maxesLength];
         maxes[0] = max;
+        // the indexes of the maximum are stored in the list maxAt, copy them into output
         for (int j = 1; j < maxesLength; j++){
-            maxes[j] = maxAt.get(j);
+            maxes[j] = maxAt.get(j-1);
         }
         return maxes;
     }
