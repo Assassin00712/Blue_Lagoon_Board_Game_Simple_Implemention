@@ -12,8 +12,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.*;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -30,6 +32,8 @@ public class Game extends Application {
 
     private final Group controls = new Group();
     private TextField stateTextField;
+
+    private String stateString;
 
 
     public List<Hexagon> hexagons = new ArrayList<>();
@@ -87,50 +91,74 @@ public class Game extends Application {
 
     // Return the exact hexagon by the given coordinate
     // The coordinate is from range (0,0) to (12,11)
-    public Hexagon cordToHexagon (int x, int y){
+    public Hexagon cordToHexagon (Coordinate coordinate){
         for (Hexagon hexagon: hexagons){
-            if ((Math.abs(hexagon.getLayoutX() - cordToXY(x,y)[0]) < 0.5)
-                    && (Math.abs(hexagon.getLayoutY() - cordToXY(x,y)[1]) < 0.5)){
+            if ((Math.abs(hexagon.getLayoutX() - cordToXY(coordinate)[0]) < 0.1)
+                    && (Math.abs(hexagon.getLayoutY() - cordToXY(coordinate)[1]) < 0.1)){
                 return hexagon;
             }
         }
-        return hexagons.get(0);
+        return findNearestHexagon(cordToXY(coordinate)[0],cordToXY(coordinate)[1]);
     }
 
     // Draw a triangle with text on it
     public void drawTriangleText(double x, double y, String text, Paint paint){
         Triangle triangle = new Triangle(x,y,35);
         triangle.setFill(paint);
-        Label label = new Label(text);
-        label.setTextFill(Color.WHITE);
-        label.setLayoutX(x-4);
-        label.setLayoutY(y-4);
-
-        root.getChildren().addAll(triangle, label);
-    }
-
-    public void drawDragTriangleText(double x, double y, String text, Paint paint){
-        Triangle triangle = new Triangle(x,y,35);
-        triangle.setFill(paint);
+        triangle.setStroke(Color.BLACK);
+        triangle.setStrokeWidth(0.8);
 
         Text textString = new Text(text);
-        textString.setX(x-4);
-        textString.setY(y-4);
+        // Set the text color to white
+        textString.setFill(Color.WHITE);
+        textString.setStroke(Color.BLACK);
+        textString.setFont(Font.font("Arial",FontWeight.BOLD,16));
+        textString.setStrokeWidth(0.8);
+        // To set the text at the exact middle of the circle
+        double textWidth = textString.getBoundsInLocal().getWidth();
+        double textHeight = textString.getBoundsInLocal().getHeight();
+        textString.setX(x - textWidth / 2);
+        textString.setY(y + textHeight / 2);
 
-        Group group = new Group(triangle, textString);
 
+        root.getChildren().addAll(triangle, textString);
+    }
+
+    public Group drawDragCircleText(double x, double y, String text, Paint paint){
+        Circle circle = new Circle(x,y,20);
+        circle.setFill(paint);
+
+        Text textString = new Text(text);
+        // To set the text at the exact middle of the circle
+        double textWidth = textString.getBoundsInLocal().getWidth();
+        double textHeight = textString.getBoundsInLocal().getHeight();
+        textString.setX(x - textWidth / 2);
+        textString.setY(y + textHeight / 4);
+        // Set the text color to white
+        textString.setFill(Color.WHITE);
+
+        Group group = new Group(circle, textString);
+
+        final double[] initialOffset = new double[2];
+        final double initialLayoutX = group.getLayoutX();
+        final double initialLayoutY = group.getLayoutY();
         group.setOnMousePressed(e -> {
             group.toFront();
-            group.setLayoutX(e.getSceneX());
-            group.setLayoutY(e.getSceneY());
+            initialOffset[0] = e.getSceneX() - group.getLayoutX();
+            initialOffset[1] = e.getSceneY() - group.getLayoutY();
         });
 
         group.setOnMouseDragged(e -> {
-            group.setTranslateX(e.getSceneX());
-            group.setTranslateY(e.getSceneY());
+            group.setLayoutX(e.getSceneX() - initialOffset[0]);
+            group.setLayoutY(e.getSceneY() - initialOffset[1]);
         });
 
-        root.getChildren().addAll(group);
+        group.setOnMouseReleased(e -> {
+            group.setLayoutX(initialLayoutX);
+            group.setLayoutY(initialLayoutY);
+        });
+
+        return group;
     }
 
 
@@ -149,21 +177,42 @@ public class Game extends Application {
 
     // Given the coordinate, will return the absolute position on the viewer stage.
     // Can be used for drawing shapes or placing images.
-    public static double[] cordToXY (int x, int y){
+    public static double[] cordToXY (Coordinate coordinate){
         double outX = 0;
         double outY = 0;
 
-        if (y % 2 == 0){
-            outX = 25 * Math.sqrt(3) * (x + 1);
-            outY = 25 * (1.5 * y +1);
+        if (coordinate.row % 2 == 0){
+            outX = 25 * Math.sqrt(3) * (coordinate.col + 1);
+            outY = 25 * (1.5 * coordinate.row +1);
         } else {
-            outX = 25 * Math.sqrt(3) * (x + 0.5);
-            outY = 25 * (1.5 * y +1);}
+            outX = 25 * Math.sqrt(3) * (coordinate.col + 0.5);
+            outY = 25 * (1.5 * coordinate.row +1);}
 
         double[] outXY = new double[]{outX, outY};
         return outXY;
 
     }
+
+    // Given the absolute position on the viewer stage, will return the coordinate.
+    public Coordinate xYToCord(double x, double y){
+        Hexagon hexagon = findNearestHexagon(x,y);
+        x = hexagon.getLayoutX();
+        y = hexagon.getLayoutY();
+        int col = 0;
+        int row = 0;
+        row = (int) ((y / 25 -1 ) / 1.5);
+
+        if (y % 2 == 0){
+            col = (int) ((x / 25) / Math.sqrt(3) -1);
+
+        } else {
+            col = (int) ((x / 25) / Math.sqrt(3) -0.5);
+        }
+
+
+        return new Coordinate(row, col);
+    }
+
 
 
 
@@ -205,18 +254,16 @@ public class Game extends Application {
         */
 
 
-
-
         // Set Hexagon color to green if it's an island
         for (Object cord: BlueLagoon.getAllIslandStatementList(stateString)){
-            cordToHexagon(new Coordinate((String) cord).stringToRow(), new Coordinate((String) cord).stringToCol())
+            cordToHexagon(new Coordinate((String) cord))
                     .setFill(Color.GREEN);
         }
 
-        // Set Hexagon color to black if it's a stone
+        // Set Hexagon color to radial-gradient green-gray if it's a stone
         for (Object cord: BlueLagoon.getAllStoneList(stateString)){
             Stop[] stops = new Stop[] { new Stop(0, Color.GREEN), new Stop(1, Color.GRAY)};
-            cordToHexagon(new Coordinate((String) cord).stringToRow(), new Coordinate((String) cord).stringToCol())
+            cordToHexagon(new Coordinate((String) cord))
                     .setFill(new RadialGradient(0, 0, 0.5, 0.5, 0.5, true, CycleMethod.NO_CYCLE, stops));
 
         }
@@ -224,27 +271,27 @@ public class Game extends Application {
         // Draw Bamboo
         if (BlueLagoon.getBamboo(stateString).size() > 0){
             for (Object cord: BlueLagoon.getBamboo(stateString)){
-                double[] draw = cordToXY(new Coordinate((String) cord).stringToRow(), new Coordinate((String) cord).stringToCol());
+                double[] draw = cordToXY(new Coordinate((String) cord));
                 double x = draw[0];
                 double y = draw[1];
-                drawTriangleText(x, y,"B", Color.RED);
+                drawTriangleText(x, y,"B", Color.YELLOW);
             }
         }
 
         // Draw Coconut
         if (BlueLagoon.getCoconutList(stateString).size() > 0){
             for (Object cord: BlueLagoon.getCoconutList(stateString)){
-                double[] draw = cordToXY(new Coordinate((String) cord).stringToRow(), new Coordinate((String) cord).stringToCol());
+                double[] draw = cordToXY(new Coordinate((String) cord));
                 double x = draw[0];
                 double y = draw[1];
-                drawTriangleText(x, y,"C", Color.DARKGREEN);
+                drawTriangleText(x, y,"C", Color.WHITESMOKE);
             }
         }
 
         // Draw Water
         if (BlueLagoon.getWater(stateString).size() > 0){
             for (Object cord: BlueLagoon.getWater(stateString)){
-                double[] draw = cordToXY(new Coordinate((String) cord).stringToRow(), new Coordinate((String) cord).stringToCol());
+                double[] draw = cordToXY(new Coordinate((String) cord));
                 double x = draw[0];
                 double y = draw[1];
                 drawTriangleText(x, y,"W", Color.DARKBLUE);
@@ -254,20 +301,20 @@ public class Game extends Application {
         // Draw Precious Stone
         if (BlueLagoon.getPreciousStone(stateString).size() > 0){
             for (Object cord: BlueLagoon.getPreciousStone(stateString)){
-                double[] draw = cordToXY(new Coordinate((String) cord).stringToRow(), new Coordinate((String) cord).stringToCol());
+                double[] draw = cordToXY(new Coordinate((String) cord));
                 double x = draw[0];
                 double y = draw[1];
-                drawTriangleText(x, y,"P", Color.ORANGE);
+                drawTriangleText(x, y,"P", Color.LAWNGREEN);
             }
         }
 
         // Draw statuette
         if (BlueLagoon.getStatuette(stateString).size() > 0){
             for (Object cord: BlueLagoon.getStatuette(stateString)){
-                double[] draw = cordToXY(new Coordinate((String) cord).stringToRow(), new Coordinate((String) cord).stringToCol());
+                double[] draw = cordToXY(new Coordinate((String) cord));
                 double x = draw[0];
                 double y = draw[1];
-                drawTriangleText(x, y,"S", Color.PURPLE);
+                drawTriangleText(x, y,"S", Color.BROWN);
             }
         }
 
@@ -283,7 +330,7 @@ public class Game extends Application {
 
                 // If playerState==0, draw a settler
                 if (c.matches("\\d+,\\d+") && playerState == 0){
-                    double[] draw = cordToXY(new Coordinate((String) c).stringToRow(), new Coordinate((String) c).stringToCol());
+                    double[] draw = cordToXY(new Coordinate((String) c));
                     double x = draw[0];
                     double y = draw[1];
                     drawTriangleText(x, y,"Se" + playerNumber, Color.DARKCYAN);
@@ -291,7 +338,7 @@ public class Game extends Application {
 
                 // If playerState==0, draw a village
                 if (c.matches("\\d+,\\d+") && playerState == 1){
-                    double[] draw = cordToXY(new Coordinate((String) c).stringToRow(), new Coordinate((String) c).stringToCol());
+                    double[] draw = cordToXY(new Coordinate((String) c));
                     double x = draw[0];
                     double y = draw[1];
                     drawTriangleText(x, y,"Vi" + playerNumber, Color.DARKORANGE);
@@ -314,39 +361,53 @@ public class Game extends Application {
         Label gameLabel = new Label("Choose the map of the game:");
         //stateTextField = new TextField();
        // stateTextField.setPrefWidth(200);
-        Button wheelsButton = new Button("WHEELS _GAME");
-        Button faceButton = new Button("FACE _GAME");
-        Button sidesButton = new Button("SIDES _GAME");
-        Button spaceButton = new Button("SPACE _INVADERS _GAME");
+        Button defaultButton = new Button("Default GAME");
+        Button wheelsButton = new Button("WHEELS GAME");
+        Button faceButton = new Button("FACE GAME");
+        Button sidesButton = new Button("SIDES GAME");
+        Button spaceButton = new Button("SPACE INVADERS");
 
         Button startButton = new Button("Start Game!");
         startButton.setPrefWidth(150);
         startButton.setPrefHeight(40);
         startButton.setVisible(false);
 
+        defaultButton.setOnAction(e -> {
+            drawMap();
+            stateString = BlueLagoon.DEFAULT_GAME;
+            displayState(stateString);
+            startButton.setVisible(true);
+        });
         wheelsButton.setOnAction(e -> {
             drawMap();
-            displayState(BlueLagoon.WHEELS_GAME);
+            stateString = BlueLagoon.WHEELS_GAME;
+            displayState(stateString);
             startButton.setVisible(true);
         });
         faceButton.setOnAction(e -> {
             drawMap();
-            displayState(BlueLagoon.FACE_GAME);
+            stateString = BlueLagoon.FACE_GAME;
+            displayState(stateString);
             startButton.setVisible(true);
         });
         sidesButton.setOnAction(e -> {
             drawMap();
-            displayState(BlueLagoon.SIDES_GAME);
+            stateString = BlueLagoon.SIDES_GAME;
+            displayState(stateString);
             startButton.setVisible(true);
         });
         spaceButton.setOnAction(e -> {
             drawMap();
-            displayState(BlueLagoon.SPACE_INVADERS_GAME);
+            stateString = BlueLagoon.SPACE_INVADERS_GAME;
+            displayState(stateString);
             startButton.setVisible(true);
         });
 
 
         startButton.setOnAction(e -> {
+            defaultButton.setVisible(false);
+            defaultButton.setManaged(false);
+
             wheelsButton.setVisible(false);
             wheelsButton.setManaged(false);
 
@@ -364,13 +425,18 @@ public class Game extends Application {
 
             startButton.setVisible(false);
             startButton.setManaged(false);
+
+            if (BlueLagoon.isStateStringWellFormed(stateString)) {
+                stateString = stateString.replaceAll("r C B W P S", BlueLagoon.distributeResources(stateString));
+                displayState(stateString);
+            }
         });
 
 
 
         HBox hb = new HBox();
         hb.getChildren().addAll(gameLabel);
-        hb.getChildren().addAll(wheelsButton, faceButton, sidesButton,spaceButton, startButton);
+        hb.getChildren().addAll(defaultButton, wheelsButton, faceButton, sidesButton,spaceButton, startButton);
         hb.setSpacing(10);
         hb.setLayoutX(50);
         hb.setLayoutY(WINDOW_HEIGHT - 50);
@@ -401,11 +467,13 @@ public class Game extends Application {
         for (Hexagon fillHexagon: hexagons){
             root.getChildren().add(fillHexagon);
         }
+
     }
 
     private void drawPlayer(){
-        drawDragTriangleText(800,400,"P1S",Color.PURPLE);
-        drawDragTriangleText(850,450,"P12",Color.RED);
+        Group p1 = drawDragCircleText(800,400,"P1S",Color.PURPLE);
+        Group p2 = drawDragCircleText(850,450,"P12",Color.RED);
+        root.getChildren().addAll(p1,p2);
     }
 
 
@@ -416,9 +484,6 @@ public class Game extends Application {
         root.getChildren().add(controls);
         makeControls();
         drawPlayer();
-
-
-
 
         stage.setScene(scene);
         stage.show();

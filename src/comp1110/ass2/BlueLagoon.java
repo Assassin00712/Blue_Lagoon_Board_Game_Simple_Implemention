@@ -329,6 +329,9 @@ public class BlueLagoon {
      * @return true if stateString is well-formed and false otherwise
      */
     public static boolean isStateStringWellFormed(String stateString){
+        if (stateString == null || stateString.isEmpty()) {return false;}
+        String[] gameStates = stateString.split("; ");
+
         int numberOfPlayers = 0;
         for (int i = 0; i < stateString.length(); i++) {
             if (stateString.charAt(i) == 'p') {
@@ -336,8 +339,6 @@ public class BlueLagoon {
             }
         }
 
-        if (stateString == null || stateString.isEmpty()) {return false;}
-        String[] gameStates = stateString.split("; ");
 
         //// Check if gameArrangementStatement is valid ////
         String[] gameArrangementStatement = gameStates[0].split("\\s");
