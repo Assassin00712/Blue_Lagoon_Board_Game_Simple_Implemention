@@ -3,6 +3,7 @@ package comp1110.ass2.board;
 import comp1110.ass2.BlueLagoon;
 import gittest.C;
 
+import static comp1110.ass2.board.Coordinate.corFromString;
 import static comp1110.ass2.board.Coordinate.isLinked;
 
 import java.util.*;
@@ -15,7 +16,6 @@ public class Player {
     public List<Integer> resources;
     public List<Coordinate> settlers;
     public List<Coordinate> villages;
-    public int statuette;
 
 
     public Player(int playId) {
@@ -87,7 +87,7 @@ public class Player {
         }
         player.settlers = corS;
         player.villages = corV;
-        player.statuette = player.resources.get(player.resources.size()-1);
+        //player.statuette = player.resources.get(player.resources.size()-1);
 
         return player;
     }
@@ -140,19 +140,44 @@ public class Player {
     }
 
     /**
-     * check if a coordinate is chained to a list of Coordinate
-     * it is chained with the list if it is contained in the list
-     * it is not chained if it is not linked in any entries in the list
-     * @param cor the coordinate to check
-     * @param compare the coordinate to be checked
-     * @return true if the cor is chained with the list, false otherwise
+     * check if a coordinate is chained to a list
+     * return false if it is not linked with any of the coordinates in the list
      */
-    public static boolean isChained (Coordinate cor, List<Coordinate> compare){
-        for (Coordinate c : compare){
-            if (isLinked(cor,c)||cor.equals(c)){
-                return true;
-            }}
-        return false;
+
+        public static boolean isChained (Coordinate cor, List<Coordinate> compare){
+            for (Coordinate c : compare){
+                if (isLinked(cor, c)){
+                    return true;
+                }
+            }return false;
+        }
+
+    /**
+     * exact the coordinates that are chained with the first entry of the given list
+     * @param given the list given
+     * @return a list of chained coordinates chained with the first entry of the given list
+     */
+
+    public static List<Coordinate> extractChain (List<Coordinate> given) {
+        List<Coordinate> chained = new ArrayList<>();
+        Coordinate first = given.get(0);
+        chained.add(first);
+        given.remove(first);
+        if (given.size()!= 0 ){
+        for (int i = 0; i < given.size(); i++) {
+            Coordinate test = given.get(i);
+            if (isLinked(first,test)){
+                chained.add(test);
+            for (int j = 1; j < chained.size(); j++){
+                // since chained[0] is the first entry in given
+                // start from chained[1]
+                Coordinate otherTest = chained.get(j);
+                if (isLinked(test,otherTest)){
+                    chained.add(test);
+                }
+            }}else{break;}
+        }}
+        return chained;
     }
 
     /**
@@ -168,21 +193,12 @@ public class Player {
         if (all.size()==0){
             return accumulated;
         }
-        List<Coordinate> toCheck = new ArrayList<>(all);
-        List<Coordinate> thrown = new ArrayList<>();
-        // for every entry in all, check if they are linked with every other entries
-        // if any of them are not linked, throw them to the next list in accumulate
-        for (Coordinate c : toCheck) {
-            if (!isChained(c, all)) {
-                System.out.println(c.toString());
-                all.remove(c);
-                thrown.add(c);
-            }
-        }
-        accumulated.add(all);
-        System.out.println("accumulated is " + accumulated.toString());
-        System.out.println("all is " + all.toString());
-        return getChainedOccupier(accumulated,thrown);
+        List<Coordinate> extracted = extractChain(all);
+        all.removeAll(extracted);
+        accumulated.add(extracted);
+        //System.out.println("accumulated is " + accumulated);
+        //System.out.println("all is " + all);
+        return getChainedOccupier(accumulated,all);
     }
 
     /**
