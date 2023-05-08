@@ -183,9 +183,9 @@ public class Island {
         for (List<Coordinate> each : separated){
             //System.out.println("the player has occupied "+each);
             HashSet<Integer> islandsOccupied = getOccupiedIslands(each,islands);
-            int score = islandsOccupied.size()*5;
+//            int score = ;
             //System.out.println("has linked island "+islandsOccupied.size());
-            scores.add(score);
+            scores.add(5*islandsOccupied.size());
         }
         if (scores.size()==0){
             return 0;
