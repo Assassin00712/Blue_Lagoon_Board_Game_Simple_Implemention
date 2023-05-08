@@ -2,12 +2,8 @@ package comp1110.ass2;
 
 import comp1110.ass2.board.Board;
 import comp1110.ass2.board.Coordinate;
-import comp1110.ass2.board.Spot;
-import comp1110.ass2.board.Coordinate;
 import comp1110.ass2.board.Island;
 import comp1110.ass2.board.Player;
-import comp1110.ass2.gui.Viewer;
-import gittest.C;
 
 import java.util.*;
 
@@ -122,7 +118,7 @@ public class BlueLagoon {
     }
 
     //Return all stone coordinates as a list to solve task 5
-    public static List getAllStoneList(String stateString){
+    public static List<String> getAllStoneList(String stateString){
         List<String> AllstoneList = new ArrayList<>();
         String StoneStatement = getStoneStatement(stateString);
         String[] CoordinatesList = StoneStatement.split(" ");
@@ -300,6 +296,26 @@ public class BlueLagoon {
         return a;
     }
 
+    public static String getCurrentPlayerStatement(String stateString){
+        //Get current player statement and number
+        String[] playerStatementList = getPlayerStatement(stateString).split(";");
+        String[] currentStateList = getCurrentStateStatement(stateString).split(" ");
+        String currentPlayerNum = currentStateList[2];
+        return playerStatementList[Integer.parseInt(currentPlayerNum)];
+    }
+
+
+    //Return the number of resources of all players
+    public static int getAllPlayerResourcesNumber(String stateString){
+        String PlayerStatement = getPlayerStatement(stateString);
+        String[] PlayerStatementSplit = PlayerStatement.split(";");
+        int NumofAllPlayerResources = 0;
+        for (int i = 0;i<=PlayerStatementSplit.length - 1;i++){
+            String[] EachPlayer = PlayerStatementSplit[i].split(" ");
+            NumofAllPlayerResources = NumofAllPlayerResources + Integer.parseInt(EachPlayer[4]) + Integer.parseInt(EachPlayer[5]) + Integer.parseInt(EachPlayer[6]) + Integer.parseInt(EachPlayer[7]);
+        }
+        return NumofAllPlayerResources;
+    }
 
     /**
      * Check if the string encoding of the game state is well-formed.
@@ -584,7 +600,6 @@ public class BlueLagoon {
      */
     public static boolean isMoveValid(String stateString, String moveString) {
 
-
         /** Split stateString into relative parts.
          * Note: every split starts with " "**/
 
@@ -697,9 +712,6 @@ public class BlueLagoon {
 
         /** Check if the move position is occupied by players **/
         String[] currentSettlerAndVillageSplit = playerStatement.split(" ");
-
-
-
         for (int q = 0; q <= currentSettlerAndVillageSplit.length - 1; q++) {
             for (int a = 0; a<= currentSettlerAndVillageSplit[q].length() - 1;a++){
                 if (currentSettlerAndVillageSplit[q].charAt(a) == ';'){
@@ -721,6 +733,7 @@ public class BlueLagoon {
             for (int a = 0; a <= islandStatementList.length - 1; a++) {
                 if (islandStatementList[a].equals(movePosition)) {
                     isVillagesOntheSea = true;
+                    break;
                 }
             }
             if (!isVillagesOntheSea){
@@ -749,15 +762,6 @@ public class BlueLagoon {
                 String currentVillageNoT = currentVillages.substring(1);
                 String[] currentVillageList = currentVillageNoT.split(" ");
 
-//                    //Add two string arrays to one, after this currentSettltersList is the combined array
-//                    int arryLen1 = currentSettlersList.length;
-//                    int arryLen2 = currentVillageList.length;
-//
-//                    currentSettlersList = Arrays.copyOf(currentSettlersList, arryLen1 + arryLen2);
-//                    System.arraycopy(currentVillageList, 0, currentSettlersList, arryLen1, arryLen2);
-
-                //currentSettlersNoS have an empty in the beginning
-                //Check if move position is adjacent to the settlers
                 String moveLeftnum = "";
                 String moveRightnum = "";
                 //Check if the move position is adjacent to villages
@@ -1128,8 +1132,7 @@ public class BlueLagoon {
 //        }
 //        stateString = originalStateString;
         if (generateAllValidMoves(stateString).size() == 0){return true;}
-        if (getAllPlayerResourcesNumber(stateString) == 24){return true;}
-         return false; // FIXME Task 9
+        return getAllPlayerResourcesNumber(stateString) == 24;// FIXME Task 9
     }
 
     /**
@@ -1143,12 +1146,11 @@ public class BlueLagoon {
      * @param moveString a string representing the current player's move
      * @return a new state string achieved by placing the move on the board
      */
-    public static String placePiece(String stateString, String moveString){
-        board = Board.fromStateString(stateString);
-        return ""; // FIXME Task 10
+    public static String placePiece(String stateString, String moveString) {
+        // FIXME Task 10
         /**Check if the move is placed on the stone**/
         //Get stone coordinates and move coordinate
-        List<String> StoneList = getAllStoneList(stateString);
+        List<String> AllStoneList = getAllStoneList(stateString);
         String[] moveStringSplit = moveString.split(" ");
         String moveCoordinate = moveStringSplit[1];
 
@@ -1159,56 +1161,247 @@ public class BlueLagoon {
         String newPlayerStatement = "";
 
         //Get moveString is "S" or "T"
-        String moveType = moveString.substring(0,1);
+        String moveType = moveString.substring(0, 1);
 
+
+        //Get list of all players settlers and villages
+        List<String> AllSettlersandVillages = getAllPlayers(stateString);
+
+        //Get all rousouce list
+        List<String> AllResourceList = getAllResourcesList(stateString);
+        AllResourceList.set(0, "r");
+
+        //Position of collected resource in playerstatement
+        int ResourcePosition = 0;
+
+        String CollectType = "";
+
+        for (int i = 0; i <= AllStoneList.size() - 1; i++) {
+            if (moveCoordinate.equals(AllStoneList.get(i))) {
+                //If the move is placed on the stone, check whether there are any resources
+                for (int j = 0; j <= AllResourceList.size() - 1; j++) {
+
+                    if (AllResourceList.get(j).equals("C") || AllResourceList.get(j).equals("B") || AllResourceList.get(j).equals("W")
+                    || AllResourceList.get(j).equals("P") || AllResourceList.get(j).equals("S")){
+                        CollectType = AllResourceList.get(j);
+                    }
+                    if (AllResourceList.get(j).equals(moveCoordinate)) {
+                        switch (CollectType){
+                            case "C" ->{ResourcePosition = 4;}
+                            case "B" ->{ResourcePosition = 5;}
+                            case "W" ->{ResourcePosition = 6;}
+                            case "P" ->{ResourcePosition = 7;}
+                            case "S" ->{ResourcePosition = 8;}
+                        }
+                        String[] currentPlayerStatementSplit1 = currentPlayerStatement.split(" ");
+                        String newPlayerStatement1 = "";
+
+                        currentPlayerStatementSplit1[ResourcePosition] = String.valueOf(Integer.parseInt(currentPlayerStatementSplit1[ResourcePosition]) + 1);
+
+                        for (int d=0;d<=currentPlayerStatementSplit1.length-1;d++){
+                            if (currentPlayerStatementSplit1[d].equals(" ")){
+                                continue;
+                            }else{
+                            newPlayerStatement1 = newPlayerStatement1 + " " + currentPlayerStatementSplit1[d];
+                            }
+                        }
+                        currentPlayerStatement = newPlayerStatement1;
+                        currentPlayerStatementSplit = currentPlayerStatement.split(" ");
+                        AllResourceList.remove(j);
+                        String NewAllResource = "";
+                        for (String containers : AllResourceList) {
+                            if (containers.equals("r")) {
+                                NewAllResource = NewAllResource + " " + "r";
+                            } else {
+                                NewAllResource = NewAllResource + " " + containers;
+                            }
+                        }
+                        String[] stateStringSplit1 = stateString.split(";");
+                        stateStringSplit1[2 + getIslandLength(stateString) + 1] = NewAllResource;
+                        stateString = "";
+                        for (String containers:stateStringSplit1){stateString = stateString + containers + ";";}
+
+                    }
+                }
+            }
+        }
         //Split the stateString
         String[] stateStringSplit = stateString.split(";");
         String newStateString = "";
 
-
-
-        System.out.println(moveString);
-//        for(String containers: stateStringSplit) {
-//            System.out.println(containers);
-//        }
-        for(int i = 0;i<= StoneList.size()-1;i++){
-            if (moveCoordinate.equals(StoneList.get(i))){
-                //If the move is placed on the stone, check whether there are any resources
-
-            }else {//If it's not on the stone, add the coordinate on current player statement
-                if (moveType.equals("S")){
-
-                    for (int j=0;j<=currentPlayerStatementSplit.length-1;j++){
-
-                        if (currentPlayerStatementSplit[j].equals("T")){
-                            newPlayerStatement = newPlayerStatement + moveCoordinate + " ";
-                        }
-                        newPlayerStatement = newPlayerStatement + currentPlayerStatementSplit[j] + " ";
-                    }
-                    //Replace the old playerstatement with the new one
-                    stateStringSplit[2+getIslandLength(stateString)+2+Integer.parseInt(currentPlayerNum)] = newPlayerStatement;
-                    for (int m=0;m<=stateStringSplit.length-1;m++){
-                        newStateString = newStateString + stateStringSplit[m] + ";";
-                    }
-                    System.out.println(newStateString);
-                    return newStateString;
-
-                }else {
-                    newPlayerStatement = currentPlayerStatement + " " + moveCoordinate;
-                    //Replace the old playerstatement with the new one
-                    stateStringSplit[2+getIslandLength(stateString)+2+Integer.parseInt(currentPlayerNum)] = newPlayerStatement;
-                    for (int m=0;m<=stateStringSplit.length-1;m++){
-                        newStateString = newStateString + stateStringSplit[m] + ";";
-                    }
-//                    System.out.println(newStateString);
-                    return newStateString;
-
-                }
+        /**Add the coordinate on current player statement**/
+        //Find the position that the coordinate should insert
+        int Sstartposition = 999;
+        int SendPosition = 0;
+        for (int a = 0; a <= AllSettlersandVillages.size() - 1; a++) {
+            if (AllSettlersandVillages.get(a).equals(currentPlayerNum)) {
+                Sstartposition = a + 1; //S position
+            }
+            if (a > Sstartposition && AllSettlersandVillages.get(a).equals("T")) {
+                SendPosition = a; //T position
+                break;
             }
         }
+        int TCurrentnumPosition = 999;
+        int TstartPosition = 0;
+        int TendPosition = 0;
+        for (int a = 0; a <= AllSettlersandVillages.size() - 1; a++) {
+            if (AllSettlersandVillages.get(a).equals(currentPlayerNum)) {
+                TCurrentnumPosition = a;
+            }
+            if (a > TCurrentnumPosition && AllSettlersandVillages.get(a).equals("T")) {
+                TstartPosition = a;//T position
+            }
+            if (a > TCurrentnumPosition && AllSettlersandVillages.get(a).equals("p")) {
+                TendPosition = a;//Next p position
+                break;
+            }
+            TendPosition = AllSettlersandVillages.size();//if there is no next p
+        }
 
-         return stateString; // FIXME Task 10
+        List<String> aimCoordinates = new ArrayList<>();
+        if (moveType.equals("S")) {
+            for (int b = 0; b <= AllSettlersandVillages.size() - 1; b++) {
+                if (b > Sstartposition && b < SendPosition) {
+                    aimCoordinates.add(AllSettlersandVillages.get(b));
+                }
+            }
+            //When aimCoordinates in empty
+            if (aimCoordinates.size() == 0) {
+
+                for (int j = 0; j <= currentPlayerStatementSplit.length - 1; j++) {
+                    if (currentPlayerStatementSplit[j].equals("T")) {
+                        newPlayerStatement = newPlayerStatement + moveCoordinate + " ";
+                    }
+                    if (j == currentPlayerStatementSplit.length - 1) {
+                        newPlayerStatement = newPlayerStatement + currentPlayerStatementSplit[j];
+                    } else {
+                        newPlayerStatement = newPlayerStatement + currentPlayerStatementSplit[j] + " ";
+                    }
+                }
+            } else {
+                //Find the coordinate on the right of this coordinate, if there is no such coordinate, neighborCoordinate = ""
+                String[] moveCoordinateSplit = moveCoordinate.split(",");
+                int moveCoordinateLeft = Integer.parseInt(moveCoordinateSplit[0]);
+                int moveCoordinateRight = Integer.parseInt(moveCoordinateSplit[1]);
+                String neighborCoordinate = "";
+                for (int c = 0; c <= aimCoordinates.size() - 1; c++) {
+                    String[] coordinateSplit = aimCoordinates.get(c).split(",");
+                    int leftNum = Integer.parseInt(coordinateSplit[0]);
+                    int rightNum = Integer.parseInt(coordinateSplit[1]);
+                    if (leftNum > moveCoordinateLeft) {
+                        neighborCoordinate = aimCoordinates.get(c);
+                        break;
+                    }
+                    if (leftNum == moveCoordinateLeft) {
+                        if (rightNum >= moveCoordinateRight) {
+                            neighborCoordinate = aimCoordinates.get(c);
+                            break;
+                        }
+                    }
+                }
+                //if neighborCoordinate = "", we add the coordinate to the left most
+                if (neighborCoordinate.equals("")) {
+                    for (int j = 0; j <= currentPlayerStatementSplit.length - 1; j++) {
+
+                        if (currentPlayerStatementSplit[j].equals("T")) {
+                            newPlayerStatement = newPlayerStatement + moveCoordinate + " ";
+                        }
+                        if (j == currentPlayerStatementSplit.length - 1) {
+                            newPlayerStatement = newPlayerStatement + currentPlayerStatementSplit[j];
+                        } else {
+                            newPlayerStatement = newPlayerStatement + currentPlayerStatementSplit[j] + " ";
+                        }
+                    }
+                } else {
+
+                    //if neighborCoordinate != "", we add the coordinate to the left of coordinate
+                    for (int j = 0; j <= currentPlayerStatementSplit.length - 1; j++) {
+
+                        if (currentPlayerStatementSplit[j].equals(neighborCoordinate)) {
+                            newPlayerStatement = newPlayerStatement + moveCoordinate + " ";
+                        }
+                        if (j == currentPlayerStatementSplit.length - 1) {
+                            newPlayerStatement = newPlayerStatement + currentPlayerStatementSplit[j];
+                        } else {
+                            newPlayerStatement = newPlayerStatement + currentPlayerStatementSplit[j] + " ";
+                        }
+                    }
+                }
+
+            }
+
+            //Replace the old playerstatement with the new one
+            stateStringSplit[2 + getIslandLength(stateString) + 2 + Integer.parseInt(currentPlayerNum)] = newPlayerStatement;
+            for (int m = 0; m <= stateStringSplit.length - 1; m++) {
+                newStateString = newStateString + stateStringSplit[m] + ";";
+            }
+            return newStateString;
+
+        } else {
+            //When add a village
+            for (int b = 0; b <= AllSettlersandVillages.size() - 1; b++) {
+                if (b > TstartPosition && b < TendPosition) {
+                    aimCoordinates.add(AllSettlersandVillages.get(b));
+                }
+            }
+
+            //When aimCoordinates in empty
+            if (aimCoordinates.size() == 0) {
+                newPlayerStatement = currentPlayerStatement + " " + moveCoordinate;
+            } else {
+                //Find the coordinate on the right of this coordinate, if there is no such coordinate, neighborCoordinate = ""
+                String[] moveCoordinateSplit = moveCoordinate.split(",");
+                int moveCoordinateLeft = Integer.parseInt(moveCoordinateSplit[0]);
+                int moveCoordinateRight = Integer.parseInt(moveCoordinateSplit[1]);
+                String neighborCoordinate = "";
+                for (int c = 0; c <= aimCoordinates.size() - 1; c++) {
+                    String[] coordinateSplit = aimCoordinates.get(c).split(",");
+                    int leftNum = Integer.parseInt(coordinateSplit[0]);
+                    int rightNum = Integer.parseInt(coordinateSplit[1]);
+                    if (leftNum > moveCoordinateLeft) {
+                        neighborCoordinate = aimCoordinates.get(c);
+                        break;
+                    }
+                    if (leftNum == moveCoordinateLeft) {
+                        if (rightNum >= moveCoordinateRight) {
+                            neighborCoordinate = aimCoordinates.get(c);
+                            break;
+                        }
+                    }
+                }
+                //if neighborCoordinate = "", we add the coordinate to the left most
+                if (neighborCoordinate.equals("")) {
+                    newPlayerStatement = currentPlayerStatement + " " + moveCoordinate;
+                } else {
+
+                    //if neighborCoordinate != "", we add the coordinate to the left of coordinate
+                    for (int j = 0; j <= currentPlayerStatementSplit.length - 1; j++) {
+
+                        if (currentPlayerStatementSplit[j].equals(neighborCoordinate)) {
+                            newPlayerStatement = newPlayerStatement + moveCoordinate + " ";
+                        }
+                        if (j == currentPlayerStatementSplit.length - 1) {
+                            newPlayerStatement = newPlayerStatement + currentPlayerStatementSplit[j];
+                        } else {
+                            newPlayerStatement = newPlayerStatement + currentPlayerStatementSplit[j] + " ";
+                        }
+                    }
+                }
+
+            }
+
+            //Replace the old playerstatement with the new one
+            stateStringSplit[2 + getIslandLength(stateString) + 2 + Integer.parseInt(currentPlayerNum)] = newPlayerStatement;
+            for (int m = 0; m <= stateStringSplit.length - 1; m++) {
+                newStateString = newStateString + stateStringSplit[m] + ";";
+            }
+            return newStateString;
+        }
+
+//FIXME Task 10
     }
+
 
     /**
      * a helper for task 11
