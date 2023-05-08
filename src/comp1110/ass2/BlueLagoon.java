@@ -1850,6 +1850,7 @@ public class BlueLagoon {
         List<String> moves = new ArrayList<>();
         /**
          * below is the first attempt AI, works fine when the game is about to end
+         * maybe when half of the villages and settlers are placed
          */
         // for each move, score them after all of them are applied
         // take the move with highest score
