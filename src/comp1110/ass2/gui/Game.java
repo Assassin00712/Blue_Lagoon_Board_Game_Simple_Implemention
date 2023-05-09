@@ -31,7 +31,16 @@ public class Game extends Application {
     private static final int WINDOW_HEIGHT = 700;
 
     private final Group controls = new Group();
-    private TextField stateTextField;
+
+    // This is to indicate what the player can currently do.
+    private Label stateText;
+    private String stateTextForPlayer;
+
+    // Groups of the player's manipulable objects.
+    private Group p0S;
+    private Group p0T;
+    private Group p1S;
+    private Group p1T;
 
     private String stateString;
 
@@ -426,6 +435,8 @@ public class Game extends Application {
             startButton.setVisible(false);
             startButton.setManaged(false);
 
+            update();
+
             if (BlueLagoon.isStateStringWellFormed(stateString)) {
                 stateString = stateString.replaceAll("r C B W P S", BlueLagoon.distributeResources(stateString));
                 displayState(stateString);
@@ -470,10 +481,97 @@ public class Game extends Application {
 
     }
 
+    /**
+     * Draw the player's settler and village as a manipulable object
+     */
     private void drawPlayer(){
-        Group p1 = drawDragCircleText(800,400,"P1S",Color.PURPLE);
-        Group p2 = drawDragCircleText(850,450,"P12",Color.RED);
-        root.getChildren().addAll(p1,p2);
+
+        p0S = drawDragCircleText(800,400,"P0S",Color.PURPLE);
+        p0T = drawDragCircleText(850,400,"P0T",Color.PURPLE);
+        p1S = drawDragCircleText(800,450,"P1S",Color.RED);
+        p1T = drawDragCircleText(850,450,"P1T",Color.RED);
+        root.getChildren().addAll(p0S, p0T, p1S, p1T);
+    }
+
+    /**
+     * Set the stateText that will show the current state and update within the game.
+     */
+    private void setStateText(String text){
+        // Set state text
+        stateText = new Label("  " + text + "  ");
+        stateText.setTextFill(Color.WHITE);
+        stateText.setStyle("-fx-background-color: black;");
+        // To set the text at the exact middle of the circle
+        double textWidth = stateText.getBoundsInLocal().getWidth();
+        double textHeight = stateText.getBoundsInLocal().getHeight();
+        stateText.setLayoutX(800 - textWidth / 2);
+        stateText.setLayoutY(200 + textHeight / 2);
+        root.getChildren().addAll(stateText);
+
+    }
+
+    /**
+     * Set a group to be draggable
+     */
+    private void setDragOn(Group group){
+        final double[] initialOffset = new double[2];
+        final double initialLayoutX = group.getLayoutX();
+        final double initialLayoutY = group.getLayoutY();
+        group.setOnMousePressed(e -> {
+            group.toFront();
+            initialOffset[0] = e.getSceneX() - group.getLayoutX();
+            initialOffset[1] = e.getSceneY() - group.getLayoutY();
+        });
+
+        group.setOnMouseDragged(e -> {
+            group.setLayoutX(e.getSceneX() - initialOffset[0]);
+            group.setLayoutY(e.getSceneY() - initialOffset[1]);
+        });
+
+        group.setOnMouseReleased(e -> {
+            group.setLayoutX(initialLayoutX);
+            group.setLayoutY(initialLayoutY);
+        });
+    }
+
+    /**
+     * Set a group to be NOT draggable
+     */
+    private void setDragOff(Group group){
+        group.setOnMousePressed(null);
+        group.setOnMouseDragged(null);
+        group.setOnMouseReleased(null);
+    }
+
+    /**
+     * Determine whose turn it is now based on stateString.
+     */
+    private void takeTurns(){
+        if (BlueLagoon.isStateStringWellFormed(stateString)){
+            String playerTurn = BlueLagoon.getCurrentPlayerNumber(stateString);
+            if (playerTurn.equals("0")){
+                setDragOn(p0S);
+                setDragOn(p0T);
+                setDragOff(p1S);
+                setDragOff(p1T);
+            } else if (playerTurn.equals("1")) {
+                if (playerTurn.equals("0")){
+                    setDragOff(p0S);
+                    setDragOff(p0T);
+                    setDragOn(p1S);
+                    setDragOn(p1T);
+                }
+            }
+        }
+
+    }
+
+    private void update(){
+        if (BlueLagoon.isStateStringWellFormed(stateString)){
+            takeTurns();
+            displayState(stateString);
+        }
+
     }
 
 
@@ -484,6 +582,18 @@ public class Game extends Application {
         root.getChildren().add(controls);
         makeControls();
         drawPlayer();
+        setStateText("Game Start");
+        takeTurns();
+
+
+        scene.setOnMouseClicked(event -> {
+            update();
+        });
+        root.setOnMouseClicked(event -> {
+            update();
+        });
+
+
 
         stage.setScene(scene);
         stage.show();
