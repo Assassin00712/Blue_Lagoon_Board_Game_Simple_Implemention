@@ -145,6 +145,26 @@ public class BlueLagoon {
         String[] s1 = stateString.split(";");
         return s1[getIslandLength(stateString) + 3];
     }
+    //Do not include Statuettes
+    public static String getAllUnclaimedResourcesNumber(String stateString){
+        String UnclaimedResourcesandStatuettesStatement = getUnclaimedResourcesandStatuettesStatement(stateString);
+        String[] Split = UnclaimedResourcesandStatuettesStatement.split(" ");
+
+        int CPosition = 0;
+        int BPosition = 0;
+        int WPosition = 0;
+        int PPosition = 0;
+        int SPosition = 0;
+        for (int i = 0;i<Split.length;i++){
+            if (Split[i].equals("C")){CPosition = i;}
+            if (Split[i].equals("B")){BPosition = i;}
+            if (Split[i].equals("W")){WPosition = i;}
+            if (Split[i].equals("P")){PPosition = i;}
+            if (Split[i].equals("S")){PPosition = i;}
+        }
+        int AllNum = (BPosition-CPosition-1)+(WPosition-BPosition-1)+(PPosition-WPosition-1)+(SPosition-PPosition-1);
+        return String.valueOf(AllNum);
+    }
 
     //Return all resource names and relative coordinates as a list to solve task 5
     public static List<String> getAllResourcesList(String stateString){
@@ -1090,6 +1110,11 @@ public class BlueLagoon {
      */
     public static Set<String> generateAllValidMoves(String stateString) {
         Set<String> validSet = new HashSet<>();
+        List<Player> players = playersFromString(stateString);
+        Player currentPlayer = players.get(Integer.parseInt(getCurrentPlayerNumber(stateString)));
+        List<Coordinate> currentST = combineSettlersVillages(currentPlayer.toStateString());
+        List<Coordinate>[] occupiedByPlayers = allSettlersVillages(stateString);
+        List<Coordinate> occupiedByCurrentPlayer = occupiedByPlayers[Integer.parseInt(getCurrentPlayerNumber(stateString))];
 
         //There is no settlers and villages in S stage
         if (getCurrentStateStatement(stateString).charAt(5) == 'S'){
