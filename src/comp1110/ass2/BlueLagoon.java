@@ -6,6 +6,7 @@ import comp1110.ass2.board.Island;
 import comp1110.ass2.board.Player;
 
 import java.lang.reflect.Array;
+import java.sql.SQLOutput;
 import java.util.*;
 
 import static comp1110.ass2.board.Island.*;
@@ -1077,30 +1078,148 @@ public class BlueLagoon {
      * @return a set of strings representing all moves the current player can play
      */
     public static Set<String> generateAllValidMoves(String stateString) {
+
         Set<String> validSet = new HashSet<>();
+        List<Player> players = playersFromString(stateString);
+        Player currentPlayer = players.get(Integer.parseInt(getCurrentPlayerNumber(stateString)));
+        List<Coordinate> currentST = combineSettlersVillages(currentPlayer.toStateString());
+        List<Coordinate>[] occupiedByPlayers = allSettlersVillages(stateString);
+        List<Coordinate> occupiedByCurrentPlayer = occupiedByPlayers[Integer.parseInt(getCurrentPlayerNumber(stateString))];
 
-        //Check every block if it's valid and add to the set if it's valid
-        for (int row = 0; row <= Board.BOARD_HEIGHT - 1; row++) {
-            for (int column = 0; column <= Board.BOARD_HEIGHT - 1; column++) {
-                //Because the board is 12 13 12 13, to eliminate the 0,13 2,13......
-                if (row % 2 == 0 && column == Board.BOARD_HEIGHT - 1){
-                    continue;
-                }else {
-                String coordinate = row + "," + column;
 
-                String settler = "S " + coordinate;
-                if (isMoveValid(stateString, settler)) {
-                    validSet.add(settler);
+        //There is no settlers and villages in S stage
+        if (getCurrentStateStatement(stateString).charAt(5) == 'S'){
+            if (Player.numberOfSettlersandVillages(getCurrentPlayerStatement(stateString)).get(0).equals("0")) {
+                if (Player.numberOfSettlersandVillages(getCurrentPlayerStatement(stateString)).get(1).equals("0")) {
+                    Set<String> emptySet = new HashSet<>();
+                    return emptySet;
                 }
-
-                String village = "T " + coordinate;
-                if (isMoveValid(stateString, village)) {
-                    validSet.add(village);
-                }
-            }
             }
         }
-        return validSet; // FIXME Task 8
+
+        /** If there is no settlers or villages **/
+        //Get all cors
+        List<Coordinate> allCors = new ArrayList<>();
+        for (int row = 0; row <= Board.BOARD_HEIGHT - 1; row++) {
+            for (int column = 0; column <= Board.BOARD_WIDTH - 1; column++) {
+                if (row % 2 == 0 && column == Board.BOARD_WIDTH - 1){
+                    continue;
+                }else {
+                    Coordinate a = new Coordinate(row,column);
+                    allCors.add(a);
+                }
+            }
+        }
+
+        //Get all island coordinates
+        Set<Coordinate> islandCorsC = new HashSet<>();
+        List<String> islandCors = getAllIslandStatementList(stateString);
+        for (int i=0;i<islandCors.size();i++){
+            if (islandCors.get(i).endsWith(";")){
+                int size = islandCors.get(i).length() - 1;
+                String a = islandCors.get(i).substring(0,size);
+                islandCors.set(i,a);
+            }
+            islandCorsC.add(Coordinate.corFromString(islandCors.get(i)));
+        }
+
+        //Get ocean cors
+        Set<Coordinate> oceanCors = new HashSet<>();
+        for (int i=0;i<=allCors.size()-1;i++){
+            if (!islandCorsC.contains(allCors.get(i))){
+                oceanCors.add(allCors.get(i));
+            }
+        }
+
+        //Remove all coordinates occupied by players, get allAdjuentCors
+        for (List<Coordinate> containers: occupiedByPlayers){
+            for (Coordinate coordinate:containers){
+                if(oceanCors.contains(coordinate)){oceanCors.remove(coordinate);}
+            }
+        }
+
+        if (currentST.size() == 0){
+            for (Coordinate containers:oceanCors){
+                validSet.add("S" + " " + containers.toString());
+            }
+            return validSet;
+        }
+
+        /** If there are settlers and villages **/
+            //All adjuent coordinates of all settlers and villages
+            Set<Coordinate> allAdjuentCors = new HashSet<>();
+
+            //Find out cors adjuent to all settlers and villages
+            for (int i=0;i<currentST.size();i++){
+                allAdjuentCors.addAll(Coordinate.adjacentCord(currentST.get(i)));
+            }
+
+            //Remove all coordinates occupied by players, get allAdjuentCors
+            for (List<Coordinate> containers: occupiedByPlayers){
+                for (Coordinate containers1:containers){
+                    if (allAdjuentCors.contains(containers1)){allAdjuentCors.remove(containers1);}
+                }
+            }
+            //S phase output
+            Set<Coordinate> SPlaceableS;
+            SPlaceableS = allAdjuentCors;
+
+            //Create two set, one to contain island placeable cors, another to place sea placeable coordinates
+            Set<Coordinate> PlacebaleS = new HashSet<>();
+            Set<Coordinate> PlacebaleT = new HashSet<>();
+
+            for (Coordinate containers1:allAdjuentCors){
+                if (islandCorsC.contains(containers1)){
+                    PlacebaleT.add(containers1);
+                    PlacebaleS.add(containers1);
+                }else {
+                    PlacebaleS.add(containers1);
+                }
+            }
+
+
+            //Add all ocean coordinates
+            PlacebaleS.addAll(oceanCors);
+
+            /** In exploration or the second phase **/
+            if (getCurrentStateStatement(stateString).charAt(5) == 'E'){
+                //If there is no enough settlers or villages
+                if (Player.numberOfSettlersandVillages(getCurrentPlayerStatement(stateString)).get(0).equals("30")){
+                    if (Player.numberOfSettlersandVillages(getCurrentPlayerStatement(stateString)).get(1).equals("5")){
+                        Set<String> emptySet = new HashSet<>();
+                        return emptySet;
+                    }else {
+                        for (Coordinate containers:PlacebaleT){
+                            validSet.add("T" + " " + containers.toString());
+                        }
+                        return validSet;
+                    }
+                }else if (Player.numberOfSettlersandVillages(getCurrentPlayerStatement(stateString)).get(1).equals("5")){
+                    for (Coordinate containers:PlacebaleS){
+                        validSet.add("S" + " " + containers.toString());
+                    }
+                    return validSet;
+                }
+
+                for (Coordinate containers:PlacebaleS){
+                    validSet.add("S" + " " + containers.toString());
+                }
+                for (Coordinate containers:PlacebaleT){
+                    validSet.add("T" + " " + containers.toString());
+                }
+                return validSet;
+            }else {
+                if (Player.numberOfSettlersandVillages(getCurrentPlayerStatement(stateString)).get(0).equals("30")){
+                    Set<String> emptySet = new HashSet<>();
+                    return emptySet;
+                    }
+                for (Coordinate containers:SPlaceableS){
+                    validSet.add("S" + " " + containers.toString());
+                }
+                return validSet;
+            }
+
+// FIXME Task 8
     }
 
     /**
@@ -1114,23 +1233,7 @@ public class BlueLagoon {
      * @return true if the state is at the end of either phase and false otherwise
      */
     public static boolean isPhaseOver(String stateString){
-//        String AllPlayerStatement = getPlayerStatement(stateString);
-//        String[] ALLPlayerStatementSplit = AllPlayerStatement.split(";");
-//        int PlayerNum = ALLPlayerStatementSplit.length;
-//        boolean NoinvaildMoves = false;
-//        String originalStateString = stateString;
-//        for (int i = 0;i<=PlayerNum-1;i++){
-//            String currentPlayer = stateString.substring(10,11);
-//            for (int j = 0;j<=stateString.length() - 1;j++){
-//                if (j>=2 && j<=stateString.length() - 3) {
-//                    if (stateString.charAt(j - 2) == 'c' && stateString.charAt(j + 2) == 'E' || stateString.charAt(j + 2) == 'S') {
-//                        stateString.replace("c" + currentPlayer + "E", "c" + i + "E");
-//                    }
-//                }
-//            }
-//            if (generateAllValidMoves(stateString).size() == 0){return !NoinvaildMoves;}
-//        }
-//        stateString = originalStateString;
+
         if (generateAllValidMoves(stateString).size() == 0){return true;}
         return getAllPlayerResourcesNumber(stateString) == 24;// FIXME Task 9
     }

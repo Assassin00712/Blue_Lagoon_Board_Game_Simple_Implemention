@@ -217,6 +217,37 @@ public class Player {
         return all;
     }
 
+    /** Input current player statement (MUST BE getCurrentPlayerStatement() in BlueLagoon) and output the number of settlers and villages
+     * It will return a string list, the first represents the number of settlers and the second represents the number of villages **/
+    public static List<String> numberOfSettlersandVillages (String currentPlayerStatement){
+        String[]  currentPlayerStatementSplit = currentPlayerStatement.split(" ");
+
+        int SPosition = 0;
+        int TPosition = 0;
+        for (int i=0;i<currentPlayerStatementSplit.length;i++){
+            if (currentPlayerStatementSplit[i].equals("S")){
+                SPosition = i;
+            }
+            if (currentPlayerStatementSplit[i].equals("T")){
+                TPosition = i;
+            }
+        }
+        int SNumber = 0;
+        int TNum = 0;
+        if (TPosition - SPosition != 1){
+         SNumber = TPosition - SPosition - 1;
+        }
+        if (currentPlayerStatementSplit.length - TPosition != 1){
+            TNum = currentPlayerStatementSplit.length - TPosition - 1;
+        }
+        String S = String.valueOf(SNumber);
+        String T = String.valueOf(TNum);
+        List<String> rESULT = new ArrayList<>();
+        rESULT.add(S);
+        rESULT.add(T);
+        return rESULT;
+    }
+
 
     /**
      * Transform players back to statement from
