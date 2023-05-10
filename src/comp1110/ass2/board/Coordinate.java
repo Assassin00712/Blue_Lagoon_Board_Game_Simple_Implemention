@@ -2,7 +2,8 @@ package comp1110.ass2.board;
 
 import gittest.C;
 
-import java.util.Objects;
+
+import java.util.*;
 
 public class Coordinate implements Comparable<Coordinate>{
 
@@ -87,6 +88,272 @@ public class Coordinate implements Comparable<Coordinate>{
         }
     }
 
+    /** Return all island coordinates when input a islandstatement **/
+
+
+
+
+
+    /**
+    Return the coordinates set that adjacent the input coordinate **/
+    public static Set<Coordinate> adjacentCord(Coordinate cor){
+        Set<Coordinate> adjacent = new HashSet<>();
+        int x = cor.row;
+        int y = cor.col;
+        int boardHeight = Board.BOARD_HEIGHT;
+        int boardWidth = Board.BOARD_WIDTH;
+
+        //Normal situation
+        if (x % 2 == 0) {
+            if (x > 0 && x < boardHeight - 1 && y > 0 && y < boardWidth - 2) {
+                Coordinate cor1 = new Coordinate(x - 1, y);
+                Coordinate cor2 = new Coordinate(x - 1, y + 1);
+                Coordinate cor3 = new Coordinate(x, y - 1);
+                Coordinate cor4 = new Coordinate(x, y + 1);
+                Coordinate cor5 = new Coordinate(x + 1, y);
+                Coordinate cor6 = new Coordinate(x + 1, y + 1);
+                adjacent.add(cor1);
+                adjacent.add(cor2);
+                adjacent.add(cor3);
+                adjacent.add(cor4);
+                adjacent.add(cor5);
+                adjacent.add(cor6);
+                return adjacent;
+            } else if (x == boardHeight - 1) {
+                if (y == boardWidth - 2) {
+                    Coordinate cor1 = new Coordinate(x - 1, y);
+                    Coordinate cor2 = new Coordinate(x - 1, y + 1);
+                    Coordinate cor3 = new Coordinate(x, y - 1);
+                    adjacent.add(cor1);
+                    adjacent.add(cor2);
+                    adjacent.add(cor3);
+                    return adjacent;
+                } else {
+                    if (y == 0) {
+                        Coordinate cor1 = new Coordinate(x - 1, 0);
+                        Coordinate cor2 = new Coordinate(x, 1);
+                        Coordinate cor3 = new Coordinate(x - 1, 1);
+                        adjacent.add(cor1);
+                        adjacent.add(cor2);
+                        adjacent.add(cor3);
+                        return adjacent;
+                    } else {
+                        Coordinate cor1 = new Coordinate(x - 1, y);
+                        Coordinate cor2 = new Coordinate(x - 1, y + 1);
+                        Coordinate cor3 = new Coordinate(x, y - 1);
+                        Coordinate cor4 = new Coordinate(x, y + 1);
+                        adjacent.add(cor1);
+                        adjacent.add(cor2);
+                        adjacent.add(cor3);
+                        adjacent.add(cor4);
+                        return adjacent;
+                    }
+                }
+            } else //First row situation
+                if (x == 0) {
+                    if (y == 0) {
+                        Coordinate cor1 = new Coordinate(0, 1);
+                        Coordinate cor2 = new Coordinate(1, 0);
+                        Coordinate cor3 = new Coordinate(1, 1);
+                        adjacent.add(cor1);
+                        adjacent.add(cor2);
+                        adjacent.add(cor3);
+                        return adjacent;
+                    } else if (y == boardWidth - 2) {
+                        Coordinate cor1 = new Coordinate(0, y-1);
+                        Coordinate cor2 = new Coordinate(1, y);
+                        Coordinate cor3 = new Coordinate(1, y+1);
+                        adjacent.add(cor1);
+                        adjacent.add(cor2);
+                        adjacent.add(cor3);
+                        return adjacent;
+                    } else {
+                        Coordinate cor1 = new Coordinate(0, y + 1);
+                        Coordinate cor2 = new Coordinate(0, y - 1);
+                        Coordinate cor3 = new Coordinate(1, y+1);
+                        Coordinate cor4 = new Coordinate(1, y);
+                        adjacent.add(cor1);
+                        adjacent.add(cor2);
+                        adjacent.add(cor3);
+                        adjacent.add(cor4);
+                        return adjacent;
+                    }
+                } else {
+                    //When in the first column
+                    if (y == 0) {
+                            Coordinate cor1 = new Coordinate(x-1, y);
+                            Coordinate cor2 = new Coordinate(x - 1, y+1);
+                            Coordinate cor3 = new Coordinate(x, y+1);
+                            Coordinate cor4 = new Coordinate(x+1, y);
+                            Coordinate cor5 = new Coordinate(x+1, y+1);
+                            adjacent.add(cor1);
+                            adjacent.add(cor2);
+                            adjacent.add(cor3);
+                            adjacent.add(cor4);
+                            adjacent.add(cor5);
+                            return adjacent;
+                    }else if (y==boardWidth-2){
+                        Coordinate cor1 = new Coordinate(x-1, y);
+                        Coordinate cor2 = new Coordinate(x-1, y+1);
+                        Coordinate cor3 = new Coordinate(x, y-1);
+                        Coordinate cor4 = new Coordinate(x+1, y);
+                        Coordinate cor5 = new Coordinate(x+1, y+1);
+                        adjacent.add(cor1);
+                        adjacent.add(cor2);
+                        adjacent.add(cor3);
+                        adjacent.add(cor4);
+                        adjacent.add(cor5);
+                        return adjacent;
+                    }
+                }
+            //odd row
+        }else if (x % 2 == 1) {
+            if (x > 0 && x < boardHeight-1 && y > 0 && y < boardWidth - 1) {
+                Coordinate cor1 = new Coordinate(x - 1, y - 1);
+                Coordinate cor2 = new Coordinate(x - 1, y);
+                Coordinate cor3 = new Coordinate(x, y - 1);
+                Coordinate cor4 = new Coordinate(x, y + 1);
+                Coordinate cor5 = new Coordinate(x + 1, y - 1);
+                Coordinate cor6 = new Coordinate(x + 1, y);
+                adjacent.add(cor1);
+                adjacent.add(cor2);
+                adjacent.add(cor3);
+                adjacent.add(cor4);
+                adjacent.add(cor5);
+                adjacent.add(cor6);
+                return adjacent;
+            }else if (y==boardWidth-1){
+                if (x==boardHeight-1){
+                    Coordinate cor1 = new Coordinate(x,y-1);
+                    Coordinate cor2 = new Coordinate(x-1,y-1);
+                    adjacent.add(cor1);
+                    adjacent.add(cor2);
+                    return adjacent;
+                }else{
+                    Coordinate cor1 = new Coordinate(x-1,y-1);
+                    Coordinate cor2 = new Coordinate(x,y-1);
+                    Coordinate cor3 = new Coordinate(x+1,y-1);
+                    adjacent.add(cor1);
+                    adjacent.add(cor2);
+                    adjacent.add(cor3);
+                    return adjacent;
+                }
+            }else{
+                //When in the first column
+                if (y==0){
+                    if (x==boardHeight-1){
+                        //Because we set boardheight=13
+                        Coordinate cor1 = new Coordinate(x,1);
+                        Coordinate cor2 = new Coordinate(x-1,0);
+                        adjacent.add(cor1);
+                        adjacent.add(cor2);
+                        return adjacent;
+                    }else{
+                        Coordinate cor1 = new Coordinate(x,1);
+                        Coordinate cor2 = new Coordinate(x-1,0);
+                        Coordinate cor3 = new Coordinate(x+1,0);
+                        adjacent.add(cor1);
+                        adjacent.add(cor2);
+                        adjacent.add(cor3);
+                        return adjacent;
+                    }
+                }
+            }
+                 if (x==boardHeight-1){
+                    Coordinate cor1 = new Coordinate(x,y-1);
+                    Coordinate cor2 = new Coordinate(x,y+1);
+                    Coordinate cor3 = new Coordinate(x-1,y-1);
+                    Coordinate cor4 = new Coordinate(x-1,y);
+                    adjacent.add(cor1);
+                    adjacent.add(cor2);
+                    adjacent.add(cor3);
+                    adjacent.add(cor4);
+                    return adjacent;
+                }
+
+        }
+
+        //First row situation
+        if (x==0){
+            if (y==0){
+            Coordinate cor1 = new Coordinate(0,1);
+            Coordinate cor2 = new Coordinate(1,0);
+            Coordinate cor3 = new Coordinate(1,1);
+            adjacent.add(cor1);
+            adjacent.add(cor2);
+            adjacent.add(cor3);
+            return adjacent;
+            }else if (y==boardWidth-1){
+                Coordinate cor1 = new Coordinate(0,boardWidth-1);
+                Coordinate cor2 = new Coordinate(1,boardWidth);
+                Coordinate cor3 = new Coordinate(1,boardWidth+1);
+                adjacent.add(cor1);
+                adjacent.add(cor2);
+                adjacent.add(cor3);
+                return adjacent;
+            }else{
+                Coordinate cor1 = new Coordinate(0,y+1);
+                Coordinate cor2 = new Coordinate(0,y-1);
+                Coordinate cor3 = new Coordinate(1,boardWidth);
+                Coordinate cor4 = new Coordinate(1,boardWidth+1);
+                adjacent.add(cor1);
+                adjacent.add(cor2);
+                adjacent.add(cor3);
+                adjacent.add(cor4);
+                return adjacent;
+            }
+        }else {
+            //When in the first column
+            if (y==0){
+                if (x==boardHeight-1){
+                    //Because we set boardheight=13
+                    if (x % 2 == 0){
+                        Coordinate cor1 = new Coordinate(x-1,0);
+                        Coordinate cor2 = new Coordinate(x,1);
+                        Coordinate cor3 = new Coordinate(x-1,1);
+                        adjacent.add(cor1);
+                        adjacent.add(cor2);
+                        adjacent.add(cor3);}else {
+                        Coordinate cor1 = new Coordinate(x,1);
+                        Coordinate cor2 = new Coordinate(x-1,0);
+                        adjacent.add(cor1);
+                        adjacent.add(cor2);
+                        return adjacent;
+                    }
+                }else{
+                    if (x % 2==0){
+                        Coordinate cor1 = new Coordinate(x,1);
+                        Coordinate cor2 = new Coordinate(x-1,0);
+                        Coordinate cor3 = new Coordinate(x-1,1);
+                        adjacent.add(cor1);
+                        adjacent.add(cor2);
+                        adjacent.add(cor3);
+                        return adjacent;
+                    }else{
+                        Coordinate cor1 = new Coordinate(x,1);
+                        Coordinate cor2 = new Coordinate(x-1,0);
+                        adjacent.add(cor1);
+                        adjacent.add(cor2);
+                        return adjacent;
+                    }
+                }
+            }
+        }
+        if (y == boardWidth - 1) {
+            Coordinate cor1 = new Coordinate(x - 1, y - 1);
+            Coordinate cor2 = new Coordinate(x, y - 1);
+            Coordinate cor3 = new Coordinate(x + 1, y - 1);
+            adjacent.add(cor1);
+            adjacent.add(cor2);
+            adjacent.add(cor3);
+            return adjacent;
+        }
+        return adjacent;
+    }
+
+
+
+
     @Override
     public String toString() {
         return  row + "," + col;
@@ -108,8 +375,8 @@ public class Coordinate implements Comparable<Coordinate>{
         //System.out.println("the row of the Coordinate dealing with is " + row);
         int col = Integer.parseInt(tmp[1].strip());
         //System.out.println("the column of the Coordinate dealing with is " + col);
-        c.col = col;
         c.row = row;
+        c.col = col;
         return c;
     }
 
