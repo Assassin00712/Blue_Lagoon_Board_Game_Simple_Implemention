@@ -1361,6 +1361,7 @@ public class BlueLagoon {
                             }
                         }
                         currentPlayerStatement = newPlayerStatement1;
+                        currentPlayerStatement = currentPlayerStatement.substring(1);
                         currentPlayerStatementSplit = currentPlayerStatement.split(" ");
                         AllResourceList.remove(j);
                         String NewAllResource = "";
@@ -1421,7 +1422,7 @@ public class BlueLagoon {
                     aimCoordinates.add(AllSettlersandVillages.get(b));
                 }
             }
-            //When aimCoordinates in empty
+            //When aimCoordinates is empty
             if (aimCoordinates.size() == 0) {
 
                 for (int j = 0; j <= currentPlayerStatementSplit.length - 1; j++) {
@@ -1482,6 +1483,7 @@ public class BlueLagoon {
                             newPlayerStatement = newPlayerStatement + currentPlayerStatementSplit[j] + " ";
                         }
                     }
+
                 }
 
             }
