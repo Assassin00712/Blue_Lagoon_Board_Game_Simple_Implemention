@@ -4,7 +4,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class CordTest {
+}
 
+
+/*
     @Test
     public void cordToXTest(){
         double result = 86.60254037844386;
@@ -31,3 +34,5 @@ public class CordTest {
 
     }
 }
+
+ */

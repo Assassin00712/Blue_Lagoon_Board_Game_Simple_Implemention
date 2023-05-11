@@ -13,8 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
+import javafx.scene.paint.*;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 
@@ -59,6 +58,11 @@ public class Viewer extends Application {
             this.setLayoutX(x);
             this.setLayoutY(y);
         }
+        private double distance(double x, double y){
+            double distX = this.getLayoutX() - x;
+            double distY = this.getLayoutY() - y;
+            return Math.sqrt(distX * distX + distY * distY);
+        }
     }
 
     public class Triangle extends Polygon{
@@ -84,15 +88,28 @@ public class Viewer extends Application {
 
     // Return the exact hexagon by the given coordinate
     // The coordinate is from range (0,0) to (12,11)
-    public Hexagon cordToHexagon (int x, int y){
+    public Hexagon cordToHexagon (Coordinate coordinate){
         for (Hexagon hexagon: hexagons){
-            if ((Math.abs(hexagon.getLayoutX() - cordToXY(x,y)[0]) < 0.5)
-                && (Math.abs(hexagon.getLayoutY() - cordToXY(x,y)[1]) < 0.5)){
+            if ((Math.abs(hexagon.getLayoutX() - cordToXY(coordinate)[0]) < 0.1)
+                    && (Math.abs(hexagon.getLayoutY() - cordToXY(coordinate)[1]) < 0.1)){
                 return hexagon;
             }
         }
-        return hexagons.get(0);
+        return findNearestHexagon(cordToXY(coordinate)[0],cordToXY(coordinate)[1]);
     }
+
+    public Hexagon findNearestHexagon(double x, double y){
+        double nearestDist = Integer.MAX_VALUE;
+        Hexagon nearestHexagon = null;
+        for (Hexagon hexagon: hexagons){
+            if (hexagon.distance(x,y) < nearestDist){
+                nearestDist = hexagon.distance(x,y);
+                nearestHexagon = hexagon;
+            }
+        }
+        return nearestHexagon;
+    }
+
 
     public void drawTriangleText(double x, double y, String text, Paint paint){
         Triangle triangle = new Triangle(x,y,35);
@@ -108,16 +125,16 @@ public class Viewer extends Application {
 
     // Given the coordinate, will return the absolute position on the viewer stage.
     // Can be used for drawing shapes or placing images.
-    public static double[] cordToXY (int x, int y){
+    public static double[] cordToXY (Coordinate coordinate){
         double outX = 0;
         double outY = 0;
 
-        if (y % 2 == 0){
-            outX = 25 * Math.sqrt(3) * (x + 1);
-            outY = 25 * (1.5 * y +1);
+        if (coordinate.row % 2 == 0){
+            outX = 25 * Math.sqrt(3) * (coordinate.col + 1);
+            outY = 25 * (1.5 * coordinate.row +1);
         } else {
-            outX = 25 * Math.sqrt(3) * (x + 0.5);
-            outY = 25 * (1.5 * y +1);}
+            outX = 25 * Math.sqrt(3) * (coordinate.col + 0.5);
+            outY = 25 * (1.5 * coordinate.row +1);}
 
         double[] outXY = new double[]{outX, outY};
         return outXY;
@@ -165,44 +182,44 @@ public class Viewer extends Application {
 
 
 
-
-
-        // Set Hexagon color to green if it's an island
+// Set Hexagon color to green if it's an island
         for (Object cord: BlueLagoon.getAllIslandStatementList(stateString)){
-            cordToHexagon(new Coordinate((String) cord).stringToRow(), new Coordinate((String) cord).stringToCol())
+            cordToHexagon(new Coordinate((String) cord))
                     .setFill(Color.GREEN);
         }
 
-        // Set Hexagon color to black if it's a stone
+        // Set Hexagon color to radial-gradient green-gray if it's a stone
         for (Object cord: BlueLagoon.getAllStoneList(stateString)){
-            cordToHexagon(new Coordinate((String) cord).stringToRow(), new Coordinate((String) cord).stringToCol())
-                    .setFill(Color.BLACK);
+            Stop[] stops = new Stop[] { new Stop(0, Color.GREEN), new Stop(1, Color.GRAY)};
+            cordToHexagon(new Coordinate((String) cord))
+                    .setFill(new RadialGradient(0, 0, 0.5, 0.5, 0.5, true, CycleMethod.NO_CYCLE, stops));
+
         }
 
         // Draw Bamboo
         if (BlueLagoon.getBamboo(stateString).size() > 0){
             for (Object cord: BlueLagoon.getBamboo(stateString)){
-                double[] draw = cordToXY(new Coordinate((String) cord).stringToRow(), new Coordinate((String) cord).stringToCol());
+                double[] draw = cordToXY(new Coordinate((String) cord));
                 double x = draw[0];
                 double y = draw[1];
-                drawTriangleText(x, y,"B", Color.RED);
+                drawTriangleText(x, y,"B", Color.YELLOW);
             }
         }
 
         // Draw Coconut
         if (BlueLagoon.getCoconutList(stateString).size() > 0){
             for (Object cord: BlueLagoon.getCoconutList(stateString)){
-                double[] draw = cordToXY(new Coordinate((String) cord).stringToRow(), new Coordinate((String) cord).stringToCol());
+                double[] draw = cordToXY(new Coordinate((String) cord));
                 double x = draw[0];
                 double y = draw[1];
-                drawTriangleText(x, y,"C", Color.DARKGREEN);
+                drawTriangleText(x, y,"C", Color.WHITESMOKE);
             }
         }
 
         // Draw Water
         if (BlueLagoon.getWater(stateString).size() > 0){
             for (Object cord: BlueLagoon.getWater(stateString)){
-                double[] draw = cordToXY(new Coordinate((String) cord).stringToRow(), new Coordinate((String) cord).stringToCol());
+                double[] draw = cordToXY(new Coordinate((String) cord));
                 double x = draw[0];
                 double y = draw[1];
                 drawTriangleText(x, y,"W", Color.DARKBLUE);
@@ -212,20 +229,20 @@ public class Viewer extends Application {
         // Draw Precious Stone
         if (BlueLagoon.getPreciousStone(stateString).size() > 0){
             for (Object cord: BlueLagoon.getPreciousStone(stateString)){
-                double[] draw = cordToXY(new Coordinate((String) cord).stringToRow(), new Coordinate((String) cord).stringToCol());
+                double[] draw = cordToXY(new Coordinate((String) cord));
                 double x = draw[0];
                 double y = draw[1];
-                drawTriangleText(x, y,"P", Color.ORANGE);
+                drawTriangleText(x, y,"P", Color.LAWNGREEN);
             }
         }
 
         // Draw statuette
         if (BlueLagoon.getStatuette(stateString).size() > 0){
             for (Object cord: BlueLagoon.getStatuette(stateString)){
-                double[] draw = cordToXY(new Coordinate((String) cord).stringToRow(), new Coordinate((String) cord).stringToCol());
+                double[] draw = cordToXY(new Coordinate((String) cord));
                 double x = draw[0];
                 double y = draw[1];
-                drawTriangleText(x, y,"S", Color.PURPLE);
+                drawTriangleText(x, y,"S", Color.BROWN);
             }
         }
 
@@ -241,7 +258,7 @@ public class Viewer extends Application {
 
                 // If playerState==0, draw a settler
                 if (c.matches("\\d+,\\d+") && playerState == 0){
-                    double[] draw = cordToXY(new Coordinate((String) c).stringToRow(), new Coordinate((String) c).stringToCol());
+                    double[] draw = cordToXY(new Coordinate((String) c));
                     double x = draw[0];
                     double y = draw[1];
                     drawTriangleText(x, y,"Se" + playerNumber, Color.DARKCYAN);
@@ -249,7 +266,7 @@ public class Viewer extends Application {
 
                 // If playerState==0, draw a village
                 if (c.matches("\\d+,\\d+") && playerState == 1){
-                    double[] draw = cordToXY(new Coordinate((String) c).stringToRow(), new Coordinate((String) c).stringToCol());
+                    double[] draw = cordToXY(new Coordinate((String) c));
                     double x = draw[0];
                     double y = draw[1];
                     drawTriangleText(x, y,"Vi" + playerNumber, Color.DARKORANGE);

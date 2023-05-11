@@ -1929,40 +1929,27 @@ public class BlueLagoon {
         System.out.println(isPhaseOver(applyMoveString));
 
          */
-        System.out.println(stateString);
-        System.out.println(moveString);
         stateString = placePiece(stateString, moveString);
-        System.out.println(stateString);
+
 
         String applyMoveString = "";
         applyMoveString += getArrangementStatement(stateString).strip() +";";
 
-        System.out.println(isStateStringWellFormed(stateString));
+
 
         // After all moves, if the phase is over, end the phase
-       if (isPhaseOver(stateString) && getCurrentStateStatement(stateString).contains("S")) {
-           System.out.println("1");
+        if (isPhaseOver(stateString)){
            stateString = endPhase(stateString);
-           applyMoveString += getCurrentStateStatement(stateString) + ";";
-
-       } else if (isPhaseOver(stateString)){
-           System.out.println("2");
-           stateString = endPhase(stateString);
-           if (getCurrentStateStatement(stateString).contains("1")){
-               applyMoveString += getCurrentStateStatement(stateString).replace('1','0') + ";";
-           } else if ( getCurrentStateStatement(stateString).contains("0")) {
-               applyMoveString += getCurrentStateStatement(stateString).replace('0','1') + ";";
-           }
-
-       } else {
-           if (getCurrentStateStatement(stateString).contains("1")){
-               applyMoveString += getCurrentStateStatement(stateString).replace('1','0') + ";";
-           } else if ( getCurrentStateStatement(stateString).contains("0")) {
-               applyMoveString += getCurrentStateStatement(stateString).replace('0','1') + ";";
-           }
        }
 
+       // Pass the turn to the next player
+        if (getCurrentStateStatement(stateString).contains("1")){
+           applyMoveString += getCurrentStateStatement(stateString).replace('1','0') + ";";
+       } else if ( getCurrentStateStatement(stateString).contains("0")) {
+           applyMoveString += getCurrentStateStatement(stateString).replace('0','1') + ";";
+       }
 
+        // The else statement should be the same
         applyMoveString += getIslandStatement(stateString);
         applyMoveString += getStoneStatement(stateString) + ";";
         applyMoveString += getUnclaimedResourcesandStatuettesStatement(stateString) + ";";
@@ -1970,6 +1957,14 @@ public class BlueLagoon {
 
         applyMoveString = applyMoveString.strip();
 
+        // Sometimes the next player don't have valid move, so the game should end and not pass to the next palyer.
+        if(generateAllValidMoves(applyMoveString).isEmpty()){
+            if (applyMoveString.contains(" c 0 ")){
+                applyMoveString = applyMoveString.replaceAll(" c 0 ", " c 1 ");
+            } else if (applyMoveString.contains(" c 1 ")) {
+                applyMoveString = applyMoveString.replaceAll(" c 1 ", " c 0 ");
+            }
+        }
 
 
         return applyMoveString; // FIXME Task 13
