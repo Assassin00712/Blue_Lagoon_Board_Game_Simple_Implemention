@@ -180,28 +180,35 @@ public class Player {
     /**
      * exact the coordinates that are chained with the first entry of the given list
      * @param given the list given
-     * @param chained the list for reference ( returned list)
+      * @param chained the list for reference ( returned list)
      * @return a list of chained coordinates chained with the first entry of the given list
      */
 
-    public static List<Coordinate> extractChain (List<Coordinate> given, List<Coordinate> chained) {
-        ArrayList<Coordinate> copied = new ArrayList<>(given);
+    public static List<Coordinate> extractChain (List<Coordinate> given, List<Coordinate> chained, int accumulator) {
         if (chained.size()==0){
             Coordinate toDetermined = given.get(0);
             given.remove(toDetermined);
-            copied.remove(toDetermined);
             chained.add(toDetermined);
+        }
+        if (accumulator==0){
+            return chained;
         }
         if (given.size()==0){
             return chained;
         }
+        ArrayList<Coordinate> copied = new ArrayList<>(given);
         Coordinate fromCopied = copied.get(0);
         if (isChained(fromCopied,chained)){
             chained.add(fromCopied);
             given.remove(fromCopied);
         }
+        //if a coordinate is not chained,
+        // throw it to the back of the list for checking
+        //
         copied.remove(fromCopied);
-        return extractChain(copied,chained);
+        copied.add(fromCopied);
+        accumulator -= 1;
+        return extractChain(copied,chained,accumulator);
     }
 
 
@@ -214,19 +221,21 @@ public class Player {
      * @param all all coordinates occupied by a player
      * @return a list of lists of Coordinates that are chained
      * lenght of 1 is allowed for each list
+     * need a more exact accumulator
      */
 
     public static List<List<Coordinate>> getChainedOccupier (List<List<Coordinate>> accumulated, List<Coordinate> all){
+        int size = all.size();
         //System.out.println("Before execution, all is " + all);
-        if (all.size()==0){
+        if (size==0){
             return accumulated;
         }
-        List<Coordinate> extracted = extractChain(all,new ArrayList<>());
+        List<Coordinate> extracted = extractChain(all, new ArrayList<>(),size*size);
         //System.out.println("extracted is "+extracted);
         all.removeAll(extracted);
-        System.out.println("all is "+all);
+        //System.out.println("all is "+all);
         accumulated.add(extracted);
-        System.out.println("accumulated is " + accumulated);
+        //System.out.println("accumulated is " + accumulated);
         return getChainedOccupier(accumulated,all);
     }
 

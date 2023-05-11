@@ -5,6 +5,8 @@ import gittest.C;
 
 import java.util.*;
 
+import static comp1110.ass2.board.Player.isChained;
+
 public class Coordinate implements Comparable<Coordinate>{
 
     // I changed Position into Coordinate since the format given in state strings are not a typical position format
@@ -69,21 +71,23 @@ public class Coordinate implements Comparable<Coordinate>{
      * @param cor1 the coordinate a play attempted to occupy
      * @param cor2 the coordinate to compare, taken from the occupied coordinates of the player
      * @return true if coordinates are linked, false otherwise
+     * test 6,1 and 7,2
      */
     public static boolean isLinked (Coordinate cor1, Coordinate cor2) {
-        int x1 = cor1.col;
-        int x = cor2.col;
-        int y1 = cor1.row;
-        int y = cor2.row;
-        if (x == x1) {
-            return ((y1 == y + 1) || (y1 == y - 1));
-        } else if (x % 2 == 0) {
-            boolean condition1 = (x == x1 - 1) || (x == x1 + 1);
-            boolean condition2 = (y == y1 - 1) || (y == y1);
+        int row1 = cor1.row;
+        int row2 = cor2.row;
+        int col1= cor1.col;
+        int col2 = cor2.col;
+
+        if (row1 == row2) {
+            return ((col1 == col2 + 1) || (col1 == col2 - 1));
+        } else if (row2 % 2 == 0) {
+            boolean condition1 = (row2 == row1 - 1) || (row2 == row1 + 1);
+            boolean condition2 = (col2 == col1 - 1) || (col2 == col1);
             return (condition1 && condition2);
         } else {
-            boolean condition1 = (x == x1 - 1) || (x == x1 + 1);
-            boolean condition2 = (y == y1 + 1) || (y == y1);
+            boolean condition1 = (row2 == row1 - 1) || (row2 == row1 + 1);
+            boolean condition2 = (col2 == col1 + 1) || (col2 == col1);
             return (condition1 && condition2);
         }
     }
@@ -410,13 +414,14 @@ public class Coordinate implements Comparable<Coordinate>{
     }
 
     public static void main(String[] args) {
-        Coordinate cor1 = new Coordinate(0,5);
-        Coordinate cor2 = new Coordinate(3,7);
-        Coordinate cor3 = new Coordinate(7,2);
+        Coordinate cor1 = new Coordinate(9,5);
+        Coordinate cor2 = new Coordinate(7,3);
+        Coordinate cor3 = new Coordinate(8,5);
         Coordinate cor4 = new Coordinate(8,2);
         Coordinate cor5 = new Coordinate(6,11);
         Coordinate cor6 = new Coordinate("6,12");
-        System.out.println(isLinked(cor3,cor4));
+        System.out.println(isLinked(cor1,cor3));
+        System.out.println(isLinked(cor2,cor3));
 
 
     }
