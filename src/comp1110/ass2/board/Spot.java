@@ -10,6 +10,7 @@ public class Spot {
     // In format of (Coordinate (col row), isIsland, isStone, Resources, occupier)
 
 
+    // island can be changed to an int
     public Boolean isIsland = false;
     public Boolean isStone = false;
     public Resources resources = null;

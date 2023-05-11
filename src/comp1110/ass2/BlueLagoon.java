@@ -1929,8 +1929,8 @@ public class BlueLagoon {
         int currentPlayer = Integer.parseInt(String.valueOf(getCurrentStateStatement(stateString).charAt(3)));
         String settlerOrVillage = moveString.substring(0,1);
         Coordinate moveCoordinate = new Coordinate(moveString.substring(2));
-        System.out.println(moveString);
-        System.out.println(stateString);
+        //System.out.println(moveString);
+        //System.out.println(stateString);
 
         board = Board.fromStateString(stateString);
 
@@ -1969,7 +1969,7 @@ public class BlueLagoon {
             applyMoveString += players.get(i).toStateString() + " ";
         }
         applyMoveString = applyMoveString.strip();
-        System.out.println(applyMoveString);
+        //System.out.println(applyMoveString);
 
         // After all moves, if the phase is over, end the phase
         if (isStateStringWellFormed(applyMoveString)) {
