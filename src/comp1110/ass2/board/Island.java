@@ -178,7 +178,7 @@ public class Island {
         // a list of lists of Coordinates of a player's occupiers that are chained
         List<List<Coordinate>> separated =  getChainedOccupier(new ArrayList<>(),cors);
         List<Integer> scores = new ArrayList<>();
-        System.out.println(separated);
+        //System.out.println(separated);
         // for each separated linked coordinates, score them in terms of islands occupied
         for (List<Coordinate> each : separated){
             //System.out.println("the player has occupied "+each);

@@ -412,8 +412,8 @@ public class Coordinate implements Comparable<Coordinate>{
     public static void main(String[] args) {
         Coordinate cor1 = new Coordinate(0,5);
         Coordinate cor2 = new Coordinate(3,7);
-        Coordinate cor3 = new Coordinate(3,11);
-        Coordinate cor4 = new Coordinate(6,10);
+        Coordinate cor3 = new Coordinate(7,2);
+        Coordinate cor4 = new Coordinate(8,2);
         Coordinate cor5 = new Coordinate(6,11);
         Coordinate cor6 = new Coordinate("6,12");
         System.out.println(isLinked(cor3,cor4));

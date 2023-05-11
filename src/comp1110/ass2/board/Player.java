@@ -1,10 +1,8 @@
 package comp1110.ass2.board;
 
 import comp1110.ass2.BlueLagoon;
-import gittest.C;
 
 import static comp1110.ass2.BlueLagoon.calculateScores;
-import static comp1110.ass2.board.Coordinate.corFromString;
 import static comp1110.ass2.board.Coordinate.isLinked;
 
 import java.util.*;
@@ -182,30 +180,32 @@ public class Player {
     /**
      * exact the coordinates that are chained with the first entry of the given list
      * @param given the list given
+     * @param chained the list for reference ( returned list)
      * @return a list of chained coordinates chained with the first entry of the given list
      */
 
-    public static List<Coordinate> extractChain (List<Coordinate> given) {
-        List<Coordinate> chained = new ArrayList<>();
-        Coordinate first = given.get(0);
-        chained.add(first);
-        given.remove(first);
-        if (given.size()!= 0 ){
-        for (int i = 0; i < given.size(); i++) {
-            Coordinate test = given.get(i);
-            if (isLinked(first,test)){
-                chained.add(test);
-            for (int j = 1; j < chained.size(); j++){
-                // since chained[0] is the first entry in given
-                // start from chained[1]
-                Coordinate otherTest = chained.get(j);
-                if (isLinked(test,otherTest)){
-                    chained.add(test);
-                }
-            }}else{break;}
-        }}
-        return chained;
+    public static List<Coordinate> extractChain (List<Coordinate> given, List<Coordinate> chained) {
+        ArrayList<Coordinate> copied = new ArrayList<>(given);
+        if (chained.size()==0){
+            Coordinate toDetermined = given.get(0);
+            given.remove(toDetermined);
+            copied.remove(toDetermined);
+            chained.add(toDetermined);
+        }
+        if (given.size()==0){
+            return chained;
+        }
+        Coordinate fromCopied = copied.get(0);
+        if (isChained(fromCopied,chained)){
+            chained.add(fromCopied);
+            given.remove(fromCopied);
+        }
+        copied.remove(fromCopied);
+        return extractChain(copied,chained);
     }
+
+
+
 
     /**
      * a method to get the chained settlers and villages
@@ -217,14 +217,16 @@ public class Player {
      */
 
     public static List<List<Coordinate>> getChainedOccupier (List<List<Coordinate>> accumulated, List<Coordinate> all){
+        //System.out.println("Before execution, all is " + all);
         if (all.size()==0){
             return accumulated;
         }
-        List<Coordinate> extracted = extractChain(all);
+        List<Coordinate> extracted = extractChain(all,new ArrayList<>());
+        //System.out.println("extracted is "+extracted);
         all.removeAll(extracted);
+        System.out.println("all is "+all);
         accumulated.add(extracted);
-        //System.out.println("accumulated is " + accumulated);
-        //System.out.println("all is " + all);
+        System.out.println("accumulated is " + accumulated);
         return getChainedOccupier(accumulated,all);
     }
 

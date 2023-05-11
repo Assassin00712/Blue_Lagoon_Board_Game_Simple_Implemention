@@ -1907,8 +1907,8 @@ public class BlueLagoon {
 
 
 
-        System.out.println(stateString);
-        System.out.println(endPhaseString);
+        //System.out.println(stateString);
+        //System.out.println(endPhaseString);
 
         return endPhaseString.strip(); // FIXME Task 12
     }
@@ -2005,6 +2005,7 @@ public class BlueLagoon {
         /**
          * below is the first attempt AI, works fine when the game is about to end
          * maybe when half of the villages and settlers are placed
+         * it is really slow
          */
         // the first attempt was in depth 1, that is,
         // the AI applies the move where it can score the most in one turn
