@@ -66,7 +66,7 @@ public class Coordinate implements Comparable<Coordinate>{
         return (bound >= cor.getRow()) && (bound >= cor.getCol());
     }
 
-    /** not fixed yet
+    /**
      * test if two Coordinates are linked
      * @param cor1 the coordinate a play attempted to occupy
      * @param cor2 the coordinate to compare, taken from the occupied coordinates of the player
