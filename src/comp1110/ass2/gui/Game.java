@@ -19,6 +19,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class Game extends Application {
     private static final int WINDOW_HEIGHT = 700;
 
     private final Group controls = new Group();
+    private final Group disposableDrawing = new Group();
 
     // This is to indicate what the player can currently do.
     private Label stateText;
@@ -111,7 +113,7 @@ public class Game extends Application {
     }
 
     // Draw a triangle with text on it
-    public void drawTriangleText(double x, double y, String text, Paint paint){
+    public Group drawTriangleText(double x, double y, String text, Paint paint){
         Triangle triangle = new Triangle(x,y,35);
         triangle.setFill(paint);
         triangle.setStroke(Color.BLACK);
@@ -129,8 +131,10 @@ public class Game extends Application {
         textString.setX(x - textWidth / 2);
         textString.setY(y + textHeight / 2);
 
+        Group group = new Group(triangle, textString);
 
-        root.getChildren().addAll(triangle, textString);
+
+        return group;
     }
 
     public Group drawDragCircleText(double x, double y, String text, Paint paint){
@@ -263,6 +267,7 @@ public class Game extends Application {
         */
 
 
+        disposableDrawing.getChildren().clear();
         // Set Hexagon color to green if it's an island
         for (Object cord: BlueLagoon.getAllIslandStatementList(stateString)){
             cordToHexagon(new Coordinate((String) cord))
@@ -283,7 +288,8 @@ public class Game extends Application {
                 double[] draw = cordToXY(new Coordinate((String) cord));
                 double x = draw[0];
                 double y = draw[1];
-                drawTriangleText(x, y,"B", Color.YELLOW);
+                Group tmpBamboo = drawTriangleText(x, y,"B", Color.YELLOW);
+                disposableDrawing.getChildren().add(tmpBamboo);
             }
         }
 
@@ -293,7 +299,8 @@ public class Game extends Application {
                 double[] draw = cordToXY(new Coordinate((String) cord));
                 double x = draw[0];
                 double y = draw[1];
-                drawTriangleText(x, y,"C", Color.WHITESMOKE);
+                Group tmpCoconut = drawTriangleText(x, y,"C", Color.WHITESMOKE);
+                disposableDrawing.getChildren().add(tmpCoconut);
             }
         }
 
@@ -303,7 +310,8 @@ public class Game extends Application {
                 double[] draw = cordToXY(new Coordinate((String) cord));
                 double x = draw[0];
                 double y = draw[1];
-                drawTriangleText(x, y,"W", Color.DARKBLUE);
+                Group tmpWater = drawTriangleText(x, y,"W", Color.DARKBLUE);
+                disposableDrawing.getChildren().add(tmpWater);
             }
         }
 
@@ -313,7 +321,8 @@ public class Game extends Application {
                 double[] draw = cordToXY(new Coordinate((String) cord));
                 double x = draw[0];
                 double y = draw[1];
-                drawTriangleText(x, y,"P", Color.LAWNGREEN);
+                Group tmpPreciousStone = drawTriangleText(x, y,"P", Color.LAWNGREEN);
+                disposableDrawing.getChildren().add(tmpPreciousStone);
             }
         }
 
@@ -323,7 +332,8 @@ public class Game extends Application {
                 double[] draw = cordToXY(new Coordinate((String) cord));
                 double x = draw[0];
                 double y = draw[1];
-                drawTriangleText(x, y,"S", Color.BROWN);
+                Group tmpStatuette = drawTriangleText(x, y,"S", Color.BROWN);
+                disposableDrawing.getChildren().add(tmpStatuette);
             }
         }
 
@@ -342,7 +352,14 @@ public class Game extends Application {
                     double[] draw = cordToXY(new Coordinate((String) c));
                     double x = draw[0];
                     double y = draw[1];
-                    drawTriangleText(x, y,"Se" + playerNumber, Color.DARKCYAN);
+                    Group tmpS = new Group();
+                    if (playerNumber == 0) {
+                        tmpS = drawDragCircleText(x, y, "P0S" , Color.PURPLE);
+                    } else if (playerNumber == 1) {
+                        tmpS = drawDragCircleText(x, y, "P1S" , Color.RED);
+                    }
+                    setDragOff(tmpS);
+                    disposableDrawing.getChildren().addAll(tmpS);
                 }
 
                 // If playerState==0, draw a village
@@ -350,12 +367,18 @@ public class Game extends Application {
                     double[] draw = cordToXY(new Coordinate((String) c));
                     double x = draw[0];
                     double y = draw[1];
-                    drawTriangleText(x, y,"Vi" + playerNumber, Color.DARKORANGE);
+                    Group tmpT = new Group();
+                    if (playerNumber == 0) {
+                        tmpT = drawDragCircleText(x, y, "P0T" , Color.PURPLE);
+                    } else if (playerNumber == 1) {
+                        tmpT = drawDragCircleText(x, y, "P1T" , Color.RED);
+                    }
+                    setDragOff(tmpT);
+                    disposableDrawing.getChildren().addAll(tmpT);
                 }
 
             }
         }
-
 
 
 
@@ -500,11 +523,12 @@ public class Game extends Application {
         // Set state text
         stateText = new Label("  " + text + "  ");
         stateText.setTextFill(Color.WHITE);
+        stateText.setFont(new Font(40));
         stateText.setStyle("-fx-background-color: black;");
         // To set the text at the exact middle of the circle
         double textWidth = stateText.getBoundsInLocal().getWidth();
         double textHeight = stateText.getBoundsInLocal().getHeight();
-        stateText.setLayoutX(800 - textWidth / 2);
+        stateText.setLayoutX(700 - textWidth / 2);
         stateText.setLayoutY(200 + textHeight / 2);
         root.getChildren().addAll(stateText);
 
@@ -531,6 +555,7 @@ public class Game extends Application {
         group.setOnMouseReleased(e -> {
             group.setLayoutX(initialLayoutX);
             group.setLayoutY(initialLayoutY);
+
         });
     }
 
@@ -547,29 +572,87 @@ public class Game extends Application {
      * Determine whose turn it is now based on stateString.
      */
     private void takeTurns(){
-        if (BlueLagoon.isStateStringWellFormed(stateString)){
+        if (stateString != null && BlueLagoon.isStateStringWellFormed(stateString)){
             String playerTurn = BlueLagoon.getCurrentPlayerNumber(stateString);
             if (playerTurn.equals("0")){
+                stateText.setText("Player 0's turn");
+                // Set p0S to be Draggable
                 setDragOn(p0S);
+                // Try to apply the move when mouse released
+                p0S.setOnMouseReleased(e -> {
+                    Coordinate cord = xYToCord(e.getSceneX(),e.getSceneY());
+                    String move = "S " + cord.toString();
+                    if (BlueLagoon.isMoveValid(stateString, move)){
+                        stateString = BlueLagoon.applyMove(stateString, move);
+                        update();
+                    }
+                    p0S.setLayoutX(0);
+                    p0S.setLayoutY(0);
+                });
+
+                // Set p0T to be Draggable
                 setDragOn(p0T);
+                // Try to apply the move when mouse released
+                p0T.setOnMouseReleased(e -> {
+                    Coordinate cord = xYToCord(p0T.getLayoutX(),p0T.getLayoutY());
+                    String move = "T " + cord.toString();
+                    if (BlueLagoon.isMoveValid(stateString, move)){
+                        stateString = BlueLagoon.applyMove(stateString, move);
+                        update();
+                    }
+                    p0T.setLayoutX(0);
+                    p0T.setLayoutY(0);
+                });
                 setDragOff(p1S);
                 setDragOff(p1T);
+
             } else if (playerTurn.equals("1")) {
-                if (playerTurn.equals("0")){
-                    setDragOff(p0S);
-                    setDragOff(p0T);
-                    setDragOn(p1S);
-                    setDragOn(p1T);
-                }
+                stateText.setText("Player 1's turn");
+                setDragOff(p0S);
+                setDragOff(p0T);
+                // Set p1S to be Draggable
+                setDragOn(p1S);
+                // Try to apply the move when mouse released
+                p1S.setOnMouseReleased(e -> {
+                    Coordinate cord = xYToCord(e.getSceneX(),e.getSceneY());
+                    String move = "S " + cord.toString();
+                    if (BlueLagoon.isMoveValid(stateString, move)){
+                        stateString = BlueLagoon.applyMove(stateString, move);
+                        update();
+                    }
+                    p1S.setLayoutX(0);
+                    p1S.setLayoutY(0);
+                });
+
+                // Set p1T to be Draggable
+                setDragOn(p1T);
+                // Try to apply the move when mouse released
+                p1T.setOnMouseReleased(e -> {
+                    Coordinate cord = xYToCord(e.getSceneX(),e.getSceneY());
+                    String move = "T " + cord.toString();
+                    if (BlueLagoon.isMoveValid(stateString, move)){
+                        stateString = BlueLagoon.applyMove(stateString, move);
+                        update();
+                    }
+                    p1T.setLayoutX(0);
+                    p1T.setLayoutY(0);
+                });
+
             }
         }
 
     }
 
     private void update(){
-        if (BlueLagoon.isStateStringWellFormed(stateString)){
+        disposableDrawing.toFront();
+        if (stateString != null && !BlueLagoon.isPhaseOver(stateString)){
             takeTurns();
             displayState(stateString);
+            disposableDrawing.toFront();
+        } else if (BlueLagoon.isPhaseOver(stateString)) {
+            stateString = BlueLagoon.endPhase(stateString);
+            displayState(stateString);
+            disposableDrawing.toFront();
         }
 
     }
@@ -580,6 +663,8 @@ public class Game extends Application {
         Scene scene = new Scene(this.root, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         root.getChildren().add(controls);
+        root.getChildren().addAll(disposableDrawing);
+
         makeControls();
         drawPlayer();
         setStateText("Game Start");
