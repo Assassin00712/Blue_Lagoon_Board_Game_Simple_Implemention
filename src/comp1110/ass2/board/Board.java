@@ -8,6 +8,7 @@ import java.util.List;
 
 
 public class Board {
+
     // The width of the board (left to right)
     public final static int BOARD_WIDTH = 13;
     // The height of the board (top to bottom)

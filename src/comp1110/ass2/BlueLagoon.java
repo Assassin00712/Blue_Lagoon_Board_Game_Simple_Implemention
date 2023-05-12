@@ -49,6 +49,13 @@ public class BlueLagoon {
         return " " + s1[0];
     }
 
+    public static int getBoardHeight(String stateString){
+        String ArrangemnetStatement = getArrangementStatement(stateString);
+        String[] Split = ArrangemnetStatement.split(" ");
+
+        return Integer.parseInt(Split[2]);
+    }
+
     //Return Current State Statement
     public static String getCurrentStateStatement(String stateString){
         String[] s1 = stateString.split(";");
@@ -659,7 +666,7 @@ public class BlueLagoon {
 
         //Split player statement according to the number of players
         String playerStatement = "";
-        for (int a = 1; a <= Integer.parseInt(gameArrangementStatement.substring(6, 7)); a++) {
+        for (int a = 1; a <= Integer.parseInt(gameArrangementStatement.substring(gameArrangementStatement.length()-1)); a++) {
             playerStatement = playerStatement + s1[islandLength + 3 + a] + ";";
         }
 
@@ -1934,9 +1941,7 @@ public class BlueLagoon {
 
         String applyMoveString = "";
         applyMoveString += getArrangementStatement(stateString).strip() +";";
-
-
-
+        
         // After all moves, if the phase is over, end the phase
         if (isPhaseOver(stateString)){
            stateString = endPhase(stateString);
