@@ -517,8 +517,8 @@ public class Game extends Application {
 
         p0S = drawDragCircleText(800,400,"P0S",Color.PURPLE);
         p0T = drawDragCircleText(850,400,"P0T",Color.PURPLE);
-        p1S = drawDragCircleText(800,450,"P1S",Color.RED);
-        p1T = drawDragCircleText(850,450,"P1T",Color.RED);
+        p1S = drawDragCircleText(800,460,"P1S",Color.RED);
+        p1T = drawDragCircleText(850,460,"P1T",Color.RED);
         root.getChildren().addAll(p0S, p0T, p1S, p1T);
     }
 
