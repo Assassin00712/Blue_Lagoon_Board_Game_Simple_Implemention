@@ -2032,8 +2032,6 @@ public class BlueLagoon {
         String placePiece2 = placePiece(placePiece1,"S 6,6");
         System.out.println(placePiece2);
         System.out.println(isStateStringWellFormed(placePiece2));
-
-
     }
 
 }
