@@ -42,20 +42,18 @@ public class BlueLagoon {
      * @return Different statements eg: Game Arrangement Statement and so on
      * **/
 
-    public static List<List<Integer>> getAllPlayersSTnumber(String stateString){
-        List<List<Integer>> aim = new ArrayList<>();
+    public static int[][] getAllPlayersSTNumber(String stateString){
+        int[][] aim = new int[Integer.parseInt(getPlayersNum(stateString))][2];
         List<String> Players = Player.extractPlayers(stateString);
-        List<Integer> numbers1 = new ArrayList<>();
         String NumberofPlayers = getPlayersNum(stateString);
         for (int i=0;i<Integer.parseInt(NumberofPlayers);i++){
+            int[] numbers1 =new int[2];
             String PlayerStatement = " " + Players.get(i);
             int NumberofSettlers = Integer.parseInt(Player.numberOfSettlersandVillages(PlayerStatement).get(0));
             int NumberofVillages = Integer.parseInt(Player.numberOfSettlersandVillages(PlayerStatement).get(1));
-            numbers1.add(NumberofSettlers);
-            numbers1.add(NumberofVillages);
-            List<Integer> numbers = List.copyOf(numbers1);
-            aim.add(numbers);
-            numbers1.clear();
+            numbers1[0] = (NumberofSettlers);
+            numbers1[1] = (NumberofVillages);
+            aim[i] = numbers1;
         }
         return aim;
     }
@@ -2040,8 +2038,7 @@ public class BlueLagoon {
         System.out.println(placePiece1);
         System.out.println(isStateStringWellFormed(placePiece1));
         String placePiece2 = placePiece(placePiece1,"S 6,6");
-        System.out.println(placePiece2);
-        System.out.println(isStateStringWellFormed(placePiece2));
+        System.out.println(Arrays.toString(getAllPlayersSTNumber(placePiece1)[0]));
         System.out.println(getCoconutList(placePiece1));
 
 

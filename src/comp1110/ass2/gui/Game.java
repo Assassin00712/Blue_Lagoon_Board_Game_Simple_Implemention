@@ -43,6 +43,12 @@ public class Game extends Application {
     private Group p0T;
     private Group p1S;
     private Group p1T;
+    // Player's remaining settlers and villages count
+    private int p0SCount;
+    private int p0TCount;
+    private int p1SCount;
+    private int P1TCount;
+
     // Player's score
     private Label player0ScoreText = new Label();
     private Label player1ScoreText = new Label();
@@ -515,10 +521,10 @@ public class Game extends Application {
      */
     private void drawPlayer(){
 
-        p0S = drawDragCircleText(800,400,"P0S",Color.PURPLE);
-        p0T = drawDragCircleText(850,400,"P0T",Color.PURPLE);
-        p1S = drawDragCircleText(800,460,"P1S",Color.RED);
-        p1T = drawDragCircleText(850,460,"P1T",Color.RED);
+        p0S = drawDragCircleText(700,400,"P0S",Color.PURPLE);
+        p0T = drawDragCircleText(780,400,"P0T",Color.PURPLE);
+        p1S = drawDragCircleText(700,460,"P1S",Color.RED);
+        p1T = drawDragCircleText(780,460,"P1T",Color.RED);
         root.getChildren().addAll(p0S, p0T, p1S, p1T);
     }
 
