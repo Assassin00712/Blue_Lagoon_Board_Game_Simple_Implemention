@@ -47,7 +47,11 @@ public class Game extends Application {
     private int p0SCount;
     private int p0TCount;
     private int p1SCount;
-    private int P1TCount;
+    private int p1TCount;
+    private Text p0SText = new Text("x" + p0SCount);
+    private Text p0TText = new Text("x" + p0TCount);
+    private Text p1SText = new Text("x" + p1SCount);
+    private Text p1TText = new Text("x" + p1TCount);
 
     // Player's score
     private Label player0ScoreText = new Label();
@@ -525,7 +529,18 @@ public class Game extends Application {
         p0T = drawDragCircleText(780,400,"P0T",Color.PURPLE);
         p1S = drawDragCircleText(700,460,"P1S",Color.RED);
         p1T = drawDragCircleText(780,460,"P1T",Color.RED);
+
+        // Set remaining count
+        p0SText.setLayoutX(720);
+        p0SText.setLayoutY(420);
+        p0TText.setLayoutX(800);
+        p0TText.setLayoutY(420);
+        p1SText.setLayoutX(720);
+        p1SText.setLayoutY(480);
+        p1TText.setLayoutX(800);
+        p1TText.setLayoutY(480);
         root.getChildren().addAll(p0S, p0T, p1S, p1T);
+        root.getChildren().addAll(p0SText, p0TText, p1SText, p1TText);
     }
 
     /**
@@ -702,6 +717,14 @@ public class Game extends Application {
                 });
 
             }
+            p0SCount = BlueLagoon.getAllPlayersSTNumber(stateString)[0][0];
+            p0TCount = BlueLagoon.getAllPlayersSTNumber(stateString)[0][1];
+            p1SCount = BlueLagoon.getAllPlayersSTNumber(stateString)[1][0];
+            p1TCount = BlueLagoon.getAllPlayersSTNumber(stateString)[1][1];
+            p0SText.setText("x" + p0SCount);
+            p0TText.setText("x" + p0TCount);
+            p1SText.setText("x" + p1SCount);
+            p1TText.setText("x" + p1TCount);
         }
 
     }
