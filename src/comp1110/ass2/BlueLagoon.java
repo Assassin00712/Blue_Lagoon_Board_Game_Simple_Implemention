@@ -53,7 +53,6 @@ public class BlueLagoon {
         String NumberofPlayers = getPlayersNum(stateString);
         for (int i=0;i<Integer.parseInt(NumberofPlayers);i++){
             String PlayerStatement = " " + Players.get(i);
-            System.out.println(PlayerStatement);
             int NumberofSettlers = Integer.parseInt(Player.numberOfSettlersandVillages(PlayerStatement).get(0));
             int NumberofVillages = Integer.parseInt(Player.numberOfSettlersandVillages(PlayerStatement).get(1));
             numbers1.add(NumberofSettlers);
