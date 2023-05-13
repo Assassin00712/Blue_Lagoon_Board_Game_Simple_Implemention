@@ -42,11 +42,33 @@ public class BlueLagoon {
      * @return Different statements eg: Game Arrangement Statement and so on
      * **/
 
+    public static int[][] getAllPlayersSTNumber(String stateString){
+        int[][] aim = new int[Integer.parseInt(getPlayersNum(stateString))][2];
+        List<String> Players = Player.extractPlayers(stateString);
+        String NumberofPlayers = getPlayersNum(stateString);
+        for (int i=0;i<Integer.parseInt(NumberofPlayers);i++){
+            int[] numbers1 =new int[2];
+            String PlayerStatement = " " + Players.get(i);
+            int NumberofSettlers = Integer.parseInt(Player.numberOfSettlersandVillages(PlayerStatement).get(0));
+            int NumberofVillages = Integer.parseInt(Player.numberOfSettlersandVillages(PlayerStatement).get(1));
+            numbers1[0] = (NumberofSettlers);
+            numbers1[1] = (NumberofVillages);
+            aim[i] = numbers1;
+        }
+        return aim;
+    }
 
     // Return  Game Arrangement Statement
     public static String getArrangementStatement(String stateString){
         String[] s1 = stateString.split(";");
         return " " + s1[0];
+    }
+
+    public static int getBoardHeight(String stateString){
+        String ArrangemnetStatement = getArrangementStatement(stateString);
+        String[] Split = ArrangemnetStatement.split(" ");
+
+        return Integer.parseInt(Split[2]);
     }
 
     //Return Current State Statement
@@ -305,14 +327,10 @@ public class BlueLagoon {
         }
 
       public static String getPlayersNum(String stateString){
-        String[] PlayerStatement = getPlayerStatement(stateString).split(" ");
-        int Num = 0;
-        for (String containers:PlayerStatement) {
-            if (containers.equals("p")) {
-                Num=Num+1;
-            }
-        }
-        return String.valueOf(Num);
+        String ArrageStatement = getArrangementStatement(stateString);
+        String[] Split = ArrageStatement.split(" ");
+        return Split[Split.length-1];
+
       }
 
 
@@ -659,7 +677,7 @@ public class BlueLagoon {
 
         //Split player statement according to the number of players
         String playerStatement = "";
-        for (int a = 1; a <= Integer.parseInt(gameArrangementStatement.substring(6, 7)); a++) {
+        for (int a = 1; a <= Integer.parseInt(gameArrangementStatement.substring(gameArrangementStatement.length()-1)); a++) {
             playerStatement = playerStatement + s1[islandLength + 3 + a] + ";";
         }
 
@@ -1860,10 +1878,6 @@ public class BlueLagoon {
         }
 
 
-
-        //System.out.println(stateString);
-        //System.out.println(endPhaseString);
-
         return endPhaseString.strip(); // FIXME Task 12
     }
 
@@ -1907,6 +1921,7 @@ public class BlueLagoon {
 
         String applyMoveString = "";
 
+
         applyMoveString += getArrangementStatement(stateString).strip() +";";
         if (getCurrentStateStatement(stateString).contains("1")){
             if(isPhaseOver(stateString) && getCurrentStateStatement(stateString).contains("S")){
@@ -1932,40 +1947,25 @@ public class BlueLagoon {
         System.out.println(isPhaseOver(applyMoveString));
 
          */
-        System.out.println(stateString);
-        System.out.println(moveString);
         stateString = placePiece(stateString, moveString);
-        System.out.println(stateString);
+
 
         String applyMoveString = "";
         applyMoveString += getArrangementStatement(stateString).strip() +";";
-
-        System.out.println(isStateStringWellFormed(stateString));
-
+        
         // After all moves, if the phase is over, end the phase
-       if (isPhaseOver(stateString) && getCurrentStateStatement(stateString).contains("S")) {
-           System.out.println("1");
+        if (isPhaseOver(stateString)){
            stateString = endPhase(stateString);
-           applyMoveString += getCurrentStateStatement(stateString) + ";";
-
-       } else if (isPhaseOver(stateString)){
-           System.out.println("2");
-           stateString = endPhase(stateString);
-           if (getCurrentStateStatement(stateString).contains("1")){
-               applyMoveString += getCurrentStateStatement(stateString).replace('1','0') + ";";
-           } else if ( getCurrentStateStatement(stateString).contains("0")) {
-               applyMoveString += getCurrentStateStatement(stateString).replace('0','1') + ";";
-           }
-
-       } else {
-           if (getCurrentStateStatement(stateString).contains("1")){
-               applyMoveString += getCurrentStateStatement(stateString).replace('1','0') + ";";
-           } else if ( getCurrentStateStatement(stateString).contains("0")) {
-               applyMoveString += getCurrentStateStatement(stateString).replace('0','1') + ";";
-           }
        }
 
+       // Pass the turn to the next player
+        if (getCurrentStateStatement(stateString).contains("1")){
+           applyMoveString += getCurrentStateStatement(stateString).replace('1','0') + ";";
+       } else if ( getCurrentStateStatement(stateString).contains("0")) {
+           applyMoveString += getCurrentStateStatement(stateString).replace('0','1') + ";";
+       }
 
+        // The else statement should be the same
         applyMoveString += getIslandStatement(stateString);
         applyMoveString += getStoneStatement(stateString) + ";";
         applyMoveString += getUnclaimedResourcesandStatuettesStatement(stateString) + ";";
@@ -1973,6 +1973,14 @@ public class BlueLagoon {
 
         applyMoveString = applyMoveString.strip();
 
+        // Sometimes the next player don't have valid move, so the game should end and not pass to the next palyer.
+        if(generateAllValidMoves(applyMoveString).isEmpty()){
+            if (applyMoveString.contains(" c 0 ")){
+                applyMoveString = applyMoveString.replaceAll(" c 0 ", " c 1 ");
+            } else if (applyMoveString.contains(" c 1 ")) {
+                applyMoveString = applyMoveString.replaceAll(" c 1 ", " c 0 ");
+            }
+        }
 
 
         return applyMoveString; // FIXME Task 13
@@ -2025,13 +2033,15 @@ public class BlueLagoon {
     public static void main(String[] args) {
         //String stateString = "a 13 2; c 0 E; i 6 0,0 0,1 0,2 0,3 0,4 0,5 0,6 0,7 0,8 0,9 0,10 0,11 1,0 1,12 2,0 2,11 3,0 3,12 4,0 4,11 5,0 5,12 6,0 6,11 7,0 7,12 8,0 8,11 9,0 9,12 10,0 10,11 11,0 11,12 12,0 12,1 12,2 12,3 12,4 12,5 12,6 12,7 12,8 12,9 12,10 12,11; i 6 2,4 2,5 2,6 2,7; i 9 4,4 4,5 4,6 4,7; i 9 6,5 6,6 7,5 7,7 8,5 8,6; i 12 2,2 3,2 3,3 4,2 5,2 5,3 6,2 7,2 7,3; i 12 2,9 3,9 3,10 4,9 5,9 5,10 6,9 7,9 7,10; i 12 9,2 9,10 10,2 10,3 10,4 10,5 10,6 10,7 10,8 10,9; s 0,3 0,8 1,0 1,12 2,2 2,4 2,7 2,9 4,2 4,5 4,6 4,9 5,0 5,12 6,2 6,5 6,6 6,9 8,0 8,5 8,6 8,11 9,2 9,10 10,3 10,5 10,6 10,8 11,0 11,12 12,4 12,7; r C 1,1 B 5,2 W P 1,4 S; p 0 0 0 0 0 0 0 S T; p 1 42 1 2 3 4 5 S 5,6 8,7 T 1,2;";
         //String sta2 = "a 13 2; c 0 E; i 6 0,0 0,1 0,2 0,3 1,0 1,1 1,2 1,3 1,4 2,0 2,1; i 6 0,5 0,6 0,7 1,6 1,7 1,8 2,6 2,7 2,8 3,7 3,8; i 6 7,12 8,11 9,11 9,12 10,10 10,11 11,10 11,11 11,12 12,10 12,11; i 8 0,9 0,10 0,11 1,10 1,11 1,12 2,10 2,11 3,10 3,11 3,12 4,10 4,11 5,11 5,12; i 8 4,0 5,0 5,1 6,0 6,1 7,0 7,1 7,2 8,0 8,1 8,2 9,0 9,1 9,2; i 8 10,3 10,4 11,0 11,1 11,2 11,3 11,4 11,5 12,0 12,1 12,2 12,3 12,4 12,5; i 10 3,3 3,4 3,5 4,2 4,3 4,4 4,5 5,3 5,4 5,5 5,6 6,3 6,4 6,5 6,6 7,4 7,5 7,6 8,4 8,5; i 10 5,8 5,9 6,8 6,9 7,8 7,9 7,10 8,7 8,8 8,9 9,7 9,8 9,9 10,6 10,7 10,8 11,7 11,8 12,7 12,8; s 0,0 0,5 0,9 1,4 1,8 1,12 2,1 3,5 3,7 3,10 3,12 4,0 4,2 5,9 5,11 6,3 6,6 7,0 7,8 7,12 8,2 8,5 9,0 9,9 10,3 10,6 10,10 11,0 11,5 12,2 12,8 12,11; r C 1,8 3,12 7,12 12,8 12,11 B 0,9 3,7 3,10 9,0 W 1,12 4,0 4,2 10,6 12,2 P 0,0 5,9 9,9 S 0,5 6,3 7,0 7,8 8,5 10,10; p 0 0 1 2 1 0 1 S 0,3 0,4 0,8 1,4 2,5 2,9 3,4 3,5 3,9 3,11 4,10 5,7 5,10 5,11 6,9 7,1 7,3 7,4 7,11 8,2 8,3 8,6 8,7 9,3 9,4 9,6 9,8 10,2 10,3 11,2 T 0,6 0,7 1,6 4,5 8,1; p 1 0 0 0 0 3 1 S 0,10 0,11 1,5 1,9 1,10 2,1 2,3 2,6 3,2 3,6 4,1 4,6 4,9 5,1 5,2 5,5 6,6 6,11 8,10 9,1 9,10 9,11 10,0 10,5 11,4 11,5 11,6 11,7 12,3 12,4 T 5,6 6,1 11,0 11,1 12,5;";
-        String placePiece1 = "a 13 2; c 0 E; i 6 0,0 0,1 0,2 0,3 1,0 1,1 1,2 1,3 1,4 2,0 2,1; i 6 0,5 0,6 0,7 1,6 1,7 1,8 2,6 2,7 2,8 3,7 3,8; i 6 7,12 8,11 9,11 9,12 10,10 10,11 11,10 11,11 11,12 12,10 12,11; i 8 0,9 0,10 0,11 1,10 1,11 1,12 2,10 2,11 3,10 3,11 3,12 4,10 4,11 5,11 5,12; i 8 4,0 5,0 5,1 6,0 6,1 7,0 7,1 7,2 8,0 8,1 8,2 9,0 9,1 9,2; i 8 10,3 10,4 11,0 11,1 11,2 11,3 11,4 11,5 12,0 12,1 12,2 12,3 12,4 12,5; i 10 3,3 3,4 3,5 4,2 4,3 4,4 4,5 5,3 5,4 5,5 5,6 6,3 6,4 6,5 6,6 7,4 7,5 7,6 8,4 8,5; i 10 5,8 5,9 6,8 6,9 7,8 7,9 7,10 8,7 8,8 8,9 9,7 9,8 9,9 10,6 10,7 10,8 11,7 11,8 12,7 12,8; s 0,0 0,5 0,9 1,4 1,8 1,12 2,1 3,5 3,7 3,10 3,12 4,0 4,2 5,9 5,11 6,3 6,6 7,0 7,8 7,12 8,2 8,5 9,0 9,9 10,3 10,6 10,10 11,0 11,5 12,2 12,8 12,11; r C 10,10 11,5 12,8 B 0,0 W 0,9 6,6 10,6 12,2 P 1,12 7,0 9,9 11,0 S 0,5 3,12 5,11 6,3 12,11; p 0 0 2 3 1 1 1 S 0,3 0,6 0,8 1,4 1,5 1,6 1,11 3,1 3,8 3,9 4,0 4,1 4,2 4,7 4,10 5,0 5,10 6,0 6,1 6,7 6,9 7,8 7,9 8,3 8,5 9,4 9,5 11,4 12,4 T 2,11 3,10 3,11 5,9 10,3; p 1 0 1 2 1 1 2 S 0,4 1,8 1,9 2,5 2,6 2,9 2,10 3,2 3,5 3,6 4,6 4,8 5,1 5,2 5,6 5,7 5,8 6,10 6,11 7,3 7,12 8,2 8,11 9,0 9,6 9,7 10,0 12,5 12,6 T 2,1 2,7 3,7 7,2 11,7;";
+        String placePiece1 = "a 13 2; c 0 E; i 6 0,0 0,1 0,2 0,3 1,0 1,1 1,2 1,3 1,4 2,0 2,1; i 6 0,5 0,6 0,7 1,6 1,7 1,8 2,6 2,7 2,8 3,7 3,8; i 6 7,12 8,11 9,11 9,12 10,10 10,11 11,10 11,11 11,12 12,10 12,11; i 8 0,9 0,10 0,11 1,10 1,11 1,12 2,10 2,11 3,10 3,11 3,12 4,10 4,11 5,11 5,12; i 8 4,0 5,0 5,1 6,0 6,1 7,0 7,1 7,2 8,0 8,1 8,2 9,0 9,1 9,2; i 8 10,3 10,4 11,0 11,1 11,2 11,3 11,4 11,5 12,0 12,1 12,2 12,3 12,4 12,5; i 10 3,3 3,4 3,5 4,2 4,3 4,4 4,5 5,3 5,4 5,5 5,6 6,3 6,4 6,5 6,6 7,4 7,5 7,6 8,4 8,5; i 10 5,8 5,9 6,8 6,9 7,8 7,9 7,10 8,7 8,8 8,9 9,7 9,8 9,9 10,6 10,7 10,8 11,7 11,8 12,7 12,8; s 0,0 0,5 0,9 1,4 1,8 1,12 2,1 3,5 3,7 3,10 3,12 4,0 4,2 5,9 5,11 6,3 6,6 7,0 7,8 7,12 8,2 8,5 9,0 9,9 10,3 10,6 10,10 11,0 11,5 12,2 12,8 12,11; r C B 0,0 W 0,9 6,6 10,6 12,2 P 1,12 7,0 9,9 11,0 S 0,5 3,12 5,11 6,3 12,11; p 0 0 2 3 1 1 1 S 0,3 0,6 0,8 1,4 1,5 1,6 1,11 3,1 3,8 3,9 4,0 4,1 4,2 4,7 4,10 5,0 5,10 6,0 6,1 6,7 6,9 7,8 7,9 8,3 8,5 9,4 9,5 11,4 12,4 T 2,11 3,10 3,11 5,9 10,3; p 1 0 1 2 1 1 2 S 0,4 1,8 1,9 2,5 2,6 2,9 2,10 3,2 3,5 3,6 4,6 4,8 5,1 5,2 5,6 5,7 5,8 6,10 6,11 7,3 7,12 8,2 8,11 9,0 9,6 9,7 10,0 12,5 12,6 T 2,1 2,7 3,7 7,2 11,7;";
 
         System.out.println(placePiece1);
         System.out.println(isStateStringWellFormed(placePiece1));
         String placePiece2 = placePiece(placePiece1,"S 6,6");
-        System.out.println(placePiece2);
-        System.out.println(isStateStringWellFormed(placePiece2));
+        System.out.println(Arrays.toString(getAllPlayersSTNumber(placePiece1)[0]));
+        System.out.println(getCoconutList(placePiece1));
+
+
     }
 
 }
