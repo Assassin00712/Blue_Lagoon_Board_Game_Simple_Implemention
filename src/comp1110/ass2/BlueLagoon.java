@@ -43,12 +43,8 @@ public class BlueLagoon {
      * **/
 
     public static List<List<Integer>> getAllPlayersSTnumber(String stateString){
-        List<Player> players = playersFromString(stateString);
-        Player currentPlayer = players.get(Integer.parseInt(getCurrentPlayerNumber(stateString)));
-
         List<List<Integer>> aim = new ArrayList<>();
         List<String> Players = Player.extractPlayers(stateString);
-        String ChangedPlayerStatement = "";
         List<Integer> numbers1 = new ArrayList<>();
         String NumberofPlayers = getPlayersNum(stateString);
         for (int i=0;i<Integer.parseInt(NumberofPlayers);i++){
@@ -60,7 +56,6 @@ public class BlueLagoon {
             List<Integer> numbers = List.copyOf(numbers1);
             aim.add(numbers);
             numbers1.clear();
-            ChangedPlayerStatement = "";
         }
         return aim;
     }
