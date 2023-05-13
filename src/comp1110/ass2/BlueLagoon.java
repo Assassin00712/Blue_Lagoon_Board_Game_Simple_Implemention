@@ -42,6 +42,23 @@ public class BlueLagoon {
      * @return Different statements eg: Game Arrangement Statement and so on
      * **/
 
+    public static List<List<Integer>> getAllPlayersSTnumber(String stateString){
+        List<List<Integer>> aim = new ArrayList<>();
+        List<String> Players = Player.extractPlayers(stateString);
+        List<Integer> numbers1 = new ArrayList<>();
+        String NumberofPlayers = getPlayersNum(stateString);
+        for (int i=0;i<Integer.parseInt(NumberofPlayers);i++){
+            String PlayerStatement = " " + Players.get(i);
+            int NumberofSettlers = Integer.parseInt(Player.numberOfSettlersandVillages(PlayerStatement).get(0));
+            int NumberofVillages = Integer.parseInt(Player.numberOfSettlersandVillages(PlayerStatement).get(1));
+            numbers1.add(NumberofSettlers);
+            numbers1.add(NumberofVillages);
+            List<Integer> numbers = List.copyOf(numbers1);
+            aim.add(numbers);
+            numbers1.clear();
+        }
+        return aim;
+    }
 
     // Return  Game Arrangement Statement
     public static String getArrangementStatement(String stateString){
@@ -312,14 +329,10 @@ public class BlueLagoon {
         }
 
       public static String getPlayersNum(String stateString){
-        String[] PlayerStatement = getPlayerStatement(stateString).split(" ");
-        int Num = 0;
-        for (String containers:PlayerStatement) {
-            if (containers.equals("p")) {
-                Num=Num+1;
-            }
-        }
-        return String.valueOf(Num);
+        String ArrageStatement = getArrangementStatement(stateString);
+        String[] Split = ArrageStatement.split(" ");
+        return Split[Split.length-1];
+
       }
 
 
