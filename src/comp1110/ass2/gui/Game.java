@@ -719,6 +719,7 @@ public class Game extends Application {
         } else if (currentState.contains("S") && BlueLagoon.isPhaseOver(stateString)) {
             player0ScoreText.setText("Player 0's Score: " + player0Score);
             player1ScoreText.setText("Player 1's Score: " + player1Score);
+            System.out.println(stateString);
             stateText.setText("Game Over!");
         }
     }
