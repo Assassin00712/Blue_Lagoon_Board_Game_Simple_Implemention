@@ -221,11 +221,11 @@ public class Game extends Application {
         int row = 0;
         row = (int) ((y / 25 -1 ) / 1.5);
 
-        if (y % 2 == 0){
-            col = (int) ((x / 25) / Math.sqrt(3) -1);
+        if (row % 2 == 0){
+            col = (int) ((x / 25) / Math.sqrt(3) -0.8);
 
         } else {
-            col = (int) ((x / 25) / Math.sqrt(3) -0.5);
+            col = (int) ((x / 25) / Math.sqrt(3) -0.3);
         }
 
 
@@ -671,7 +671,9 @@ public class Game extends Application {
                     System.out.println(BlueLagoon.isMoveValid(stateString, move));
                     if (BlueLagoon.isMoveValid(stateString, move)){
                         stateString = BlueLagoon.applyMove(stateString, move);
-                        update();
+                        if (!BlueLagoon.isPhaseOver(stateString)) {
+                            update();
+                        }
                     }
                     p1S.setLayoutX(0);
                     p1S.setLayoutY(0);
@@ -703,9 +705,9 @@ public class Game extends Application {
      */
     private void checkPhaseChange(){
         String currentState = BlueLagoon.getCurrentStateStatement(stateString);
+        System.out.println(currentState);
 
-        if (currentState.contains("E") && BlueLagoon.isPhaseOver(stateString)){
-            stateString = BlueLagoon.endPhase(stateString);
+        if (currentState.contains("S") && !BlueLagoon.isPhaseOver(stateString)){
             player0Score = BlueLagoon.calculateScores(stateString)[0];
             player1Score = BlueLagoon.calculateScores(stateString)[1];
             player0ScoreText.setText("Player 0's Score: " + player0Score);
@@ -715,6 +717,8 @@ public class Game extends Application {
             phaseLabel.setText("Settlement Phase");
 
         } else if (currentState.contains("S") && BlueLagoon.isPhaseOver(stateString)) {
+            player0ScoreText.setText("Player 0's Score: " + player0Score);
+            player1ScoreText.setText("Player 1's Score: " + player1Score);
             stateText.setText("Game Over!");
         }
     }
