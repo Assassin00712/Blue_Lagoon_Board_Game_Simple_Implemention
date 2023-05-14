@@ -48,9 +48,6 @@ public class Coordinate implements Comparable<Coordinate>{
         return Integer.parseInt(cord[1]);
     }
 
-    public void setCol(int col) {
-        this.col = col;
-    }
 
 //    public int hashCode() {
 //        return Objects.hash(row, col);

@@ -2077,8 +2077,11 @@ public class BlueLagoon {
     public static String generateAIMove(String stateString){
         // first determine which player is playing
         int aiNum = getCurrentPlayer(stateString);
+        int[] occupiers = getUnplacedPieces(aiNum,stateString);
         Set<String> allMoves = generateAllValidMoves(stateString);
+        String bestMove;
         List<String> moves = new ArrayList<>();
+
         /**
          * below is the first attempt AI, works fine when the game is about to end
          * maybe when half of the villages and settlers are placed
@@ -2091,16 +2094,23 @@ public class BlueLagoon {
         // it would like to take the easiest move
         // for each move, score them after all of them are applied
         // take the move with highest score
-        List<Integer> scoresForMove = new ArrayList<>();
+   // if (occupiers[0]+occupiers[1]>=20){
+   // List<Integer> scoresForMove = new ArrayList<>();
+   // for (String move : allMoves) {
+   //     moves.add(move);
+   //     String afterMove = applyMove(stateString, move);
+   //     int score = playerScore(afterMove, aiNum);
+   //     scoresForMove.add(score);
+   // }
+   // int best = Collections.max(scoresForMove);
+   // int index = scoresForMove.indexOf(best);
+   // bestMove = moves.get(index);}
+        Random ran2 = new Random();
+        int digitRand = ran2.nextInt(allMoves.size());
         for (String move : allMoves) {
             moves.add(move);
-            String afterMove = applyMove(stateString, move);
-            int score = playerScore(afterMove, aiNum);
-            scoresForMove.add(score);
         }
-        int best = Collections.max(scoresForMove);
-        int index = scoresForMove.indexOf(best);
-        String bestMove = moves.get(index);
+        bestMove = moves.get(digitRand);
          return bestMove; // FIXME Task 16
     }
 
