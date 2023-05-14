@@ -368,6 +368,80 @@ public class BlueLagoon {
     }
 
     /**
+     * get the number of settlers put
+     * @param gameString the String of current state
+     * @return an array of int, each entry represents number of settlers placed by each player
+     */
+
+    public static int[] getPlacedSettlers (String gameString){
+        List<Player> players = playersFromString(gameString);
+        int[] output = new int[players.size()];
+        for (int i = 0; i < players.size();i++){
+            List<Coordinate> settlers = players.get(i).settlers;
+            output[i] = settlers.size();
+        }
+        return output;
+    }
+    /**
+     * get the number of villages put
+     * @param gameString the String of current state
+     * @return an array of int, each entry represents number of village placed by each player
+     */
+
+    public static int[] getPlacedVillages (String gameString){
+        List<Player> players = playersFromString(gameString);
+        int[] output = new int[players.size()];
+        for (int i = 0; i < players.size();i++){
+            List<Coordinate> villages = players.get(i).villages;
+            output[i] = villages.size();
+        }
+        return output;
+    }
+    /**
+     * get the number of unplaced settlers
+     * @param gameString the String of current state
+     * @return an array of int, each entry represents number of settlers to be placed by each player
+     */
+    public static int[] getUnplacedSettlers (String gameString){
+        int[] placed = getPlacedSettlers(gameString);
+        for (int i : placed ){
+            i = 30 - i;
+        }
+        return placed;
+    }
+
+    /**
+     * get the number of unplaced villages
+     * @param gameString the String of current state
+     * @return an array of int, each entry represents number of villages to be placed by each player
+     */
+    public static int[] getUnplacedVillages (String gameString){
+        int[] placed = getPlacedVillages(gameString);
+        for (int i : placed ){
+            i = 5 - i;
+        }
+        return placed;
+    }
+
+    /**
+     * get the number of unplaced villages
+     * @param playerId the ID of the player we want to get its state
+     *                 (start from 0)
+     * @param gameString the String of current state
+     * @return an array of int, first entry is number of unplaced settlers
+     * second is number of unplaced villages
+     */
+    public static int[] getUnplacedPieces ( int playerId, String gameString){
+        int[] settlers = getUnplacedSettlers(gameString);
+        int[] villages = getUnplacedVillages(gameString);
+        int[] output = new int[2];
+        output[0] = settlers[playerId];
+        output[1] = villages[playerId];
+        return output;
+    }
+
+
+    /**
      * Check if the string encoding of the game state is well-formed.
      * Note that this does not mean checking that the state is valid
      * (represents a state that players could reach in game play),
