@@ -10,9 +10,9 @@ import java.util.List;
 public class Board {
 
     // The width of the board (left to right)
-    public static int BOARD_WIDTH;
+    public static int BOARD_WIDTH = 13;
     // The height of the board (top to bottom)
-    public final static int BOARD_HEIGHT = BOARD_WIDTH - 1;
+    public final static int BOARD_HEIGHT = 13;
 
     // The matrix of spots representing the board
     // For spotMatrix[row][col]:
