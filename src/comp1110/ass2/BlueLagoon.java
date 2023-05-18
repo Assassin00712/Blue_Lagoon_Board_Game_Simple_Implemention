@@ -483,11 +483,11 @@ public class BlueLagoon {
             String[] tempStatement = gameStates[i].split("\\s");
             if (tempStatement [0].equals("i")) {
                 if (!(tempStatement[1].matches("-?\\d+(\\.\\d+)?"))) {
-                    System.out.println("3" + tempStatement[1]); return false;
+                     return false;
                 }
                 for (int j = 2; j < tempStatement.length; j++) {
                     if (!(tempStatement[j].matches("\\d+,\\d+"))) {
-                        System.out.println("f" + tempStatement[j]);
+
                         return false;
                     }
                 }
@@ -495,7 +495,7 @@ public class BlueLagoon {
             } else if(tempStatement [0].equals("s")){
                 for (int j = 1; j < tempStatement.length; j++) {
                     if (!(tempStatement[j].matches("\\d+,\\d+"))) {
-                        System.out.println("f" + tempStatement[j]);
+
                         return false;
                     }
                 }
