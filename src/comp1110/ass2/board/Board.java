@@ -10,7 +10,7 @@ import static comp1110.ass2.BlueLagoon.getArrangementStatement;
 import static comp1110.ass2.BlueLagoon.getBoardHeight;
 
 
-public class Board{
+public class Board {
 
     public int getBoardHeight(String stateString){
         return BlueLagoon.getBoardHeight(stateString);
