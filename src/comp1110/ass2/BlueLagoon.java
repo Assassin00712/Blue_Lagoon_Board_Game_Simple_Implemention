@@ -1258,7 +1258,6 @@ public class BlueLagoon {
                 if(oceanCors.contains(coordinate)){oceanCors.remove(coordinate);}
             }
         }
-        System.out.println(currentST);
         if (currentST.size() == 0){
             for (Coordinate containers:oceanCors){
                 validSet.add("S" + " " + containers.toString());
@@ -1342,7 +1341,7 @@ public class BlueLagoon {
             }
 
 
-            // FIXME Task
+            // FIXME Task 8
     }
 
     /**

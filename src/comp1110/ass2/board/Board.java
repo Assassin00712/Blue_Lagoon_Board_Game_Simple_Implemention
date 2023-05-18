@@ -12,8 +12,12 @@ import static comp1110.ass2.BlueLagoon.getBoardHeight;
 
 public class Board{
 
+    public int getBoardHeight(String stateString){
+        return BlueLagoon.getBoardHeight(stateString);
+    }
+
     // The width of the board (left to right)
-    public static int BOARD_WIDTH = 26;
+    public static int BOARD_WIDTH = 24;
     // The height of the board (top to bottom)
     public static int BOARD_HEIGHT = BOARD_WIDTH - 1;
 
