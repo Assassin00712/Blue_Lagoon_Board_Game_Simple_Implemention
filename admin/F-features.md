@@ -4,7 +4,7 @@ of our project implements the following features:
 *(Remove those that are unimplemented)*
 
  - A simple state viewer (Task 5)
- - A basic playable game with some bugs (Task 14)
+ - A basic playable game (Task 14)
  - A fully playable game (Task 15)
  - Generalised GUI to different sized boards (Task 17)
  - The game is able to start again after pressing restart button
