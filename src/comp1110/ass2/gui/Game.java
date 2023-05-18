@@ -64,6 +64,7 @@ public class Game extends Application {
 
 
     public List<Hexagon> hexagons = new ArrayList<>();
+    private Group hexagonsGroup = new Group();
     public class Hexagon extends Polygon {
         private double x;
         private double y;
@@ -408,7 +409,7 @@ public class Game extends Application {
     private void makeControls() {
         Label gameLabel = new Label("Choose the map of the game:");
         //stateTextField = new TextField();
-       // stateTextField.setPrefWidth(200);
+        // stateTextField.setPrefWidth(200);
         Button defaultButton = new Button("Default GAME");
         Button wheelsButton = new Button("WHEELS GAME");
         Button faceButton = new Button("FACE GAME");
@@ -421,31 +422,31 @@ public class Game extends Application {
         startButton.setVisible(false);
 
         defaultButton.setOnAction(e -> {
-            drawMap();
+            drawMap(13);
             stateString = BlueLagoon.DEFAULT_GAME;
             displayState(stateString);
             startButton.setVisible(true);
         });
         wheelsButton.setOnAction(e -> {
-            drawMap();
+            drawMap(13);
             stateString = BlueLagoon.WHEELS_GAME;
             displayState(stateString);
             startButton.setVisible(true);
         });
         faceButton.setOnAction(e -> {
-            drawMap();
+            drawMap(13);
             stateString = BlueLagoon.FACE_GAME;
             displayState(stateString);
             startButton.setVisible(true);
         });
         sidesButton.setOnAction(e -> {
-            drawMap();
+            drawMap(7);
             stateString = BlueLagoon.SIDES_GAME;
             displayState(stateString);
             startButton.setVisible(true);
         });
         spaceButton.setOnAction(e -> {
-            drawMap();
+            drawMap(23);
             stateString = BlueLagoon.SPACE_INVADERS_GAME;
             displayState(stateString);
             startButton.setVisible(true);
@@ -493,16 +494,17 @@ public class Game extends Application {
         controls.getChildren().add(hb);
     }
 
-    private void drawMap(){
+    private void drawMap(int i){
         this.hexagons.clear();
+        this.hexagonsGroup.getChildren().clear();
         double distX = 25; // the side length of the hexagon
-        // Draw 13 rows of hexagons
-        for (int row = 0; row < 13; row++){
-            // Draw 12(or 13) columns of hexagons
-            for (int col = 0; col < 13; col++){
+        // Draw i rows of hexagons
+        for (int row = 0; row < i; row++){
+            // Draw i-1(or i) columns of hexagons
+            for (int col = 0; col < i; col++){
                 // Every 2 column the hexagon needs to be only 12
                 if (row % 2 == 0){
-                    if (col == 12){break;}
+                    if (col == i-1){break;}
                     Hexagon tempHexagon = new Hexagon(distX * Math.sqrt(3) * (col + 1), distX * (1.5 * row +1), 24);
                     tempHexagon.setFill(Color.LIGHTBLUE);
                     hexagons.add(tempHexagon);
@@ -514,8 +516,9 @@ public class Game extends Application {
             }
         }
         // Add all hexagons to the group
+
         for (Hexagon fillHexagon: hexagons){
-            root.getChildren().add(fillHexagon);
+            hexagonsGroup.getChildren().add(fillHexagon);
         }
 
     }
@@ -779,6 +782,7 @@ public class Game extends Application {
 
         root.getChildren().add(controls);
         root.getChildren().addAll(disposableDrawing);
+        root.getChildren().add(hexagonsGroup);
 
 
         makeControls();
