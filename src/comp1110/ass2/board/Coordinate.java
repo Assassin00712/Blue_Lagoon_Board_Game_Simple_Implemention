@@ -90,12 +90,6 @@ public class Coordinate implements Comparable<Coordinate>{
         }
     }
 
-    /** Return all island coordinates when input a islandstatement **/
-
-
-
-
-
     /**
     Return the coordinates set that adjacent the input coordinate **/
     public static Set<Coordinate> adjacentCord(Coordinate cor,String stateString){

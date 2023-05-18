@@ -2067,7 +2067,7 @@ public class BlueLagoon {
         // Sometimes the next player don't have valid move, so the game should end and not pass to the next palyer.
         if(generateAllValidMoves(applyMoveString).isEmpty()){
             if ((currentState.length() > 4)){
-                applyMoveString = applyMoveString.replaceAll(" c "+);
+//                applyMoveString = applyMoveString.replaceAll(" c "+);
             }
         }
 
