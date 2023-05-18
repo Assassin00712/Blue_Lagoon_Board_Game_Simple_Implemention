@@ -806,12 +806,13 @@ public class Game extends Application {
             // Reset all variables
             stateString = "";
             player0Score = 0;
-            player1Score = 1;
+            player1Score = 0;
             p0SCount = 0;
             p0TCount = 0;
             p1SCount = 0;
             p1TCount = 0;
             stateText.setText("Game Start");
+            phaseLabel.setText("Exploration Phase");
             disposableDrawing.getChildren().clear();
 
             // Show the menu
