@@ -807,6 +807,8 @@ public class Game extends Application {
             stateString = "";
             player0Score = 0;
             player1Score = 0;
+            player0ScoreText.setText("Player 0's Score: " + player0Score);
+            player1ScoreText.setText("Player 1's Score: " + player1Score);
             p0SCount = 0;
             p0TCount = 0;
             p1SCount = 0;
