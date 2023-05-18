@@ -1203,6 +1203,8 @@ public class BlueLagoon {
     public static Set<String> generateAllValidMoves(String stateString) {
         Set<String> validSet = new HashSet<>();
         List<Player> players = playersFromString(stateString);
+        //System.out.println(getCurrentPlayerNumber(stateString));
+        //System.out.println(players);
         Player currentPlayer = players.get(Integer.parseInt(getCurrentPlayerNumber(stateString)));
         List<Coordinate> currentST = combineSettlersVillages(currentPlayer.toStateString());
         List<Coordinate>[] occupiedByPlayers = allSettlersVillages(stateString);
@@ -1258,7 +1260,6 @@ public class BlueLagoon {
                 if(oceanCors.contains(coordinate)){oceanCors.remove(coordinate);}
             }
         }
-        System.out.println(currentST);
         if (currentST.size() == 0){
             for (Coordinate containers:oceanCors){
                 validSet.add("S" + " " + containers.toString());
@@ -2026,8 +2027,6 @@ public class BlueLagoon {
 
          */
         stateString = placePiece(stateString, moveString);
-
-
         String applyMoveString = "";
         applyMoveString += getArrangementStatement(stateString).strip() +";";
         
@@ -2036,25 +2035,13 @@ public class BlueLagoon {
            stateString = endPhase(stateString);
        }
 
-        /*
-        adjust this to multiple players
-         */
        // Pass the turn to the next player\
-        String front;
-        String currentState = getCurrentStateStatement(stateString);
-        if (currentState.length() > 4) {
-            System.out.println(currentState);
-            System.out.println(currentState.charAt(3));
-            int playerNum = Integer.parseInt(String.valueOf(currentState.charAt(3)));
-            int maxPlayer = numberOfPlayers;
-            int nextPlayer;
-            if (playerNum == maxPlayer) {
-                nextPlayer = 0;
-            }
-            nextPlayer = playerNum + 1;
-            front = generateCurrentStateStatement(nextPlayer);
-            applyMoveString += getCurrentStateStatement(stateString).replace(currentState.charAt(3), (char) (nextPlayer + '0')) + ";";
+        if (getCurrentStateStatement(stateString).contains("1")){
+            applyMoveString += getCurrentStateStatement(stateString).replace('1','0') + ";";
+        } else if ( getCurrentStateStatement(stateString).contains("0")) {
+            applyMoveString += getCurrentStateStatement(stateString).replace('0','1') + ";";
         }
+
 
         // The else statement should be the same
         applyMoveString += getIslandStatement(stateString);
@@ -2066,10 +2053,13 @@ public class BlueLagoon {
 
         // Sometimes the next player don't have valid move, so the game should end and not pass to the next palyer.
         if(generateAllValidMoves(applyMoveString).isEmpty()){
-            if ((currentState.length() > 4)){
-                applyMoveString = applyMoveString.replaceAll(" c "+);
+            if (applyMoveString.contains(" c 0 ")){
+                applyMoveString = applyMoveString.replaceAll(" c 0 ", " c 1 ");
+            } else if (applyMoveString.contains(" c 1 ")) {
+                applyMoveString = applyMoveString.replaceAll(" c 1 ", " c 0 ");
             }
         }
+
 
 
         return applyMoveString; // FIXME Task 13
