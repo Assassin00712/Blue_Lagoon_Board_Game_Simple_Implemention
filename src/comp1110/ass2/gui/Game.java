@@ -717,10 +717,10 @@ public class Game extends Application {
                 });
 
             }
-            p0SCount = BlueLagoon.getAllPlayersSTNumber(stateString)[0][0];
-            p0TCount = BlueLagoon.getAllPlayersSTNumber(stateString)[0][1];
-            p1SCount = BlueLagoon.getAllPlayersSTNumber(stateString)[1][0];
-            p1TCount = BlueLagoon.getAllPlayersSTNumber(stateString)[1][1];
+            p0SCount = BlueLagoon.getUnplacedSettlers(stateString)[0];
+            p0TCount = BlueLagoon.getUnplacedVillages(stateString)[0];
+            p1SCount = BlueLagoon.getUnplacedSettlers(stateString)[1];
+            p1TCount = BlueLagoon.getUnplacedVillages(stateString)[1];
             p0SText.setText("x" + p0SCount);
             p0TText.setText("x" + p0TCount);
             p1SText.setText("x" + p1SCount);

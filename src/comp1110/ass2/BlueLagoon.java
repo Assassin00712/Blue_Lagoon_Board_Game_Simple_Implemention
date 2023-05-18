@@ -404,8 +404,8 @@ public class BlueLagoon {
      */
     public static int[] getUnplacedSettlers (String gameString){
         int[] placed = getPlacedSettlers(gameString);
-        for (int i : placed ){
-            i = 30 - i;
+        for (int i=0; i<placed.length; i++){
+            placed[i] = 30 - placed[i];
         }
         return placed;
     }
@@ -417,8 +417,8 @@ public class BlueLagoon {
      */
     public static int[] getUnplacedVillages (String gameString){
         int[] placed = getPlacedVillages(gameString);
-        for (int i : placed ){
-            i = 5 - i;
+        for (int i=0; i<placed.length; i++){
+            placed[i] = 5 - placed[i];
         }
         return placed;
     }
