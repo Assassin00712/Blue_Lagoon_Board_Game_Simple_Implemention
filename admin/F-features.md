@@ -6,8 +6,9 @@ of our project implements the following features:
  - A simple state viewer (Task 5)
  - A basic playable game with some bugs (Task 14)
  - A fully playable game (Task 15)
- - Playable against a computer opponent / AI (Task 16)
- - Generalised GUI to more than two players (Task 17)
  - Generalised GUI to different sized boards (Task 17)
+ - The game is able to start again after pressing restart button
+ - We have total four maps which are able to be played
+ - Players are able to view playing boards before playing
+ - Our game can show how many settlers and villages that a player can place on the board
 
-additional features...
