@@ -10,16 +10,16 @@ import java.util.List;
 public class Board {
 
     // The width of the board (left to right)
-    public final static int BOARD_WIDTH = 13;
+    public static int BOARD_WIDTH;
     // The height of the board (top to bottom)
-    public final static int BOARD_HEIGHT = 13;
+    public final static int BOARD_HEIGHT = BOARD_WIDTH - 1;
 
     // The matrix of spots representing the board
     // For spotMatrix[row][col]:
     //   row corresponds to the row, working top to bottom, and
     //   col corresponds to the column, working left to right.
     // Values default to null where there are no spots
-    public Spot[][] spotMatrix = new Spot[BOARD_HEIGHT][BOARD_WIDTH];
+    public Spot[][] spotMatrix = new Spot[BOARD_WIDTH][BOARD_HEIGHT];
 
 
     // initialize a board by creating an array/list of spots
