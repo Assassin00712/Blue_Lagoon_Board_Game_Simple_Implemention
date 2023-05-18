@@ -7,6 +7,7 @@ of our project implements the following features:
  - A basic playable game (Task 14)
  - A fully playable game (Task 15)
  - Generalised GUI to different sized boards (Task 17)
+ - We draw all the shapes instead of using pictures online
  - The game is able to start again after pressing restart button
  - We have total four maps which are able to be played
  - Players are able to view playing boards before playing
