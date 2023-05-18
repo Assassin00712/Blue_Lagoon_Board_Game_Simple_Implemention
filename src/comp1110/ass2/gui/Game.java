@@ -64,6 +64,8 @@ public class Game extends Application {
     private int player1Score = 0;
 
     private Label phaseLabel = new Label();
+
+    // The stateString
     private String stateString;
 
 
