@@ -7,13 +7,15 @@ import java.util.Arrays;
 import java.util.List;
 
 import static comp1110.ass2.BlueLagoon.getArrangementStatement;
+import static comp1110.ass2.BlueLagoon.getBoardHeight;
 
 
-public class Board {
+public class Board{
+
     // The width of the board (left to right)
-    public static int BOARD_WIDTH = 13;
+    public static int BOARD_WIDTH = 26;
     // The height of the board (top to bottom)
-    public final static int BOARD_HEIGHT = 13;
+    public static int BOARD_HEIGHT = BOARD_WIDTH - 1;
 
 
     // The matrix of spots representing the board
@@ -25,9 +27,9 @@ public class Board {
 
 
     // initialize a board by creating an array/list of spots
-    public void initialize() {
-        for (int row = 0; row < BOARD_HEIGHT; row++) {
-            for (int col = 0; col < BOARD_WIDTH; col++) {
+    public void initialize(String gameString) {
+        for (int row = 0; row < BlueLagoon.getBoardHeight(gameString); row++) {
+            for (int col = 0; col < BlueLagoon.getBoardHeight(gameString); col++) {
                 spotMatrix[row][col] = new Spot();
             }
         }
@@ -42,7 +44,7 @@ public class Board {
 
     public static Board fromStateString(String stateString) {
         Board board = new Board();
-        board.initialize();
+        board.initialize(stateString);
 
         // Set the spot isIsland if it's an island
         for (var cord: BlueLagoon.getAllIslandStatementList(stateString)){
