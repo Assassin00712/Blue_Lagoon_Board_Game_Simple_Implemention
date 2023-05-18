@@ -444,6 +444,7 @@ public class Game extends Application {
             stateString = BlueLagoon.FACE_GAME;
             displayState(stateString);
             startButton.setVisible(true);
+
         });
         sidesButton.setOnAction(e -> {
             drawMap(7);
@@ -458,6 +459,7 @@ public class Game extends Application {
             stateString = BlueLagoon.SPACE_INVADERS_GAME;
             displayState(stateString);
             startButton.setVisible(true);
+            controls.setLayoutY(200);
         });
 
 
@@ -829,7 +831,7 @@ public class Game extends Application {
         scrollPane.setContent(this.root);
         Scene scene = new Scene(scrollPane, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-        controls.setLayoutY(WINDOW_HEIGHT-10);
+
 
         root.getChildren().add(controls);
         root.getChildren().addAll(disposableDrawing);
