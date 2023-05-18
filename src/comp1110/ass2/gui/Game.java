@@ -500,10 +500,13 @@ public class Game extends Application {
         hb.getChildren().addAll(defaultButton, wheelsButton, faceButton, sidesButton,spaceButton, startButton);
         hb.setSpacing(10);
         hb.setLayoutX(50);
-        hb.setLayoutY(MAP_HEIGHT + 50);
+        hb.setLayoutY(WINDOW_HEIGHT - 20);
         controls.getChildren().add(hb);
     }
 
+    /**
+     * Draw the map according to the size.
+     */
     private void drawMap(int i){
         this.hexagons.clear();
         this.hexagonsGroup.getChildren().clear();
@@ -538,19 +541,19 @@ public class Game extends Application {
      */
     private void drawPlayer(){
 
-        p0S = drawDragCircleText(700,400,"P0S",Color.PURPLE);
-        p0T = drawDragCircleText(780,400,"P0T",Color.PURPLE);
-        p1S = drawDragCircleText(700,460,"P1S",Color.RED);
-        p1T = drawDragCircleText(780,460,"P1T",Color.RED);
+        p0S = drawDragCircleText(1000,400,"P0S",Color.PURPLE);
+        p0T = drawDragCircleText(1080,400,"P0T",Color.PURPLE);
+        p1S = drawDragCircleText(1000,460,"P1S",Color.RED);
+        p1T = drawDragCircleText(1080,460,"P1T",Color.RED);
 
         // Set remaining count
-        p0SText.setLayoutX(720);
+        p0SText.setLayoutX(1020);
         p0SText.setLayoutY(420);
-        p0TText.setLayoutX(800);
+        p0TText.setLayoutX(1100);
         p0TText.setLayoutY(420);
-        p1SText.setLayoutX(720);
+        p1SText.setLayoutX(1020);
         p1SText.setLayoutY(480);
-        p1TText.setLayoutX(800);
+        p1TText.setLayoutX(1100);
         p1TText.setLayoutY(480);
         root.getChildren().addAll(p0S, p0T, p1S, p1T);
         root.getChildren().addAll(p0SText, p0TText, p1SText, p1TText);
@@ -568,7 +571,7 @@ public class Game extends Application {
         // To set the text at the exact middle of the circle
         double textWidth = stateText.getBoundsInLocal().getWidth();
         double textHeight = stateText.getBoundsInLocal().getHeight();
-        stateText.setLayoutX(700 - textWidth / 2);
+        stateText.setLayoutX(980 - textWidth / 2);
         stateText.setLayoutY(200 + textHeight / 2);
         root.getChildren().addAll(stateText);
 
@@ -589,7 +592,7 @@ public class Game extends Application {
         // To set the text at the exact middle of the circle
         double textWidth0 = player0ScoreText.getBoundsInLocal().getWidth();
         double textHeight0 = player0ScoreText.getBoundsInLocal().getHeight();
-        player0ScoreText.setLayoutX(900 - textWidth0 / 2);
+        player0ScoreText.setLayoutX(1130 - textWidth0 / 2);
         player0ScoreText.setLayoutY(400 + textHeight0 / 2);
 
         // Set player 1 Label
@@ -597,17 +600,18 @@ public class Game extends Application {
         // To set the text at the exact middle of the circle
         double textWidth1 = player1ScoreText.getBoundsInLocal().getWidth();
         double textHeight1 = player1ScoreText.getBoundsInLocal().getHeight();
-        player1ScoreText.setLayoutX(900 - textWidth1 / 2);
-        player1ScoreText.setLayoutY(450 + textHeight1 / 2);
+        player1ScoreText.setLayoutX(1130 - textWidth1 / 2);
+        player1ScoreText.setLayoutY(460 + textHeight1 / 2);
 
 
 
         phaseLabel.setText("Exploration Phase");
         phaseLabel.setTextFill(Color.BLACK);
+        phaseLabel.setFont(new Font(24));
         // To set the text at the exact middle of the circle
         double textWidthP = phaseLabel.getBoundsInLocal().getWidth();
         double textHeightP = phaseLabel.getBoundsInLocal().getHeight();
-        phaseLabel.setLayoutX(700 - textWidthP / 2);
+        phaseLabel.setLayoutX(980 - textWidthP / 2);
         phaseLabel.setLayoutY(300 + textHeightP / 2);
 
         root.getChildren().addAll(player0ScoreText, player1ScoreText, phaseLabel);
@@ -653,7 +657,8 @@ public class Game extends Application {
      * Determine whose turn it is now based on stateString.
      */
     private void takeTurns(){
-        if (stateString != null && BlueLagoon.isStateStringWellFormed(stateString)){
+        if (isGameStart){
+            if (stateString != null && BlueLagoon.isStateStringWellFormed(stateString)){
             String playerTurn = BlueLagoon.getCurrentPlayerNumber(stateString);
             if (playerTurn.equals("0")){
                 stateText.setText("Player 0's turn");
@@ -739,6 +744,7 @@ public class Game extends Application {
             p1SText.setText("x" + p1SCount);
             p1TText.setText("x" + p1TCount);
         }
+        }
 
     }
 
@@ -789,14 +795,28 @@ public class Game extends Application {
 
     private void restartGame(){
         Button restartButton = new Button("Restart");
+        restartButton.setLayoutX(WINDOW_WIDTH - 20);
+        restartButton.setLayoutY(20);
         restartButton.setOnAction(e -> {
+            isGameStart = false;
+            // Reset all variables
             stateString = "";
             player0Score = 0;
             player1Score = 1;
+            p0SCount = 0;
+            p0TCount = 0;
+            p1SCount = 0;
+            p1TCount = 0;
+            stateText.setText("Game Start");
             disposableDrawing.getChildren().clear();
+
+            // Show the menu
+            setDragOff(p0S);
+            setDragOff(p0T);
+            setDragOff(p1S);
+            setDragOff(p1T);
             makeControls();
-            setStateText("Game Start");
-            takeTurns();
+
             //restartButton.setVisible(false);
         });
         root.getChildren().add(restartButton);
@@ -808,6 +828,8 @@ public class Game extends Application {
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(this.root);
         Scene scene = new Scene(scrollPane, WINDOW_WIDTH, WINDOW_HEIGHT);
+
+        controls.setLayoutY(WINDOW_HEIGHT-10);
 
         root.getChildren().add(controls);
         root.getChildren().addAll(disposableDrawing);
@@ -825,10 +847,15 @@ public class Game extends Application {
 
 
         scene.setOnMouseClicked(event -> {
-            update();
+            System.out.println(isGameStart);
+            if (isGameStart){
+                update();
+            }
         });
         root.setOnMouseClicked(event -> {
-            update();
+            if (isGameStart){
+                update();
+            }
         });
 
 
