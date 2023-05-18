@@ -1,5 +1,6 @@
 package comp1110.ass2.board;
 
+import comp1110.ass2.BlueLagoon;
 import gittest.C;
 
 
@@ -97,12 +98,12 @@ public class Coordinate implements Comparable<Coordinate>{
 
     /**
     Return the coordinates set that adjacent the input coordinate **/
-    public static Set<Coordinate> adjacentCord(Coordinate cor){
+    public static Set<Coordinate> adjacentCord(Coordinate cor,String stateString){
         Set<Coordinate> adjacent = new HashSet<>();
         int x = cor.row;
         int y = cor.col;
-        int boardHeight = Board.BOARD_HEIGHT;
-        int boardWidth = Board.BOARD_WIDTH;
+        int boardHeight = BlueLagoon.getBoardHeight(stateString);
+        int boardWidth = BlueLagoon.getBoardHeight(stateString);
 
         //Normal situation
         if (x % 2 == 0) {

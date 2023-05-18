@@ -32,9 +32,9 @@ public class BlueLagoon {
     public static Board board = new Board();
 
 
-    public BlueLagoon(int numberOfPlayers){
-        this.numberOfPlayers = numberOfPlayers;
-    }
+//    public BlueLagoon(int numberOfPlayers){
+//        this.numberOfPlayers = numberOfPlayers;
+//    }
 
 
     /** Split the StateString into different parts
@@ -43,7 +43,7 @@ public class BlueLagoon {
      * **/
 
     public static int[][] getAllPlayersSTNumber(String stateString){
-        int[][] aim = new int[Integer.parseInt(getPlayersNum(stateString))][2];
+        int[][] aim = new int[Integer.parseInt(getPlayersNum(stateString))][];
         List<String> Players = Player.extractPlayers(stateString);
         String NumberofPlayers = getPlayersNum(stateString);
         for (int i=0;i<Integer.parseInt(NumberofPlayers);i++){
@@ -51,8 +51,8 @@ public class BlueLagoon {
             String PlayerStatement = " " + Players.get(i);
             int NumberofSettlers = Integer.parseInt(Player.numberOfSettlersandVillages(PlayerStatement).get(0));
             int NumberofVillages = Integer.parseInt(Player.numberOfSettlersandVillages(PlayerStatement).get(1));
-            numbers1[0] = (NumberofSettlers);
-            numbers1[1] = (NumberofVillages);
+            numbers1[0] = (30-NumberofSettlers);
+            numbers1[1] = (5-NumberofVillages);
             aim[i] = numbers1;
         }
         return aim;
@@ -404,8 +404,8 @@ public class BlueLagoon {
      */
     public static int[] getUnplacedSettlers (String gameString){
         int[] placed = getPlacedSettlers(gameString);
-        for (int i : placed ){
-            i = 30 - i;
+        for (int i=0; i<placed.length; i++){
+            placed[i] = 30 - placed[i];
         }
         return placed;
     }
@@ -417,8 +417,8 @@ public class BlueLagoon {
      */
     public static int[] getUnplacedVillages (String gameString){
         int[] placed = getPlacedVillages(gameString);
-        for (int i : placed ){
-            i = 5 - i;
+        for (int i=0; i<placed.length; i++){
+            placed[i] = 5 - placed[i];
         }
         return placed;
     }
@@ -713,10 +713,10 @@ public class BlueLagoon {
      *   adjacent to one of the player's pieces.
      * <p>
      * In the Settlement Phase, the move must be:
-     * - Only a settler placed on an unoccupied space adjacent to
-     *   one of the player's pieces.
-     * Importantly, players can now only play on the sea if it is
-     * adjacent to a piece they already own.
+     *      * - Only a settler placed on an unoccupied space adjacent to
+     *      *   one of the player's pieces.
+     *      * Importantly, players can now only play on the sea if it is
+     *      * adjacent to a piece they already own.
      *
      * @param stateString a string representing a game state
      * @param moveString a string representing the current player's move
@@ -1221,9 +1221,9 @@ public class BlueLagoon {
         /** If there are settlers or villages **/
         //Get all cors
         List<Coordinate> allCors = new ArrayList<>();
-        for (int row = 0; row <= Board.BOARD_HEIGHT - 1; row++) {
-            for (int column = 0; column <= Board.BOARD_WIDTH - 1; column++) {
-                if (row % 2 == 0 && column == Board.BOARD_WIDTH - 1){
+        for (int row = 0; row <= getBoardHeight(stateString) - 1; row++) {
+            for (int column = 0; column <= getBoardHeight(stateString) - 1; column++) {
+                if (row % 2 == 0 && column == getBoardHeight(stateString) - 1){
                     continue;
                 }else {
                     Coordinate a = new Coordinate(row,column);
@@ -1272,7 +1272,7 @@ public class BlueLagoon {
 
             //Find out cors adjuent to all settlers and villages
             for (int i=0;i<currentST.size();i++){
-                allAdjuentCors.addAll(Coordinate.adjacentCord(currentST.get(i)));
+                allAdjuentCors.addAll(Coordinate.adjacentCord(currentST.get(i),stateString));
             }
 
             //Remove all coordinates occupied by players, get allAdjuentCors
