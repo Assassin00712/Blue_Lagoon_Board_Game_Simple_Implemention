@@ -9,6 +9,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.*;
@@ -30,13 +31,16 @@ public class Game extends Application {
     private final Group root = new Group();
     private static final int WINDOW_WIDTH = 1200;
     private static final int WINDOW_HEIGHT = 700;
+    private static int MAP_WIDTH = 563;
+    private static int MAP_HEIGHT = 500;
+
 
     private final Group controls = new Group();
     private final Group disposableDrawing = new Group();
 
     // This is to indicate what the player can currently do.
     private Label stateText;
-    private String stateTextForPlayer;
+    private Boolean isGameStart = false;
 
     // Groups of the player's manipulable objects.
     private Group p0S;
@@ -407,6 +411,7 @@ public class Game extends Application {
      * Create a basic selection function to start the game.
      */
     private void makeControls() {
+        controls.getChildren().clear();
         Label gameLabel = new Label("Choose the map of the game:");
         //stateTextField = new TextField();
         // stateTextField.setPrefWidth(200);
@@ -421,6 +426,7 @@ public class Game extends Application {
         startButton.setPrefHeight(40);
         startButton.setVisible(false);
 
+        // Set moves when click on every button
         defaultButton.setOnAction(e -> {
             drawMap(13);
             stateString = BlueLagoon.DEFAULT_GAME;
@@ -447,13 +453,17 @@ public class Game extends Application {
         });
         spaceButton.setOnAction(e -> {
             drawMap(23);
+            MAP_WIDTH = 1000;
+            MAP_HEIGHT = 870;
             stateString = BlueLagoon.SPACE_INVADERS_GAME;
             displayState(stateString);
             startButton.setVisible(true);
         });
 
 
+        // Start the game when click on game start
         startButton.setOnAction(e -> {
+            isGameStart = true;
             defaultButton.setVisible(false);
             defaultButton.setManaged(false);
 
@@ -490,7 +500,7 @@ public class Game extends Application {
         hb.getChildren().addAll(defaultButton, wheelsButton, faceButton, sidesButton,spaceButton, startButton);
         hb.setSpacing(10);
         hb.setLayoutX(50);
-        hb.setLayoutY(WINDOW_HEIGHT - 50);
+        hb.setLayoutY(MAP_HEIGHT + 50);
         controls.getChildren().add(hb);
     }
 
@@ -737,7 +747,6 @@ public class Game extends Application {
      */
     private void checkPhaseChange(){
         String currentState = BlueLagoon.getCurrentStateStatement(stateString);
-        System.out.println(currentState);
 
         if (currentState.contains("S") && !BlueLagoon.isPhaseOver(stateString)){
             player0Score = BlueLagoon.calculateScores(stateString)[0];
@@ -753,6 +762,7 @@ public class Game extends Application {
             player1ScoreText.setText("Player 1's Score: " + player1Score);
             System.out.println(stateString);
             stateText.setText("Game Over!");
+            isGameStart = false;
         }
     }
 
@@ -761,24 +771,43 @@ public class Game extends Application {
      */
     private void update(){
         disposableDrawing.toFront();
-        if (stateString != null && !stateText.getText().equals("Game Over!")) {
-            checkPhaseChange();
-            takeTurns();
-            displayState(stateString);
-            disposableDrawing.toFront();
-        } else if (stateText.getText().equals("Game Over!")) {
-            setDragOff(p0S);
-            setDragOff(p0T);
-            setDragOff(p1S);
-            setDragOff(p1T);
+        if (isGameStart) {
+            if (stateString != null && !stateText.getText().equals("Game Over!")) {
+                checkPhaseChange();
+                takeTurns();
+                displayState(stateString);
+                disposableDrawing.toFront();
+            } else if (stateText.getText().equals("Game Over!")) {
+                setDragOff(p0S);
+                setDragOff(p0T);
+                setDragOff(p1S);
+                setDragOff(p1T);
+            }
         }
 
+    }
+
+    private void restartGame(){
+        Button restartButton = new Button("Restart");
+        restartButton.setOnAction(e -> {
+            stateString = "";
+            player0Score = 0;
+            player1Score = 1;
+            disposableDrawing.getChildren().clear();
+            makeControls();
+            setStateText("Game Start");
+            takeTurns();
+            //restartButton.setVisible(false);
+        });
+        root.getChildren().add(restartButton);
     }
 
 
     @Override
     public void start(Stage stage) throws Exception {
-        Scene scene = new Scene(this.root, WINDOW_WIDTH, WINDOW_HEIGHT);
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(this.root);
+        Scene scene = new Scene(scrollPane, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         root.getChildren().add(controls);
         root.getChildren().addAll(disposableDrawing);
@@ -790,6 +819,7 @@ public class Game extends Application {
         setStateText("Game Start");
         takeTurns();
         setScoreText();
+        restartGame();
 
 
 
