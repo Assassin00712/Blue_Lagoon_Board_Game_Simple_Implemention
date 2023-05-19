@@ -1,4 +1,4 @@
-package comp1110.ass2.gui;
+package gittest;
 
 import comp1110.ass2.BlueLagoon;
 import org.junit.jupiter.api.Assertions;
