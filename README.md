@@ -1,7 +1,7 @@
 # COMP1110 Assignment 2
 
 ## Intruction
-This is one of my teamwork projects during my education in Australia. It's to implement a board game called Blue Lagoon. I upload it for more advice. Here, I want to appreciate my teammates' efforts on this project. The following are some instructions from the course.
+This is one of my teamwork projects during my education in Australia. It's to implement a board game called Blue Lagoon. It's written by Java. I upload it for more advice. Here, I want to appreciate my teammates' efforts on this project. The following are some instructions and how it's been designed and written from the course. 
 
 ## Game Description
 
