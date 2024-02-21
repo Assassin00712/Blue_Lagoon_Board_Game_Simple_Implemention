@@ -1,91 +1,14 @@
 # COMP1110 Assignment 2
 
-## Academic Honesty and Integrity
+## Illustration
+This is one of my teamwork projects during my education in Australia. It's to implement a board game called Blue Lagoon. I upload it for more advice. Here, I want to appreciate my teammates' efforts on this project. The following are some instructions from the course.
 
-Honesty and integrity are of utmost importance. These goals are *not* at odds
-with being resourceful and working collaboratively. You *should* be
-resourceful, you should collaborate within your team, and you should discuss
-the assignment and other aspects of the course with others taking the class.
-However, *you must never misrepresent the work of others as your own*. If you
-have taken ideas from elsewhere or used code sourced from elsewhere, you must
-say so with *utmost clarity*. At each stage of the assignment you will be asked
-to submit a statement of originality, either as a group or as individuals. This
-statement is the place for you to declare which ideas or code contained in your
-submission were sourced from elsewhere.
+## Game Description
 
-Please read the ANU's [official position](http://academichonesty.anu.edu.au/)
-on academic honesty. If you have any questions, please ask me.
-
-Carefully review the statements of originality in the [admin](admin) folder
-which you must complete at each stage.  Edit the relevant statement and update
-it as you complete each stage of the assignment, ensuring that when you
-complete each stage, a truthful statement is committed and pushed to your repo.
-
-## Purpose
-
-In this assignment you will *work as a group* to master a number of major
-themes of this course, including software design and implementation, group
-work, using development tools such as Git and IntelliJ, and using JavaFX to
-build a user interface.  **Above all, this assignment will emphasize group
-work**; while you will receive an individual mark for your work based on your
-contributions to the assignment, **you can only succeed if all members
-contribute to your group's success**.
-
-## Assignment Deliverables
-
-The assignment is worth 30% of your total assessment, and it will be
-marked out of 30.  So each mark in the assignment corresponds to a
-mark in your final assessment for the course.  Note that for some
-stages of the assignment, you will get a _group_ mark, and for others
-you will be _individually_ marked.  The mark breakdown and the due
-dates are described on the
-[deliverables](https://cs.anu.edu.au/courses/comp1110/assessments/deliverables/)
-page.
-
-Your tutor will mark your work via GitLab, so it is essential that you
-carefully follow instructions for setting up and maintaining your group
-repository. You will be marked according to whatever is committed to your
-repository at the time of the deadline. You will be assessed on how effectively
-you use Git as a development tool.
-
-## Problem Description
-
-Your task is to implement in Java, using JavaFX, a board game called the
+Our task is to implement in Java, using JavaFX, a board game called the
 [Blue Lagoon](https://boardgamegeek.com/boardgame/244331/blue-lagoon).
 The design of the game and all imagery shown in this README comes from
-the game publishers, Blue Orange Games. You should either be creating
-your own artwork or making use of other works with an appropriate license.
-
-![Blue Lagoon Box](assets/images/blue_lagoon_box.png)
-
-A copy of the [rulebook](assets/rules/rulebook.pdf) has been provided from the
-[official site](https://blueorangegames.eu/en/games/blue-lagoon/).
-
-You can also find several video tutorials explaining how to play the game
-online, for example [this video](https://www.youtube.com/watch?v=0q1hWfH9S_8).
-
-## Game Overview
-
-In Blue Lagoon, you play as a seafaring tribe on a quest to settle and explore 
-a newly discovered archipelago. Enlisting the help of all the settlers in your 
-tribe to claim territory, and scavenging the resources you find, you will make 
-history as one of the first tribes on the archipelago. But be careful! Other 
-tribes have found the islands too, and it's a race to the top to see who can 
-end up the most renowned tribe of the archipelago.
-
-Blue Lagoon is a board game for 2-4 players. Each player manages a group
-of settlers who will be finding precious resources and claiming islands in
-the newly discovered archipelago.
-
-The game is played over two phases - the exploration phase followed by the
-settlement phase. On a player's turn, they will be playing one of the tokens
-from their hand on to the board in order to work towards claiming resources 
-and islands. At the end of each phase points are scored based on the islands 
-each player claims and the resources they collect. Highest score wins!
-
-An overview of the game rules is given below. Use this, in addition to the
-resources linked above. If anything is unclear, please consult 
-the [class forum](https://edstem.org/au/courses/10706/discussion/) for clarification.
+the game publishers, Blue Orange Games.
 
 ## Game Rules
 
